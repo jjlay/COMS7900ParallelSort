@@ -1,4 +1,10 @@
+//
+// Parallel Sort
+//
+
 #include <iostream>
+
+#include "definitions.h"
 
 int main(int argc, char *argv[])
 {
