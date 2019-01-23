@@ -7,7 +7,7 @@
 
 
 
-int main(int argc, char *argv[])
+int testBinSizing(int argc, char *argv[])
 {
 	const int numVals = 10000;
 	const int numBins = 5;
