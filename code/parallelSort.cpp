@@ -37,7 +37,16 @@ int main(int argc, char *argv[])
 
 	std::cout << "Team Metropolis Parallel Sort" << std::endl;
 
+	int numProcs, myRank, nameLen;
 
+	auto procName = new char[MPI_MAX_PROCESSOR_NAME];
+
+	MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+	MPI_Get_processor_name(procName, &nameLen);
+
+	std::cout << "Rank " << myRank << " out of " << numProcs << " nodes" << std::endl
+		<< "Hostname: " << procName << std::endl;
 
 
 	//
