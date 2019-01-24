@@ -1,16 +1,22 @@
+CC = g++
+CFLAGS = -std=c++11 -lmpi
+
+
 parallelSort : parallelSort.o
-	mpicc -o parallelSort parallelSort.o
+	$(CC) $(CFLAGS) -o parallelSort parallelSort.o
 
 parallelSort.o : parallelSort.cpp definitions.h
-	mpicc -c parallelSort.cpp
+	$(CC) $(CFLAGS) -c parallelSort.cpp
 
 
 testbinsizing : testbinsizing.o
-	g++ - o testbinsizing testbinsizing.o
+	$(CC) $(CFLAGS) -o testbinsizing testbinsizing.o
 
 testbinsizing.o : testbinsizing.cpp
-	g++ - c testbinsizing.cpp
+	$(CC) $(CFLAGS) -c testbinsizing.cpp
 
 clean :
-	rm - f testbinsizing parallelSort
-	rm - f * .o
+	rm -f testbinsizing parallelSort
+	rm -f *.o
+
+
