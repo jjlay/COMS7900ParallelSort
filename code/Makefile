@@ -1,5 +1,5 @@
-CC = g++
-CFLAGS = -std=c++11 -lmpi
+CC = mpicxx
+CFLAGS = -std=c++11
 
 
 parallelSort : parallelSort.o
