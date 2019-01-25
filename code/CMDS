@@ -1,0 +1,9 @@
+(echo "job1"; echo `date`; sleep 1; echo `date`) > OUTPUT/file1
+(echo "job2"; echo `date`; sleep 2; echo `date`) > OUTPUT/file2
+(echo "job3"; echo `date`; sleep 3; echo `date`) > OUTPUT/file3
+(echo "job4"; echo `date`; sleep 4; echo `date`) > OUTPUT/file4
+(echo "job5"; echo `date`; sleep 5; echo `date`) > OUTPUT/file5
+(echo "job6"; echo `date`; sleep 6; echo `date`) > OUTPUT/file6
+(echo "job7"; echo `date`; sleep 7; echo `date`) > OUTPUT/file7
+(echo "job8"; echo `date`; sleep 8; echo `date`) > OUTPUT/file8
+(echo "job9"; echo `date`; sleep 9; echo `date`) > OUTPUT/file9
