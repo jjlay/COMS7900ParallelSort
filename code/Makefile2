@@ -1,0 +1,6 @@
+CC = mpiccc
+CFLAGS = -g
+p5: p5.c
+    mpicc -lm -o p5 p5.c
+clean:
+    rm -f  *.o
