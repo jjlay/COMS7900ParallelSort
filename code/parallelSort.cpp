@@ -57,6 +57,8 @@ int main(int argc, char *argv[])
 
 	if (myRank != 0) {
 		// Read data files in
+
+		// Perform initial sort
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -69,6 +71,58 @@ int main(int argc, char *argv[])
 	}
 
 
+	if (myRank == 0) {
+		// Calculate bins
+
+		// Transmit bins
+	}
+	else {
+		// Receive bins
+	}
+
+
+	if (myRank == 0) {
+		// Receive number of elements in each bin
+	}
+	else {
+		// Transmit number of elements in each bin
+	}
+
+
+	int isUniform = 0;
+
+	while (isUniform == 0) {
+		if (myRank == 0) {
+			// Adapt bins
+
+			// Transmit new bins
+
+			// Receive element counts
+
+			// Determine if uniform
+			
+			// Transmit isUniform update
+		}
+		else {
+			// Receive new bins
+
+			// Count elements
+
+			// Receive isUniform update
+		}
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	if (myRank != 0) {
+		// Transmit elements to appropriate nodes
+
+		// Receive elements from other nodes
+
+		// Final sort
+
+		// Export results
+	}
 
 
 
