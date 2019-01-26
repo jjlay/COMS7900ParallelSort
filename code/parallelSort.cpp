@@ -46,6 +46,29 @@ int main(int argc, char *argv[])
 		<< " with " << numNodes << " total processes" 
 		<< std::endl;
 
+	// FilenameArray = readListOfFile();
+
+	if (myRank == 0) {
+		// Distribute files
+	} 
+	else {
+		// Receive file list
+	}
+
+	if (myRank != 0) {
+		// Read data files in
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	if (myRank == 0) {
+		// Receive minimums and maximums
+	} 
+	else {
+		// Send minimums and maximums
+	}
+
+
 
 
 
