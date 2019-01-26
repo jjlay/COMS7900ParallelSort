@@ -2,12 +2,19 @@
 // Initialize MPI
 //
 
+
+//
+// Debug Control
+//
+
+#undef _DEBUG_
+
+
 //
 // Standard includes
 //
 
 #include <iostream>
-#include <iomanip>
 #include <string>
 
 
