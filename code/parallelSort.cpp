@@ -47,7 +47,11 @@ int main(int argc, char *argv[])
 		<< " with " << numNodes << " total processes" 
 		<< std::endl;
 
-	// FilenameArray = readListOfFile();
+	// Change the following variable to the actual
+	// location of the data files
+	std::string path = "./data/";
+
+	auto FilenameArray = readListOfFile(path);
 
 	if (myRank == 0) {
 		// Distribute files
