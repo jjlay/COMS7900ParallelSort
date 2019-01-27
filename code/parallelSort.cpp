@@ -26,6 +26,7 @@
 #include "initializeMPI.h"
 #include "listFiles.h"
 #include "distributeFiles.h"
+#include "receiveFiles.h"
 
 
 //
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
 	} 
 	else {
 		// Receive file list
+		FilenameArray = receiveFiles(numNodes-1);
 	}
 
 	if (myRank != 0) {

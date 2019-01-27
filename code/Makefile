@@ -1,22 +1,12 @@
 CC = mpicxx
-CFLAGS = -std=c++11
+CFLAGS = -std=c++11 -ggdb
 
 
-parallelSort : parallelSort.o initializeMPI.o listFiles.o distributeFiles.o
-	$(CC) $(CFLAGS) -o parallelSort parallelSort.o initializeMPI.o listFiles.o distributeFiles.o
+parallelSort : parallelSort.o initializeMPI.o listFiles.o distributeFiles.o receiveFiles.o
+	$(CC) $(CFLAGS) -o parallelSort parallelSort.o initializeMPI.o listFiles.o distributeFiles.o receiveFiles.o
 
-parallelSort.o : parallelSort.cpp definitions.h
-	$(CC) $(CFLAGS) -c parallelSort.cpp
-
-initializeMPI.o : initializeMPI.cpp definitions.h
-	$(CC) $(CFLAGS) -c initializeMPI.cpp
-
-listFiles.o : listFiles.cpp
-	$(CC) $(CFLAGS) -c listFiles.cpp
-
-distributeFiles.o : distributeFiles.cpp
-	$(CC) $(CFLAGS) -c distributeFiles.cpp
-
+%.o : %.cpp
+	$(CC) $(CFLAGS) -c $< 
 
 testbinsizing : testbinsizing.o
 	$(CC) $(CFLAGS) -o testbinsizing testbinsizing.o
