@@ -23,5 +23,12 @@
 
 #define mpi_Tag_Name    10
 #define mpi_Tag_State   20
+#define mpi_Tag_File    30
 
+
+//
+// MPI lengths
+//
+
+#define mpi_Max_Filename  100
 
