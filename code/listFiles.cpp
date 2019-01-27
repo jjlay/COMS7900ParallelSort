@@ -44,7 +44,7 @@ std::vector<std::string> listFiles(std::string path) {
 	while (dirp != NULL) {
 		auto s = std::string(dirp->d_name);
 
-		if (s.size() > 4)
+		if ((s.size() > 4) && (s.substr(s.size()-4) == ".txt"))
 			files.push_back(s);
 
 		dirp = readdir(dp);
