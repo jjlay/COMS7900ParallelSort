@@ -51,7 +51,10 @@ int main(int argc, char *argv[])
 	// location of the data files
 	std::string path = "./data/";
 
-	auto FilenameArray = readListOfFile(path);
+	std::vector<std::string> FilenameArray;
+
+	if (myRank == 0)
+		FilenameArray = listFiles(path);
 
 	if (myRank == 0) {
 		// Distribute files
@@ -94,7 +97,8 @@ int main(int argc, char *argv[])
 	}
 
 
-	int isUniform = 0;
+	// Change the line when the functions are written
+	int isUniform = 1;
 
 	while (isUniform == 0) {
 		if (myRank == 0) {
