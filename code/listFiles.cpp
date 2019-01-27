@@ -43,7 +43,10 @@ std::vector<std::string> listFiles(std::string path) {
 
 	while (dirp != NULL) {
 		auto s = std::string(dirp->d_name);
-		files.push_back(s);
+
+		if (s.size() > 4)
+			files.push_back(s);
+
 		dirp = readdir(dp);
 	}
 
