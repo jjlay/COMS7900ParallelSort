@@ -25,6 +25,7 @@
 #include "definitions.h"
 #include "initializeMPI.h"
 #include "listFiles.h"
+#include "distributeFiles.h"
 
 
 //
@@ -58,6 +59,7 @@ int main(int argc, char *argv[])
 
 	if (myRank == 0) {
 		// Distribute files
+		distributeFiles(FilenameArray, numNodes-1);
 	} 
 	else {
 		// Receive file list

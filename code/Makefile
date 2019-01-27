@@ -2,8 +2,8 @@ CC = mpicxx
 CFLAGS = -std=c++11
 
 
-parallelSort : parallelSort.o initializeMPI.o listFiles.o
-	$(CC) $(CFLAGS) -o parallelSort parallelSort.o initializeMPI.o listFiles.o
+parallelSort : parallelSort.o initializeMPI.o listFiles.o distributeFiles.o
+	$(CC) $(CFLAGS) -o parallelSort parallelSort.o initializeMPI.o listFiles.o distributeFiles.o
 
 parallelSort.o : parallelSort.cpp definitions.h
 	$(CC) $(CFLAGS) -c parallelSort.cpp
@@ -13,6 +13,9 @@ initializeMPI.o : initializeMPI.cpp definitions.h
 
 listFiles.o : listFiles.cpp
 	$(CC) $(CFLAGS) -c listFiles.cpp
+
+distributeFiles.o : distributeFiles.cpp
+	$(CC) $(CFLAGS) -c distributeFiles.cpp
 
 
 testbinsizing : testbinsizing.o
