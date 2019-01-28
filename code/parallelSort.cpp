@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 
@@ -27,6 +28,7 @@
 #include "listFiles.h"
 #include "distributeFiles.h"
 #include "receiveFiles.h"
+#include "importFiles.h"
 #include "Data.h"
 
 
@@ -53,7 +55,7 @@ int main(int argc, char *argv[])
 	// Change the following variable to the actual
 	// location of the data files
 	std::string path = "./data/";
-
+	
 	std::vector<std::string> FilenameArray;
 
 	if (myRank == 0)
@@ -70,6 +72,7 @@ int main(int argc, char *argv[])
 	
 	if (myRank != 0) {
 		// Read data files in
+		importFiles( FilenameArray, myRank );
 		
 		// Perform initial sort
 	}

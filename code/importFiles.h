@@ -12,18 +12,28 @@
 
 #include <vector>
 
-
 //
 // Standard includes
 //
 
 #include <string>
+#include <iostream>
+#include <fstream>
+
+
+//
+// Local includes
+//
+//
+
+#include "definitions.h"
+#include "Data.h"
 
 
 //
 // Function: importFiles
 //
 
-double *importFiles(std::vector<std::string> files);
+double *importFiles(std::vector<std::string> files, int myRank);
 
 
