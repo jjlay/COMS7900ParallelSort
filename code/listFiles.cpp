@@ -71,7 +71,7 @@ std::vector<std::string> listFiles(std::string path) {
 		if ((s.size() > 4) && (s.substr(s.size()-4) == ".txt")) {
 			// If the filename meets our criteria, add it to our
 			// vector container
-			files.push_back(s);
+			files.push_back(path + s);
 		}
 
 		// Fetch the next entry
