@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## 
+#$ -N MetropolisSort
+#$ -pe mpi 8
+#$ -q amd8.q
+#$ -cwd
+
+mpirun -np $NSLOTS $HOME/COMS7900ParallelSort/code/parallelSort
+
+
