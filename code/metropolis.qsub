@@ -6,7 +6,5 @@
 #$ -q amd8.q
 #$ -cwd
 
-
 mpirun -np $NSLOTS $HOME/COMS7900ParallelSort/code/parallelSort
-
 
