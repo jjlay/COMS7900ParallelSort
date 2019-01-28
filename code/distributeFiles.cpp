@@ -54,8 +54,8 @@ void distributeFiles(std::vector<std::string> files, int numWorkers) {
 	for (auto f : files) {
 		b = f.c_str();
 
-	mpiReturn = MPI_Isend(b, mpi_Max_Filename, MPI_BYTE, currentRank,
-		mpi_Tag_File, MPI_COMM_WORLD, &request);
+		mpiReturn = MPI_Isend(b, mpi_Max_Filename, MPI_BYTE, currentRank,
+				mpi_Tag_File, MPI_COMM_WORLD, &request);
 
 #ifdef _DEBUG_
 		std::cout << "Dest: " << currentRank
@@ -66,7 +66,7 @@ void distributeFiles(std::vector<std::string> files, int numWorkers) {
 #endif
 
 		currentRank++;
-		if (currentRank >= numWorkers)
+		if (currentRank > numWorkers)
 			currentRank = 1;
 	}
 
