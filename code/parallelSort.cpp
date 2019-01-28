@@ -27,6 +27,7 @@
 #include "listFiles.h"
 #include "distributeFiles.h"
 #include "receiveFiles.h"
+#include "Data.h"
 
 
 //
@@ -66,10 +67,10 @@ int main(int argc, char *argv[])
 		// Receive file list
 		FilenameArray = receiveFiles(myRank);
 	}
-
+	
 	if (myRank != 0) {
 		// Read data files in
-
+		
 		// Perform initial sort
 	}
 
