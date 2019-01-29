@@ -82,7 +82,6 @@ double *importFiles(std::vector<std::string> files, int myRank) {
 		infile.close();
 	}
 	
-	
-	return nullptr;
+	return myData;
 }
 

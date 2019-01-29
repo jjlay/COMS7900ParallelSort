@@ -77,7 +77,10 @@ int main(int argc, char *argv[])
 	
 	if (myRank != 0) {
 		// Read data files in
-		importFiles( FilenameArray, myRank );
+		Data_COMS *myData;
+		myData = importFiles( FilenameArray, myRank );
+		
+		std::cout << myData << std::endl;
 		
 		// Perform initial sort
 	}
