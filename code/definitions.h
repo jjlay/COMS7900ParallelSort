@@ -25,11 +25,17 @@
 #define mpi_Tag_State   20
 #define mpi_Tag_File    30
 
-#define numLines	100
-
 //
 // MPI lengths
 //
 
 #define mpi_Max_Filename  100
+
+//
+// other variables
+//
+
+
+#define numLines	3
+
 

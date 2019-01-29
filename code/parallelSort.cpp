@@ -46,7 +46,12 @@ int main(int argc, char *argv[])
 	int myRank, numNodes;
 
 	initializeMPI(&processorName, &myRank, &numNodes, argc, argv);
-
+	
+	
+	// set cout to print doubles' full length
+	std::cout.precision(17);
+	
+	
 	std::cout << "Rank " << myRank
 		<< " running on " << processorName 
 		<< " with " << numNodes << " total processes" 
