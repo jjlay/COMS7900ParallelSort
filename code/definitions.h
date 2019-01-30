@@ -43,6 +43,7 @@
 
 #define numLines	3
 #define Rank0    0
+#define maxRows 30000000
 
 
 //

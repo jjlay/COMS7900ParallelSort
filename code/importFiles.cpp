@@ -34,10 +34,14 @@
 //
 
 void importFiles(std::vector<std::string> files, int myRank,
-	double *myData, int rows, int cols) {
-	
+	double *myData, int *rows, int *cols) {
+
+	int totalLineCount = 0;
+
+	*cols = _ROW_WIDTH_;
+
 	//Data_COMS myData[numLines]; // compiler directive (see definitions.h)
-	myData = new double[numLines]; //JJL
+	myData = new double[files.size() * maxRows * _ROW_WIDTH_]; //JJL
 
 	// loop through files to read
 	for ( auto f:files ) {
@@ -51,7 +55,7 @@ void importFiles(std::vector<std::string> files, int myRank,
 		
 		lineCount = 0;
 		// loop through lines of file
-		while( std::getline(infile, line) and lineCount < numLines ) {
+		while( std::getline(infile, line)) { // JJL and lineCount < numLines ) {
 			
 			// add index
 			//	myData[lineCount].id = lineCount + 1;
@@ -82,11 +86,15 @@ void importFiles(std::vector<std::string> files, int myRank,
 			myData[lineCount * _ROW_WIDTH_ + _Z_] = std::stod(token); //JJL
 
 			lineCount++;
+			totalLineCount++;
 			
 		}
-		
+	
 		// close the file
 		infile.close();
+		std::cout << "Rank " << myRank << " read " << lineCount << " lines from " << f << std::endl;
 	}
+
+	std::cout << "Read " << totalLineCount << std::endl;
 }
 

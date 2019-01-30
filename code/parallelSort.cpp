@@ -74,13 +74,21 @@ int main(int argc, char *argv[])
 		// Receive file list
 		FilenameArray = receiveFiles(myRank);
 	}
-	
+
+
+	double *array;
+	int rows = 0, cols = 0;
+
 	if (myRank != 0) {
 		// Read data files in
-		Data_COMS *myData;
+		// Data_COMS *myData;
 		// myData = importFiles( FilenameArray, myRank );
-		
 		//std::cout << myData << std::endl;
+
+	std::cout << "Rank " << myRank << " is importing files" << std::endl;
+	importFiles(FilenameArray, myRank, array, &rows, &cols);
+	std::cout << "Rank " << myRank << " has imported files" << std::endl;
+
 		
 		// Perform initial sort
 	}
