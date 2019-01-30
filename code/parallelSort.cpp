@@ -29,7 +29,10 @@
 #include "distributeFiles.h"
 #include "receiveFiles.h"
 #include "importFiles.h"
-#include "Data.h"
+#include "getLinearBins.h"
+
+
+// #include "Data.h"
 
 
 //
@@ -85,26 +88,31 @@ int main(int argc, char *argv[])
 		// myData = importFiles( FilenameArray, myRank );
 		//std::cout << myData << std::endl;
 
-	std::cout << "Rank " << myRank << " is importing files" << std::endl;
-	importFiles(FilenameArray, myRank, array, &rows, &cols);
-	std::cout << "Rank " << myRank << " has imported files" << std::endl;
-
+		std::cout << "Rank " << myRank << " is importing files" << std::endl;
+		importFiles(FilenameArray, myRank, array, &rows, &cols);
+		std::cout << "Rank " << myRank << " has imported files" << std::endl;
 		
 		// Perform initial sort
 	}
-
+	
+	
 	MPI_Barrier(MPI_COMM_WORLD);
-
+	
+	
 	if (myRank == 0) {
 		// Receive minimums and maximums
 	} 
 	else {
 		// Send minimums and maximums
 	}
-
+	
+	
+	double *binE;
+	double minGlobal = -1.0, maxGlobal = 1.0; // remove -1,+1 when done testing
 
 	if (myRank == 0) {
 		// Calculate bins
+		getLinearBins( binE, numNodes-1, myRank, minGlobal, maxGlobal );
 
 		// Transmit bins
 	}

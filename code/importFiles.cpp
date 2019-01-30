@@ -48,10 +48,10 @@ void importFiles(std::vector<std::string> files, int myRank,
 		
 		std::ifstream infile( f );
 		std::string line;
-		std::string delimiter = "    ";
+	//	std::string delimiter = "    ";
 		std::string token;
 		size_t pos = 0;
-		int lineCount, tokenCount;
+		int lineCount; //, tokenCount;
 		
 		lineCount = 0;
 		// loop through lines of file
