@@ -6,6 +6,20 @@
 
 
 //
+// Standard includes
+//
+
+#include <iostream>
+
+
+//
+// Parallel includes
+//
+
+#include "mpi.h"
+
+
+//
 // Function: transmit
 //
 // Parameters:

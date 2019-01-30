@@ -35,12 +35,14 @@
 
 #define mpi_Max_Filename  100
 
+
 //
 // other variables
 //
 
 
 #define numLines	3
+#define Rank0    0
 
 
 //
