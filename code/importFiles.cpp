@@ -54,8 +54,10 @@ void importFiles(std::vector<std::string> files, int myRank,
 		while( std::getline(infile, line) and lineCount < numLines ) {
 			
 			// add index
-			myData[lineCount].id = lineCount + 1;
-			
+			//	myData[lineCount].id = lineCount + 1;
+			myData[l
+
+
 			// add 1 double
 			token = line.substr(14,18);
 			if( isspace(token.front()) ){

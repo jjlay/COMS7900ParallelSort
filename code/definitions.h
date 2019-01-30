@@ -59,5 +59,6 @@
 #define _X_       1
 #define _Y_       2
 #define _Z_       3
+#define _ROW_WIDTH_   4
 
 
