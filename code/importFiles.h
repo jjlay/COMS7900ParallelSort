@@ -34,6 +34,6 @@
 // Function: importFiles
 //
 
-double *importFiles(std::vector<std::string> files, int myRank);
+Data_COMS* importFiles(std::vector<std::string> files, int myRank);
 
 

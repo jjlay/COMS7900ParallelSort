@@ -33,10 +33,12 @@
 // Function: importFiles
 //
 
-double *importFiles(std::vector<std::string> files, int myRank) {
+void importFiles(std::vector<std::string> files, int myRank,
+	double *array, int rows, int cols) {
 	
-	Data_COMS myData[numLines]; // compiler directive (see definitions.h)
-	
+	//Data_COMS myData[numLines]; // compiler directive (see definitions.h)
+	myData = new double[numLines]; //JJL
+
 	// loop through files to read
 	for ( auto f:files ) {
 		

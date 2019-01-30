@@ -50,3 +50,14 @@
 #define _MIN_  0
 #define _MAX_  1
 
+
+//
+// Data map
+//
+
+#define _INDEX_   0
+#define _X_       1
+#define _Y_       2
+#define _Z_       3
+
+
