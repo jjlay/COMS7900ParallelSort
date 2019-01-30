@@ -43,3 +43,10 @@
 #define numLines	3
 
 
+//
+// Used for transmitting min and max
+//
+
+#define _MIN_  0
+#define _MAX_  1
+
