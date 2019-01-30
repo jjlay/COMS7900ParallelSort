@@ -34,7 +34,7 @@
 //
 
 void importFiles(std::vector<std::string> files, int myRank,
-	double *array, int rows, int cols) {
+	double *myData, int rows, int cols) {
 	
 	//Data_COMS myData[numLines]; // compiler directive (see definitions.h)
 	myData = new double[numLines]; //JJL
@@ -55,7 +55,7 @@ void importFiles(std::vector<std::string> files, int myRank,
 			
 			// add index
 			//	myData[lineCount].id = lineCount + 1;
-			myData[l
+			myData[lineCount * _ROW_WIDTH_ + _INDEX_] = static_cast<double>(lineCount+1); //JJL
 
 
 			// add 1 double
@@ -63,21 +63,24 @@ void importFiles(std::vector<std::string> files, int myRank,
 			if( isspace(token.front()) ){
 				token.erase(token.begin());
 			}
-			myData[lineCount].data[0] = std::stod(token);
-			
+			//myData[lineCount].data[0] = std::stod(token);
+			myData[lineCount * _ROW_WIDTH_ + _X_] = std::stod(token); //JJL
+
 			// add 2 double
 			token = line.substr(36,18);
 			if( isspace(token.front()) ){
 				token.erase(token.begin());
 			}
-			myData[lineCount].data[1] = std::stod(token);
-			
+			//myData[lineCount].data[1] = std::stod(token);
+			myData[lineCount * _ROW_WIDTH_ + _Y_] = std::stod(token); //JJL
+
 			token = line.substr(58,18);
 			if( isspace(token.front()) ){
 				token.erase(token.begin());
 			}
-			myData[lineCount].data[2] = std::stod(token);
-			
+			// myData[lineCount].data[2] = std::stod(token);
+			myData[lineCount * _ROW_WIDTH_ + _Z_] = std::stod(token); //JJL
+
 			lineCount++;
 			
 		}
@@ -85,7 +88,5 @@ void importFiles(std::vector<std::string> files, int myRank,
 		// close the file
 		infile.close();
 	}
-	
-	return myData;
 }
 

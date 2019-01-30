@@ -1,3 +1,5 @@
+#pragma once
+
 //
 // importFiles
 //
@@ -34,6 +36,8 @@
 // Function: importFiles
 //
 
-Data_COMS* importFiles(std::vector<std::string> files, int myRank);
-
+//Data_COMS* importFiles(std::vector<std::string> files, int myRank);
+void importFiles(std::vector<std::string> files, int myRank,
+	double *array, int rows, int cols);
+	
 
