@@ -36,9 +36,6 @@
 void getLinearBins( double *binE, int numWorkers, int myRank,
 	double minGlobal, double maxGlobal ) {
 	
-	// bin edges, one more than numWorkers since it's bin EDGES
-	binE = new double[ numWorkers+1 ];
-	
 	for( int i = 0; i < numWorkers+1; i++ ) {
 		
 		binE[i] = minGlobal + (maxGlobal - minGlobal)*( (1.0*i)/numWorkers );

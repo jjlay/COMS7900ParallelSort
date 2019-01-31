@@ -30,6 +30,7 @@
 #include "receiveFiles.h"
 #include "importFiles.h"
 #include "getLinearBins.h"
+#include "adaptBins.h"
 
 
 // #include "Data.h"
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
 
 	initializeMPI(&processorName, &myRank, &numNodes, argc, argv);
 	
+	int numWorkers = numNodes - 1;
 	
 	// set cout to print doubles' full length
 	std::cout.precision(17);
@@ -88,10 +90,10 @@ int main(int argc, char *argv[])
 		double *array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		int rows = 0, cols = 0;
 		
-		std::cout << "Rank " << myRank << " is importing files" << std::endl;
+//		std::cout << "Rank " << myRank << " is importing files" << std::endl;
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
-		std::cout << "rank: " << myRank << " " << array[0] << " " << array[1] << " " << array[2] << " " << array[3] << std::endl;
-		std::cout << "Rank " << myRank << " has imported files" << std::endl;
+//		std::cout << "rank: " << myRank << " " << array[0] << " " << array[1] << " " << array[2] << " " << array[3] << std::endl;
+//		std::cout << "Rank " << myRank << " has imported files" << std::endl;
 		
 		// Perform initial sort
 	}
@@ -108,13 +110,20 @@ int main(int argc, char *argv[])
 	}
 	
 	
-	double *binE;
-	double minGlobal = -1.0, maxGlobal = 1.0; // remove -1,+1 when done testing
 
 	if (myRank == 0) {
+		double *binE = new double[numWorkers+1]; // GW
+		double minGlobal = -1.0, maxGlobal = 1.0; // remove -1,+1 when done testing
+		
 		// Calculate bins
 		getLinearBins( binE, numNodes-1, myRank, minGlobal, maxGlobal );
-
+		std::cout << "binE 0: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
+		
+		int binC[3] = { 100, 250, 185 };
+		
+		adaptBins( binE, binC, numWorkers);
+		std::cout << "binE 1: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
+		
 		// Transmit bins
 	}
 	else {
