@@ -64,7 +64,7 @@ void importFiles(std::vector<std::string> files, int myRank,
 
 
 			// add 1 double
-			token = line.substr(14,18);
+			token = line.substr(11,12);
 //			if( isspace(token.front()) ){
 //				token.erase(token.begin());
 //			}
@@ -86,15 +86,16 @@ void importFiles(std::vector<std::string> files, int myRank,
 			// myData[lineCount].data[2] = std::stod(token);
 			myData[totalLineCount * _ROW_WIDTH_ + _Z_] = std::stod(token); //JJL
 
-			lineCount++;
-			totalLineCount++;
-
 			std::cout << "Record " << std::fixed << std::setprecision(0) << totalLineCount
 				<< ", Index " << myData[totalLineCount * _ROW_WIDTH_ + _INDEX_]
 				<< ", X " << std::fixed << std::setprecision(5) << myData[totalLineCount * _ROW_WIDTH_ + _X_]
 				<< ", Y " << myData[totalLineCount * _ROW_WIDTH_ + _Y_]
 				<< ", Z " << myData[totalLineCount * _ROW_WIDTH_ + _Z_] << std::endl;
+
+			lineCount++;
+			totalLineCount++;
 		}
+
 
 	
 		// close the file
