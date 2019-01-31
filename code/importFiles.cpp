@@ -18,6 +18,7 @@
 
 #include <string>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 
 
@@ -64,34 +65,35 @@ void importFiles(std::vector<std::string> files, int myRank,
 
 			// add 1 double
 			token = line.substr(14,18);
-			if( isspace(token.front()) ){
-				token.erase(token.begin());
-			}
+//			if( isspace(token.front()) ){
+//				token.erase(token.begin());
+//			}
 			//myData[lineCount].data[0] = std::stod(token);
 			myData[totalLineCount * _ROW_WIDTH_ + _X_] = std::stod(token); //JJL
 
 			// add 2 double
-			token = line.substr(36,18);
-			if( isspace(token.front()) ){
-				token.erase(token.begin());
-			}
+//			token = line.substr(36,18);
+//			if( isspace(token.front()) ){
+//				token.erase(token.begin());
+//			}
 			//myData[lineCount].data[1] = std::stod(token);
 			myData[totalLineCount * _ROW_WIDTH_ + _Y_] = std::stod(token); //JJL
 
 			token = line.substr(58,18);
-			if( isspace(token.front()) ){
-				token.erase(token.begin());
-			}
+//			if( isspace(token.front()) ){
+//				token.erase(token.begin());
+//			}
 			// myData[lineCount].data[2] = std::stod(token);
 			myData[totalLineCount * _ROW_WIDTH_ + _Z_] = std::stod(token); //JJL
 
 			lineCount++;
 			totalLineCount++;
 
-			std::cout << "Record " << totalLineCount << ", Index " 
-				<< totalLineCount << ", X " << myData[totalLineCount * _ROW_WIDTH_ + _X_]
-				<< totalLineCount << ", Y " << myData[totalLineCount * _ROW_WIDTH_ + _Y_]
-				<< totalLineCount << ", Z " << myData[totalLineCount * _ROW_WIDTH_ + _Z_] << std::endl;
+			std::cout << "Record " << std::fixed << std::setprecision(0) << totalLineCount
+				<< ", Index " << myData[totalLineCount * _ROW_WIDTH_ + _INDEX_]
+				<< ", X " << std::fixed << std::setprecision(5) << myData[totalLineCount * _ROW_WIDTH_ + _X_]
+				<< ", Y " << myData[totalLineCount * _ROW_WIDTH_ + _Y_]
+				<< ", Z " << myData[totalLineCount * _ROW_WIDTH_ + _Z_] << std::endl;
 		}
 
 	
