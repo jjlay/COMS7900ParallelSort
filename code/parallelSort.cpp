@@ -79,17 +79,18 @@ int main(int argc, char *argv[])
 	}
 
 
-	double *array;
-	int rows = 0, cols = 0;
-
 	if (myRank != 0) {
 		// Read data files in
 		// Data_COMS *myData;
 		// myData = importFiles( FilenameArray, myRank );
 		//std::cout << myData << std::endl;
 
+		double *array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
+		int rows = 0, cols = 0;
+		
 		std::cout << "Rank " << myRank << " is importing files" << std::endl;
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
+		std::cout << "rank: " << myRank << " " << array[0] << " " << array[1] << " " << array[2] << " " << array[3] << std::endl;
 		std::cout << "Rank " << myRank << " has imported files" << std::endl;
 		
 		// Perform initial sort

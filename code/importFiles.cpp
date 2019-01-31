@@ -42,7 +42,7 @@ void importFiles(std::vector<std::string> files, int myRank,
 	*cols = _ROW_WIDTH_;
 
 	//Data_COMS myData[numLines]; // compiler directive (see definitions.h)
-	myData = new double[files.size() * maxRows * _ROW_WIDTH_]; //JJL
+//	myData = new double[files.size() * maxRows * _ROW_WIDTH_]; //JJL
 
 	// loop through files to read
 	for ( auto f:files ) {
@@ -53,7 +53,6 @@ void importFiles(std::vector<std::string> files, int myRank,
 
 		std::ifstream infile( f );
 		std::string line;
-	//	std::string delimiter = "    ";
 		std::string token;
 		size_t pos = 0;
 		int lineCount; //, tokenCount;
@@ -65,8 +64,10 @@ void importFiles(std::vector<std::string> files, int myRank,
 			// add index
 			//	myData[lineCount].id = lineCount + 1;
 			myData[totalLineCount * _ROW_WIDTH_ + _INDEX_] = static_cast<double>(totalLineCount+1); //JJL
-
-
+			
+			// ABOVE: we need to fix this so that
+			// different nodes don't have duplicate indices
+			
 			// add 1 double
 			token = line.substr(11,12);
 //			if( isspace(token.front()) ){
