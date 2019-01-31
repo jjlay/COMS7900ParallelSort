@@ -46,7 +46,11 @@ void importFiles(std::vector<std::string> files, int myRank,
 
 	// loop through files to read
 	for ( auto f:files ) {
-		
+
+		std::cout << "=========================" << std::endl
+			<< "Importing " << f << std::endl
+			<< "=========================" << std::endl;
+
 		std::ifstream infile( f );
 		std::string line;
 	//	std::string delimiter = "    ";
@@ -72,14 +76,14 @@ void importFiles(std::vector<std::string> files, int myRank,
 			myData[totalLineCount * _ROW_WIDTH_ + _X_] = std::stod(token); //JJL
 
 			// add 2 double
-//			token = line.substr(36,18);
+			token = line.substr(33,12);
 //			if( isspace(token.front()) ){
 //				token.erase(token.begin());
 //			}
 			//myData[lineCount].data[1] = std::stod(token);
 			myData[totalLineCount * _ROW_WIDTH_ + _Y_] = std::stod(token); //JJL
 
-			token = line.substr(58,18);
+			token = line.substr(55,11);
 //			if( isspace(token.front()) ){
 //				token.erase(token.begin());
 //			}
