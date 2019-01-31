@@ -30,7 +30,9 @@
 #include "receiveFiles.h"
 #include "importFiles.h"
 #include "getLinearBins.h"
+// #include "binData.h"   // not written yet
 #include "adaptBins.h"
+#include "testUniformity.h"
 
 
 // #include "Data.h"
@@ -119,10 +121,21 @@ int main(int argc, char *argv[])
 		getLinearBins( binE, numNodes-1, myRank, minGlobal, maxGlobal );
 		std::cout << "binE 0: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
-		int binC[3] = { 100, 250, 185 };
+		int binC[3] = { 140, 141, 139 };
+		int total = 0;
+		for( int i = 0; i < 3; i++ ) {
+			total = total + binC[i];
+		}
 		
 		adaptBins( binE, binC, numWorkers);
 		std::cout << "binE 1: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
+		
+		double uniformity;
+		
+		uniformity = testUniformity( binC, numWorkers, total );
+		
+//		std::cout << "uniformity: " << uniformity << std::endl;
+		
 		
 		// Transmit bins
 	}

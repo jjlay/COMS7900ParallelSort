@@ -37,7 +37,7 @@
 void adaptBins( double *binE, int *binC, int numWorkers) {
 	// binE = bin edges, binC = bin counts
 	
-	double *temp = new double[numWorkers+1];
+	double *diff = new double[numWorkers+1];
 	double dC, dB;
 	
 	for( int i = 1; i < numWorkers; i++ ) {
@@ -52,11 +52,11 @@ void adaptBins( double *binE, int *binC, int numWorkers) {
 			dB = 0;
 		}
 		
-		temp[i] = 0.25*dC*dB;
+		diff[i] = 0.25*dC*dB;
 	}
 	
 	for( int i = 1; i < numWorkers; i++ ) {
-		binE[i] = temp[i];
+		binE[i] = binE[i] + diff[i];
 	}
 	
 }
