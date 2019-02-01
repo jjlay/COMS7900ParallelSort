@@ -214,6 +214,14 @@ int main(int argc, char *argv[])
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
+#ifdef _TIMING_	
+	auto timeBeginSwapping = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginSwapping - timeBeginBinning;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< "to identify bins" << std::endl;
+#endif
+
 	if (myRank != 0) {
 		// Transmit elements to appropriate nodes
 
@@ -225,12 +233,31 @@ int main(int argc, char *argv[])
 	}
 
 
+#ifdef _TIMING_	
+	auto timeEndSwapping = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeEndSwapping - timeBeginSwapping;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< "to swap, sort, and export data" << std::endl;
+#endif
+
 
 	//
 	// Wrap up
 	//
 	
 	MPI_Barrier(MPI_COMM_WORLD);
+
+
+#ifdef _TIMING_	
+	auto timeEnd = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeEnd - timeStart;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< "to run" << std::endl;
+#endif
+
+
 	MPI_Finalize();
 
 	return _OKAY_;
