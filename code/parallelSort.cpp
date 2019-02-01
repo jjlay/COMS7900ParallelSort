@@ -97,6 +97,11 @@ int main(int argc, char *argv[])
 
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to distribute the filenames" << std::endl;
+
 #endif
 
 	if (myRank != 0) {
@@ -121,6 +126,10 @@ int main(int argc, char *argv[])
 
 #ifdef _TIMING_	
 	auto timeBeginMinMax = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to import data" << std::endl;
 #endif
 
 	if (myRank == 0) {
@@ -131,6 +140,14 @@ int main(int argc, char *argv[])
 	}
 	
 	
+
+#ifdef _TIMING_	
+	auto timeBeginBinning = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginBinning - timeBeginMinMax;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to exchange min and max" << std::endl;
+#endif
 
 	if (myRank == 0) {
 		double *binE = new double[numWorkers+1]; // GW
