@@ -71,10 +71,10 @@ int main(int argc, char *argv[])
 
 #ifdef _TIMING_
 	auto timeBeginFilenameDistribute = std::chrono::system_clock::now();
-	auto timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
-	std::cout << "Rank " << myRank << " took "
-		<< timeElapsedSeconds.count() << " seconds"
-		<<  std::endl;
+	std::chrono::duration<double> timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to initialize MPI" << std::endl;
 #endif
 
 	// Change the following variable to the actual
