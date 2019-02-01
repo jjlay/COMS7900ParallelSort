@@ -30,9 +30,9 @@
 #include "receiveFiles.h"
 #include "importFiles.h"
 #include "getLinearBins.h"
-// #include "binData.h"   // not written yet
 #include "adaptBins.h"
 #include "testUniformity.h"
+#include "binData.h"
 
 
 // #include "Data.h"
@@ -118,8 +118,8 @@ int main(int argc, char *argv[])
 		double minGlobal = -1.0, maxGlobal = 1.0; // remove -1,+1 when done testing
 		
 		// Calculate bins
-		getLinearBins( binE, numNodes-1, myRank, minGlobal, maxGlobal );
-		std::cout << "binE 0: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
+		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );
+	//	std::cout << "binE 0: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
 		int binC[3] = { 140, 141, 139 };
 		int total = 0;
@@ -127,6 +127,18 @@ int main(int argc, char *argv[])
 			total = total + binC[i];
 		}
 		
+		double dataTest[10] = {-5.0, -3.0, -2.0, -1.0, -0.5, 0.5, 1.0, 2.0, 3.0, 5.0};
+		int    binI[4] = {0, 3, 6, 9}; // GW
+		
+		
+		getLinearBins( binE, numWorkers, myRank, -5, 5 );
+		binData( dataTest, binE, myRank, numWorkers, 10, binI, binC);
+		
+		std::cout << "binI : " << binI[0] << " " << binI[1] << " " << binI[2] << " " << binI[3] << std::endl;
+		std::cout << "binC : " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
+		
+		
+		/*
 		adaptBins( binE, binC, numWorkers);
 		std::cout << "binE 1: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
@@ -135,7 +147,7 @@ int main(int argc, char *argv[])
 		uniformity = testUniformity( binC, numWorkers, total );
 		
 //		std::cout << "uniformity: " << uniformity << std::endl;
-		
+		*/
 		
 		// Transmit bins
 	}

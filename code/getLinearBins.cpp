@@ -40,7 +40,7 @@ void getLinearBins( double *binE, int numWorkers, int myRank,
 		
 		binE[i] = minGlobal + (maxGlobal - minGlobal)*( (1.0*i)/numWorkers );
 		// print for debug
-		std::cout << "linear bin edge " << i << ": " << binE[i] << std::endl;
+	//	std::cout << "linear bin edge " << i << ": " << binE[i] << std::endl;
 		
 	}
 	
