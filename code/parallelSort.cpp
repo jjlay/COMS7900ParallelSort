@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <chrono> 
 
 
 //
@@ -52,6 +53,10 @@ int main(int argc, char *argv[])
 	int myRank, numNodes;
 
 	initializeMPI(&processorName, &myRank, &numNodes, argc, argv);
+
+#ifdef _TIMING_
+	auto timeStart = std::chrono::system_clock::now();
+#endif
 	
 	int numWorkers = numNodes - 1;
 	
@@ -63,6 +68,11 @@ int main(int argc, char *argv[])
 		<< " running on " << processorName 
 		<< " with " << numNodes << " total processes" 
 		<< std::endl;
+
+#ifdef _TIMING_
+	auto timeBeginFilenameDistribute = std::chrono::system_clock::now();
+	std::cout << "Rank " << std::endl;
+#endif
 
 	// Change the following variable to the actual
 	// location of the data files
@@ -82,6 +92,9 @@ int main(int argc, char *argv[])
 		FilenameArray = receiveFiles(myRank);
 	}
 
+#ifdef _TIMING_
+	auto timeBeginFileImport = std::chrono::system_clock::now();
+#endif
 
 	if (myRank != 0) {
 		// Read data files in
@@ -102,8 +115,11 @@ int main(int argc, char *argv[])
 	
 	
 	MPI_Barrier(MPI_COMM_WORLD);
-	
-	
+
+#ifdef _TIMING_	
+	auto timeBeginMinMax = std::chrono::system_clock::now();
+#endif
+
 	if (myRank == 0) {
 		// Receive minimums and maximums
 	} 
