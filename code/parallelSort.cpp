@@ -71,7 +71,10 @@ int main(int argc, char *argv[])
 
 #ifdef _TIMING_
 	auto timeBeginFilenameDistribute = std::chrono::system_clock::now();
-	std::cout << "Rank " << std::endl;
+	auto timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
+	std::cout << "Rank " << myRank << " took "
+		<< timeElapsedSeconds.count() << " seconds"
+		<<  std::endl;
 #endif
 
 	// Change the following variable to the actual
