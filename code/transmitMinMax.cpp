@@ -20,7 +20,7 @@
 
 
 //
-// Function: transmit
+// Function: transmitMinMax
 //
 // Parameters:
 //   min - least value
@@ -46,3 +46,5 @@ void transmitMinMax(double min, double max) {
 	
 
 }
+
+

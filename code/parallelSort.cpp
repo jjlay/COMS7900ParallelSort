@@ -34,6 +34,8 @@
 // #include "binData.h"   // not written yet
 #include "adaptBins.h"
 #include "testUniformity.h"
+#include "receiveMinMax.h"
+#include "transmitMinMax.h"
 
 
 // #include "Data.h"
@@ -104,6 +106,9 @@ int main(int argc, char *argv[])
 
 #endif
 
+	double myMin = 0.0;
+	double myMax = 0.0;
+
 	if (myRank != 0) {
 		// Read data files in
 		// Data_COMS *myData;
@@ -132,11 +137,20 @@ int main(int argc, char *argv[])
 		<< " to import data" << std::endl;
 #endif
 
+	auto allMins = new double[numNodes];
+	auto allMaxs = new double[numNodes];
+
 	if (myRank == 0) {
 		// Receive minimums and maximums
+		allMins[Rank0] = 0.0;
+		allMaxs[Rank0] = 0.0;
+
+		for (auto r = 1; r < numNodes; r++)
+			receiveMinMax(&allMins[r], &allMaxs[r]);
 	} 
 	else {
 		// Send minimums and maximums
+		transmitMinMax(myMin, myMax);
 	}
 	
 	
