@@ -145,8 +145,12 @@ int main(int argc, char *argv[])
 		allMins[Rank0] = 0.0;
 		allMaxs[Rank0] = 0.0;
 
-		for (auto r = 1; r < numNodes; r++)
-			receiveMinMax(&allMins[r], &allMaxs[r]);
+		for (auto r = 1; r < numNodes; r++) {
+			receiveMinMax(r, &allMins[r], &allMaxs[r]);
+			std::cout << "Rank " << r << " send " 
+				<< allMins[r] << " and "
+				<< allMaxs[r] << std::endl;
+		}
 	} 
 	else {
 		// Send minimums and maximums
