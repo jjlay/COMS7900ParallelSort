@@ -163,46 +163,50 @@ int main(int argc, char *argv[])
 		<< " to exchange min and max" << std::endl;
 #endif
 
+	// same across all nodes
 	int *binE = new int[numWorkers+1];
+	// different across all nodes, master doesn't have one
 	int *binI = new int[numWorkers+1];
+	// different across all nodes, master is sum of others
 	int *binC = new int[numWorkers];
 	
-	if (myRank == 0) {
-		// Calculate initial linear bins
-		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );
-		
-		// Transmit bin edges
-	//	transmitBinEdges();
-	}
-	else {
-		// Receive bin edges
-	}
-
-
-	if (myRank == 0) {
-		// Receive number of elements in each bin
-	}
-	else {
-		// bin the data
-		binData( array, binE, myRank, numWorkers, 1000, binI, binC);
-		
-		// Transmit number of elements in each bin
-	//	transmitBinCounts();
-	}
-
 	// uniformity threshold
 	double thresh = 0.10;
 	// Change to 0 when the functions are written
 	int isUniform = 1;
+	
+	if (myRank == 0) {
+		// Calculate initial bin edges
+		getLinearBins( binE, numWorkers, myRank, myMin, myMax );
+
+		// Transmit initial bin edges
+
+		// Receive initial bin counts
+
+		// Determine if uniform
+		isUniform = testUniformity( binC, numWorkers, total, thresh );
+		
+		// Transmit isUniform update
+	}
+	else {
+		// Receive initial bin edges
+
+		// get intitial bin counts
+		binData( array, binE, myRank, numWorkers, 1000, binI, binC);
+
+		// Transmit initial bin counts
+		
+		// Receive isUniform update
+	}
 
 	while (isUniform == 0) {
 		if (myRank == 0) {
-			// Adapt bins
+			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
 
-			// Transmit new bins
+			// Transmit bin edges
 
-			// Receive element counts
+			// Receive bin counts
 
 			// Determine if uniform
 			isUniform = testUniformity( binC, numWorkers, total, thresh );
@@ -210,12 +214,12 @@ int main(int argc, char *argv[])
 			// Transmit isUniform update
 		}
 		else {
-			// Receive new bins
+			// Receive bin edges
 
-			// Count elements
+			// get bin counts
 			binData( array, binE, myRank, numWorkers, 1000, binI, binC);
 
-			// Transmit element counts
+			// Transmit bin counts
 			
 			// Receive isUniform update
 		}
