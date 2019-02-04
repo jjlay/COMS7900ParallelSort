@@ -90,15 +90,11 @@ int main(int argc, char *argv[])
 
 	if (myRank == 0) {
 		// Distribute files
-		std::cout << "Rank 0 before distribute files" << std::endl;
 		distributeFiles(FilenameArray, numNodes-1);
-
-		std::cout << "Rank 0 after distribute files" << std::endl;
 	} 
 	else {
 		// Receive file list
 		FilenameArray = receiveFiles(myRank);
-		std::cout << "Rank " << myRank << " after distribute files" << std::endl;
 	}
 
 #ifdef _TIMING_
@@ -120,26 +116,15 @@ int main(int argc, char *argv[])
 		// myData = importFiles( FilenameArray, myRank );
 		//std::cout << myData << std::endl;
 
-		unsigned int arraySize = FilenameArray.size() * maxRows * _ROW_WIDTH_;
-		std::cout << "Rank " << myRank << " will allocate " << arraySize << " elements" << std::endl;
-
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		int rows = 0, cols = 0;
 		
-//		std::cout << "Rank " << myRank << " is importing files" << std::endl;
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
-//		std::cout << "rank: " << myRank << " " << array[0] << " " << array[1] << " " << array[2] << " " << array[3] << std::endl;
-//		std::cout << "Rank " << myRank << " has imported files" << std::endl;
 		
 		// Perform initial sort
 	}
 	
-	
-	std::cout << "Rank " << myRank << " has reached the barrier" << std::endl;
-
 	MPI_Barrier(MPI_COMM_WORLD);
-
-	std::cout << "Rank " << myRank << " has passed the barrier" << std::endl;
 
 #ifdef _TIMING_	
 	auto timeBeginMinMax = std::chrono::system_clock::now();
@@ -148,8 +133,6 @@ int main(int argc, char *argv[])
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to import data" << std::endl;
 #endif
-
-	std::cout << "Rank " << myRank << " says numNodes = " << numNodes << std::endl;
 
 	auto allMins = new double[numNodes];
 	auto allMaxs = new double[numNodes];
@@ -161,9 +144,6 @@ int main(int argc, char *argv[])
 
 		for (auto r = 1; r < numNodes; r++) {
 			receiveMinMax(r, &allMins[r], &allMaxs[r]);
-			std::cout << "Rank " << r << " send " 
-				<< allMins[r] << " and "
-				<< allMaxs[r] << std::endl;
 		}
 	} 
 	else {

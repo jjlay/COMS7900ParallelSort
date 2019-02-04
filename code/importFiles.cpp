@@ -93,12 +93,13 @@ void importFiles(std::vector<std::string> files, int myRank,
 			// myData[lineCount].data[2] = std::stod(token);
 			myData[totalLineCount * _ROW_WIDTH_ + _Z_] = std::stod(token); //JJL
 
+/*
 			std::cout << "Record " << std::fixed << std::setprecision(0) << totalLineCount
 				<< ", Index " << myData[totalLineCount * _ROW_WIDTH_ + _INDEX_]
 				<< ", X " << std::fixed << std::setprecision(5) << myData[totalLineCount * _ROW_WIDTH_ + _X_]
 				<< ", Y " << myData[totalLineCount * _ROW_WIDTH_ + _Y_]
 				<< ", Z " << myData[totalLineCount * _ROW_WIDTH_ + _Z_] << std::endl;
-
+*/
 			lineCount++;
 			totalLineCount++;
 		}
