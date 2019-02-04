@@ -163,27 +163,19 @@ int main(int argc, char *argv[])
 		<< " to exchange min and max" << std::endl;
 #endif
 
+	int *binE = new int[numWorkers+1];
+	int *binI = new int[numWorkers+1];
+	int *binC = new int[numWorkers];
+	
 	if (myRank == 0) {
 		// Calculate initial linear bins
 		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );
-	//	std::cout << "binE 0: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
-		std::cout << "binI : " << binI[0] << " " << binI[1] << " " << binI[2] << " " << binI[3] << std::endl;
-		std::cout << "binC : " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
-		
-		
-		/*
-		adaptBins( binE, binC, numWorkers);
-		std::cout << "binE 1: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
-		
-		
-//		std::cout << "uniformity: " << uniformity << std::endl;
-		*/
-		
-		// Transmit bins
+		// Transmit bin edges
+	//	transmitBinEdges();
 	}
 	else {
-		// Receive bins
+		// Receive bin edges
 	}
 
 
@@ -191,16 +183,12 @@ int main(int argc, char *argv[])
 		// Receive number of elements in each bin
 	}
 	else {
-		int *binI = new int[numWorkers+1];
-		int *binC = new int[numWorkers];
-		
 		// bin the data
 		binData( array, binE, myRank, numWorkers, 1000, binI, binC);
 		
 		// Transmit number of elements in each bin
-	//	transmitBins();
+	//	transmitBinCounts();
 	}
-
 
 	// uniformity threshold
 	double thresh = 0.10;
@@ -227,6 +215,8 @@ int main(int argc, char *argv[])
 			// Count elements
 			binData( array, binE, myRank, numWorkers, 1000, binI, binC);
 
+			// Transmit element counts
+			
 			// Receive isUniform update
 		}
 	}
