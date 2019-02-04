@@ -5,6 +5,14 @@
 //
 
 //
+// Control
+// 
+
+#define _DEBUG_
+#define _TIMING_
+
+
+//
 // Return Values
 //
 

@@ -4,13 +4,6 @@
 
 
 //
-// Debug Control
-//
-
-#undef _DEBUG_
-
-
-//
 // Standard includes
 //
 
@@ -57,8 +50,8 @@ void initializeMPI(std::string *processorName, int *myRank, int *numNodes, int a
 	*processorName = std::string(localProcName);
 
 #ifdef _DEBUG_
-	std::cout << "Rank " << myRank << " out of " << numProcs << " nodes" 
-		<< " on Hostname: " << procName << std::endl;
+	std::cout << "Rank " << *myRank << " out of " << *numNodes << " nodes" 
+		<< " on Hostname: " << *processorName << std::endl;
 #endif
 
 }

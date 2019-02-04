@@ -20,7 +20,7 @@
 
 
 //
-// Function: transmit
+// Function: transmitMinMax
 //
 // Parameters:
 //   min - least value
@@ -38,11 +38,6 @@ void transmitMinMax(double min, double max) {
 
 	int result = MPI_Send(minMax, 2, MPI_DOUBLE, Rank0,
 		mpi_Tag_SendMinMax, MPI_COMM_WORLD);
-	
-	char *error;
-	int errorLen;
-	MPI_Error_string(result, error, &errorLen);
-	std::cerr << "MPI Result " << result << " : " << error << std::endl;
-	
-
 }
+
+

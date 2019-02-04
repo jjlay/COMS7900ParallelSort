@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <chrono> 
 
 
 //
@@ -32,7 +33,12 @@
 #include "getLinearBins.h"
 #include "adaptBins.h"
 #include "testUniformity.h"
+<<<<<<< HEAD
 #include "binData.h"
+=======
+#include "receiveMinMax.h"
+#include "transmitMinMax.h"
+>>>>>>> 9500f0c9d33b36479529417c6bb891556b7bf8fe
 
 
 // #include "Data.h"
@@ -52,6 +58,10 @@ int main(int argc, char *argv[])
 	int myRank, numNodes;
 
 	initializeMPI(&processorName, &myRank, &numNodes, argc, argv);
+
+#ifdef _TIMING_
+	auto timeStart = std::chrono::system_clock::now();
+#endif
 	
 	int numWorkers = numNodes - 1;
 	
@@ -63,6 +73,14 @@ int main(int argc, char *argv[])
 		<< " running on " << processorName 
 		<< " with " << numNodes << " total processes" 
 		<< std::endl;
+
+#ifdef _TIMING_
+	auto timeBeginFilenameDistribute = std::chrono::system_clock::now();
+	std::chrono::duration<double> timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to initialize MPI" << std::endl;
+#endif
 
 	// Change the following variable to the actual
 	// location of the data files
@@ -82,6 +100,18 @@ int main(int argc, char *argv[])
 		FilenameArray = receiveFiles(myRank);
 	}
 
+#ifdef _TIMING_
+	auto timeBeginFileImport = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to distribute the filenames" << std::endl;
+
+#endif
+
+	double myMin = -1 * (double) myRank; 
+	double myMax = (double) myRank;
+	double *array;
 
 	if (myRank != 0) {
 		// Read data files in
@@ -89,29 +119,52 @@ int main(int argc, char *argv[])
 		// myData = importFiles( FilenameArray, myRank );
 		//std::cout << myData << std::endl;
 
-		double *array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
+		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		int rows = 0, cols = 0;
 		
-//		std::cout << "Rank " << myRank << " is importing files" << std::endl;
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
-//		std::cout << "rank: " << myRank << " " << array[0] << " " << array[1] << " " << array[2] << " " << array[3] << std::endl;
-//		std::cout << "Rank " << myRank << " has imported files" << std::endl;
 		
 		// Perform initial sort
 	}
 	
-	
 	MPI_Barrier(MPI_COMM_WORLD);
-	
-	
+
+#ifdef _TIMING_	
+	auto timeBeginMinMax = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to import data" << std::endl;
+#endif
+
+	auto allMins = new double[numNodes];
+	auto allMaxs = new double[numNodes];
+
 	if (myRank == 0) {
 		// Receive minimums and maximums
+		allMins[Rank0] = 0.0;
+		allMaxs[Rank0] = 0.0;
+
+		for (auto r = 1; r < numNodes; r++) {
+			receiveMinMax(r, &allMins[r], &allMaxs[r]);
+			std::cout << "Rank " << r << " sent " << allMins[r]
+				<< " and " << allMaxs[r] << std::endl;
+		}
 	} 
 	else {
 		// Send minimums and maximums
+		transmitMinMax(myMin, myMax);
 	}
 	
 	
+
+#ifdef _TIMING_	
+	auto timeBeginBinning = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginBinning - timeBeginMinMax;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to exchange min and max" << std::endl;
+#endif
 
 	if (myRank == 0) {
 		double *binE = new double[numWorkers+1]; // GW
@@ -190,6 +243,14 @@ int main(int argc, char *argv[])
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
+#ifdef _TIMING_	
+	auto timeBeginSwapping = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginSwapping - timeBeginBinning;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< "to identify bins" << std::endl;
+#endif
+
 	if (myRank != 0) {
 		// Transmit elements to appropriate nodes
 
@@ -201,12 +262,31 @@ int main(int argc, char *argv[])
 	}
 
 
+#ifdef _TIMING_	
+	auto timeEndSwapping = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeEndSwapping - timeBeginSwapping;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< "to swap, sort, and export data" << std::endl;
+#endif
+
 
 	//
 	// Wrap up
 	//
 	
 	MPI_Barrier(MPI_COMM_WORLD);
+
+
+#ifdef _TIMING_	
+	auto timeEnd = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeEnd - timeStart;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< "to run" << std::endl;
+#endif
+
+
 	MPI_Finalize();
 
 	return _OKAY_;
