@@ -164,25 +164,9 @@ int main(int argc, char *argv[])
 #endif
 
 	if (myRank == 0) {
-		double *binE = new double[numWorkers+1]; // GW
-		double minGlobal = -1.0, maxGlobal = 1.0; // remove -1,+1 when done testing
-		
-		// Calculate bins
+		// Calculate initial linear bins
 		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );
 	//	std::cout << "binE 0: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
-		
-		int binC[3] = { 140, 141, 139 };
-		int total = 0;
-		for( int i = 0; i < 3; i++ ) {
-			total = total + binC[i];
-		}
-		
-		double dataTest[10] = {-5.0, -3.0, -2.0, -1.0, -0.5, 0.5, 1.0, 2.0, 3.0, 5.0};
-		int    binI[4] = {0, 3, 6, 9}; // GW
-		
-		
-		getLinearBins( binE, numWorkers, myRank, -5, 5 );
-		binData( dataTest, binE, myRank, numWorkers, 10, binI, binC);
 		
 		std::cout << "binI : " << binI[0] << " " << binI[1] << " " << binI[2] << " " << binI[3] << std::endl;
 		std::cout << "binC : " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
@@ -192,9 +176,6 @@ int main(int argc, char *argv[])
 		adaptBins( binE, binC, numWorkers);
 		std::cout << "binE 1: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
-		double uniformity;
-		
-		uniformity = testUniformity( binC, numWorkers, total );
 		
 //		std::cout << "uniformity: " << uniformity << std::endl;
 		*/
@@ -210,22 +191,33 @@ int main(int argc, char *argv[])
 		// Receive number of elements in each bin
 	}
 	else {
+		int *binI = new int[numWorkers+1];
+		int *binC = new int[numWorkers];
+		
+		// bin the data
+		binData( array, binE, myRank, numWorkers, 1000, binI, binC);
+		
 		// Transmit number of elements in each bin
+	//	transmitBins();
 	}
 
 
-	// Change the line when the functions are written
+	// uniformity threshold
+	double thresh = 0.10;
+	// Change to 0 when the functions are written
 	int isUniform = 1;
 
 	while (isUniform == 0) {
 		if (myRank == 0) {
 			// Adapt bins
+			adaptBins( binE, binC, numWorkers);
 
 			// Transmit new bins
 
 			// Receive element counts
 
 			// Determine if uniform
+			isUniform = testUniformity( binC, numWorkers, total, thresh );
 			
 			// Transmit isUniform update
 		}
@@ -233,6 +225,7 @@ int main(int argc, char *argv[])
 			// Receive new bins
 
 			// Count elements
+			binData( array, binE, myRank, numWorkers, 1000, binI, binC);
 
 			// Receive isUniform update
 		}

@@ -24,6 +24,7 @@
 #include <fstream>
 
 
+
 //
 // Local includes
 //
@@ -33,44 +34,39 @@
 #include "Data.h"
 
 //
-// Function: importFiles
+// Function: testUniformity
 //
 
-//
-// SHOULD THIS FUNCTION RETURN JUST A
-// MEASURE OR THE RESULT OF THE TEST?
-//
-double testUniformity( int *binC, int numWorkers, int total ) {
+int testUniformity( int *binC, int numWorkers, int total, double thresh ) {
 	// binC = bin counts
 	
-	double binN; // normalized binC
-	double entropy = 0.0;
-	double entropyN; // normalized entropy
-	double uniformity; // final returned value
+	int isUniform; 	// final returned value
+	double avgPts = (1.0*total)/numWorkers;
+	double maxPts = binC[i];
+	double minPts = binC[i];
+	double uniformity;
 	
-	for( int i = 0; i < numWorkers; i++ ) {
-		
-		if( binC[i] > 0) {
-			binN = (1.0*binC[i]) / total;
-			std::cout << binN << std::endl;
-			entropy = entropy - binN*log(binN)/log(2.0);
+	for( int i = 1; i < numWorkers; i++ ) {
+		if( binC[i] > maxPts) {
+			maxPts = binC[i];
 		}
+		if( binC[i] < minPts) {
+			minPts = binC[i];
+		}
+
 	}
 	
-	entropyN = entropy / (log( 1.0*numWorkers )/log(2.0));
+	// the actual equations
+	uniformity = (maxPts - avgPts)/avgPts + (avgPts - minPts)/avgPts;
+	uniformity = uniformity/2;
 	
-	std::cout << "entropy:  " << entropy  << std::endl;
-	std::cout << "entropyN: " << entropyN << std::endl;
+	if( uniformity < thresh ){
+		isUniform = 1;
+	} else {
+		isUniform = 0
+	}
 	
-	// these two asymptotically approach a max of 1, look quite similar
-	uniformity = entropyN;
-//	uniformity = log( (2.0 - entropyN )/2.0 ) / log(0.5);
-
-	//  we can also use this
-	//  it's linear until distribution becomes nearly completely uniform
-//	uniformity = log( 1 - entropyN );
-	
-	return uniformity;
+	return isUniform;
 	
 }
 

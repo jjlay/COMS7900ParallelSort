@@ -37,20 +37,21 @@
 // returns binC, updates binI
 //
 
-void binData( double *data, double *binE, int myRank, int numWorkers, int numPoints, int *binI, int *binC) {
-	// binE = bin edges, binI = bin edge indices, binC = bin counts
+void binData( double *data, double *binE, int myRank, int sortInd int numWorkers, int numPoints, int *binI, int *binC) {
+	// binE: bin edges, binI: bin edge indices, binC: bin counts
+	// sortInd: which column to sort by
 	
 	int test, halves, curr, last, ind;
 	int dI = numPoints/numWorkers; // initial amount to move curr by
 	
 	// match with Wallin's 1 indexing
-	binI[0] = -1;
-	binI[numPoints-1] = numPoints-1;
+	binI[0] = 0;
+	binI[numPoints-1] = numPoints;
 	
-	std::cout << std::endl;
-	std::cout << "Binning......" << std::endl;
-	std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
-	std::cout << std::endl;
+//	std::cout << std::endl;
+//	std::cout << "Binning......" << std::endl;
+//	std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
+//	std::cout << std::endl;
 	
 	// loop through movable bin edges
 	for( int i = 1; i < numWorkers; i++) {
@@ -60,18 +61,18 @@ void binData( double *data, double *binE, int myRank, int numWorkers, int numPoi
 		// don't bisect initially
 		halves = 0;
 		
-		if(        data[ind] < binE[i] and data[ind+1] <= binE[i] ) {
+		if(        data[4*ind+sortInd] < binE[i] and data[4*ind+sortInd+1] <= binE[i] ) {
 			curr =  1;
-		} else if( binE[i] < data[ind] and binE[i] < data[ind+1] ) {
+		} else if( binE[i] < data[4*ind+sortIndind] and binE[i] < data[4*ind+sortInd+1] ) {
 			curr = -1;
 		} else {
 			curr =  0;
 		}
 		
-		std::cout << "ind: " << ind << std::endl;
-		std::cout << data[ind] << " " << binE[i] << " " << data[ind+1] << std::endl;
-		std::cout << "curr:  " << curr << std::endl;
-		std::cout << std::endl;
+	//	std::cout << "ind: " << ind << std::endl;
+	//	std::cout << data[ind] << " " << binE[i] << " " << data[ind+1] << std::endl;
+	//	std::cout << "curr:  " << curr << std::endl;
+	//	std::cout << std::endl;
 		
 		if( curr != 0 )
 			ind = ind + curr * (int)ceil(dI*pow(2.0,-halves));
@@ -84,9 +85,9 @@ void binData( double *data, double *binE, int myRank, int numWorkers, int numPoi
 			
 			last = curr;
 			
-			if(        data[ind] < binE[i] and data[ind+1] <= binE[i] ) {
+			if(        data[4*ind+sortInd] < binE[i] and data[4*ind+sortInd+1] <= binE[i] ) {
 				curr =  1;
-			} else if( binE[i] < data[ind] and binE[i] < data[ind+1] ) {
+			} else if( binE[i] < data[4*ind+sortInd] and binE[i] < data[4*ind+sortInd+1] ) {
 				curr = -1;
 			} else {
 				curr =  0;
@@ -100,13 +101,13 @@ void binData( double *data, double *binE, int myRank, int numWorkers, int numPoi
 			
 			// throws an error
 			if( ind > numPoints ) {
-				ind = 1000000000;
+				ind = 100000000000;
 			}
 			
 			std::cout << std::endl;
 		}
 		
-		binI[i] = ind;
+		binI[i] = ind+1;
 	}
 	
 	for( int i = 0; i < numWorkers; i++ )
