@@ -42,10 +42,12 @@ void importFiles(std::vector<std::string> files, int myRank,
 	*cols = _ROW_WIDTH_;
 
 	//Data_COMS myData[numLines]; // compiler directive (see definitions.h)
-//	myData = new double[files.size() * maxRows * _ROW_WIDTH_]; //JJL
-
+	// std::cout << "Rank " << myRank << " before allocation" << std::endl;
+	// myData = new double[maxRows * _ROW_WIDTH_]; //JJL
+	// std::cout << "Rank " << myRank << " after allocation" << std::endl;
+	
 	// loop through files to read
-	for ( auto f:files ) {
+	for ( auto f : files ) {
 
 		std::cout << "=========================" << std::endl
 			<< "Importing " << f << std::endl

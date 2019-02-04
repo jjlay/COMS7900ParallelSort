@@ -90,11 +90,15 @@ int main(int argc, char *argv[])
 
 	if (myRank == 0) {
 		// Distribute files
+		std::cout << "Rank 0 before distribute files" << std::endl;
 		distributeFiles(FilenameArray, numNodes-1);
+
+		std::cout << "Rank 0 after distribute files" << std::endl;
 	} 
 	else {
 		// Receive file list
 		FilenameArray = receiveFiles(myRank);
+		std::cout << "Rank " << myRank << " after distribute files" << std::endl;
 	}
 
 #ifdef _TIMING_
@@ -127,7 +131,11 @@ int main(int argc, char *argv[])
 	}
 	
 	
+	std::cout << "Rank " << myRank << " has reached the barrier" << std::endl;
+
 	MPI_Barrier(MPI_COMM_WORLD);
+
+	std::cout << "Rank " << myRank << " has passed the barrier" << std::endl;
 
 #ifdef _TIMING_	
 	auto timeBeginMinMax = std::chrono::system_clock::now();
@@ -136,6 +144,8 @@ int main(int argc, char *argv[])
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to import data" << std::endl;
 #endif
+
+	std::cout << "Rank " << myRank << " says numNodes = " << numNodes << std::endl;
 
 	auto allMins = new double[numNodes];
 	auto allMaxs = new double[numNodes];
