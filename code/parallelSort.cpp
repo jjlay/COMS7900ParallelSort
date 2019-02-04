@@ -33,12 +33,9 @@
 #include "getLinearBins.h"
 #include "adaptBins.h"
 #include "testUniformity.h"
-<<<<<<< HEAD
 #include "binData.h"
-=======
 #include "receiveMinMax.h"
 #include "transmitMinMax.h"
->>>>>>> 9500f0c9d33b36479529417c6bb891556b7bf8fe
 
 
 // #include "Data.h"
