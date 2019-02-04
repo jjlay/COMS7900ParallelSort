@@ -37,16 +37,14 @@ void receiveMinMax(int sourceRank, double *min, double *max) {
 	minMax[_MIN_] = 0.0;
 	minMax[_MAX_] = 0.0;
 
-	int result = MPI_Recv(&minMax, 2, MPI_DOUBLE, sourceRank,
+	int result = MPI_Recv(minMax, 2, MPI_DOUBLE, sourceRank,
 		mpi_Tag_SendMinMax, MPI_COMM_WORLD, &status);
-	
-	char *error;
-	int errorLen;
-	MPI_Error_string(result, error, &errorLen);
-	std::cerr << "MinMax MPI received " << result << " : " << error << std::endl;
-	
-	*min = minMax[_MIN_];
-	*max = minMax[_MAX_];
+
+	int counter;
+	MPI_Get_count(&status, MPI_DOUBLE, &counter);
+
+	min[0] = minMax[_MIN_];
+	max[0] = minMax[_MAX_];
 }
 
 

@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
 
 #endif
 
-	double myMin = 0.0;
-	double myMax = 0.0;
+	double myMin = -1 * (double) myRank; 
+	double myMax = (double) myRank;
 	double *array;
 
 	if (myRank != 0) {
@@ -144,6 +144,8 @@ int main(int argc, char *argv[])
 
 		for (auto r = 1; r < numNodes; r++) {
 			receiveMinMax(r, &allMins[r], &allMaxs[r]);
+			std::cout << "Rank " << r << " sent " << allMins[r]
+				<< " and " << allMaxs[r] << std::endl;
 		}
 	} 
 	else {
