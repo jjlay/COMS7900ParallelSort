@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
 
 	double myMin = 0.0;
 	double myMax = 0.0;
+	double *array;
 
 	if (myRank != 0) {
 		// Read data files in
@@ -119,7 +120,10 @@ int main(int argc, char *argv[])
 		// myData = importFiles( FilenameArray, myRank );
 		//std::cout << myData << std::endl;
 
-		double *array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
+		unsigned int arraySize = FilenameArray.size() * maxRows * _ROW_WIDTH_;
+		std::cout << "Rank " << myRank << " will allocate " << arraySize << " elements" << std::endl;
+
+		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		int rows = 0, cols = 0;
 		
 //		std::cout << "Rank " << myRank << " is importing files" << std::endl;
