@@ -36,6 +36,8 @@
 #include "binData.h"
 #include "receiveMinMax.h"
 #include "transmitMinMax.h"
+#include "transmitBinEdges.h"
+#include "receiveBinCounts.h"
 
 
 // #include "Data.h"
@@ -181,31 +183,45 @@ int main(int argc, char *argv[])
 	// sortArray to have been used above,
 	// transmit uniformity test
 	
-	/*
+	
 	if (myRank == 0) {
 		// Calculate initial bin edges
-		getLinearBins( binE, numWorkers, myRank, myMin, myMax );
+	//	getLinearBins( binE, numWorkers, myRank, myMin, myMax );  // for real
+		getLinearBins( binE, numWorkers, myRank, -1.0, 1.0 );     // for testing
 		
 		// Transmit initial bin edges
+		transmitBinEdges( binE, numWorkers );
 		
 		// Receive initial bin counts
+		receiveBinCounts( binC, numWorkers );
+		
+		std::cout << binC[0] << " " << binC[1] << " " << binC[2] <<  std::endl;
 		
 		// Determine if uniform
-		isUniform = testUniformity( binC, numWorkers, numLines, thresh );
+	//	isUniform = testUniformity( binC, numWorkers, numLines, thresh );
 		
 		// Transmit isUniform update
 	}
 	else {
+		int result;
+		MPI_Status status;
+		
 		// Receive initial bin edges
+		result = MPI_Recv( binE, numWorkers+1, MPI_DOUBLE, 0,
+			mpi_Tag_BinEdges, MPI_COMM_WORLD, &status );
 		
 		// get intitial bin counts
-		binData( array, binE, myRank, sortInd, numWorkers, numLines, binI, binC);
+	//	binData( array, binE, myRank, sortInd, numWorkers, numLines, binI, binC);
+		int binC[3] = { myRank, myRank, myRank };
 		
 		// Transmit initial bin counts
+		result = MPI_Send( binC, numWorkers, MPI_INT, 0,
+			mpi_Tag_BinCounts, MPI_COMM_WORLD );
 		
 		// Receive isUniform update
 	}
 	
+	/*
 	while (isUniform == 0) {
 		if (myRank == 0) {
 			// Adapt bin edges

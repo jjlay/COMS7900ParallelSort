@@ -36,6 +36,10 @@
 #define mpi_Tag_File         30
 #define mpi_Tag_SendMinMax   40
 
+#define mpi_Tag_BinEdges     50
+#define mpi_Tag_BinCounts    55
+
+#define mpi_Tag_isUnif       60
 
 //
 // MPI lengths
