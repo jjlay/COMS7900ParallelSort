@@ -163,9 +163,9 @@ int main(int argc, char *argv[])
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to exchange min and max" << std::endl;
 #endif
-
+	
 	// same across all nodes
-	int *binE = new int[numWorkers+1];
+	double *binE = new double[numWorkers+1];
 	// different across all nodes, master doesn't have one
 	int *binI = new int[numWorkers+1];
 	// different across all nodes, master is sum of others
@@ -176,16 +176,22 @@ int main(int argc, char *argv[])
 	// Change to 0 when the functions are written
 	int isUniform = 1;
 	
+	// this next section requires:
+	// transmitBinEdges, transmitBinCounts,
+	// sortArray to have been used above,
+	// transmit uniformity test
+	
+	/*
 	if (myRank == 0) {
 		// Calculate initial bin edges
-	//	getLinearBins( binE, numWorkers, myRank, myMin, myMax );
+		getLinearBins( binE, numWorkers, myRank, myMin, myMax );
 		
 		// Transmit initial bin edges
 		
 		// Receive initial bin counts
 		
 		// Determine if uniform
-	//	isUniform = testUniformity( binC, numWorkers, numLines, thresh );
+		isUniform = testUniformity( binC, numWorkers, numLines, thresh );
 		
 		// Transmit isUniform update
 	}
@@ -200,8 +206,6 @@ int main(int argc, char *argv[])
 		// Receive isUniform update
 	}
 	
-	// get above working first
-	/*
 	while (isUniform == 0) {
 		if (myRank == 0) {
 			// Adapt bin edges
