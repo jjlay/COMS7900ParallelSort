@@ -38,6 +38,7 @@
 #include "transmitMinMax.h"
 #include "transmitBinEdges.h"
 #include "receiveBinCounts.h"
+#include "transmitUniformity.h"
 
 
 // #include "Data.h"
@@ -176,7 +177,8 @@ int main(int argc, char *argv[])
 	// uniformity threshold
 	double thresh = 0.10;
 	// Change to 0 when the functions are written
-	int isUniform = 1;
+	int isUniform[1];
+	isUniform[0] = 1;
 	
 	// this next section requires:
 	// transmitBinEdges, transmitBinCounts,
@@ -195,12 +197,11 @@ int main(int argc, char *argv[])
 		// Receive initial bin counts
 		receiveBinCounts( binC, numWorkers );
 		
-		std::cout << binC[0] << " " << binC[1] << " " << binC[2] <<  std::endl;
-		
 		// Determine if uniform
 	//	isUniform = testUniformity( binC, numWorkers, numLines, thresh );
 		
 		// Transmit isUniform update
+		transmitUniformity( isUniform, numWorkers);
 	}
 	else {
 		int result;
@@ -211,19 +212,23 @@ int main(int argc, char *argv[])
 			mpi_Tag_BinEdges, MPI_COMM_WORLD, &status );
 		
 		// get intitial bin counts
-	//	binData( array, binE, myRank, sortInd, numWorkers, numLines, binI, binC);
-		int binC[3] = { myRank, myRank, myRank };
+	//	binData( array, binE, myRank, sortInd,
+	//		numWorkers, numLines, binI, binC); // for real
+		int binC[3] = { myRank, myRank, myRank };  // for testing
 		
 		// Transmit initial bin counts
 		result = MPI_Send( binC, numWorkers, MPI_INT, 0,
 			mpi_Tag_BinCounts, MPI_COMM_WORLD );
 		
 		// Receive isUniform update
+		result = MPI_Recv( isUniform, 1, MPI_INT, 0,
+			mpi_Tag_isUnif, MPI_COMM_WORLD, &status );
 	}
 	
+	// this loop should look the same as the above
 	/*
-	while (isUniform == 0) {
-		if (myRank == 0) {
+	while( *isUniform == 0 ) {
+		if( myRank == 0 ) {
 			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
 
