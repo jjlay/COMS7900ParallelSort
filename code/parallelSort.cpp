@@ -105,7 +105,8 @@ int main(int argc, char *argv[])
 		<< " to distribute the filenames" << std::endl;
 
 #endif
-
+	
+	int sortInd = _X_;
 	double myMin = -1 * (double) myRank; 
 	double myMax = (double) myRank;
 	double *array;
@@ -177,28 +178,30 @@ int main(int argc, char *argv[])
 	
 	if (myRank == 0) {
 		// Calculate initial bin edges
-		getLinearBins( binE, numWorkers, myRank, myMin, myMax );
-
+	//	getLinearBins( binE, numWorkers, myRank, myMin, myMax );
+		
 		// Transmit initial bin edges
-
+		
 		// Receive initial bin counts
-
+		
 		// Determine if uniform
-		isUniform = testUniformity( binC, numWorkers, total, thresh );
+	//	isUniform = testUniformity( binC, numWorkers, numLines, thresh );
 		
 		// Transmit isUniform update
 	}
 	else {
 		// Receive initial bin edges
-
+		
 		// get intitial bin counts
-		binData( array, binE, myRank, numWorkers, 1000, binI, binC);
-
+		binData( array, binE, myRank, sortInd, numWorkers, numLines, binI, binC);
+		
 		// Transmit initial bin counts
 		
 		// Receive isUniform update
 	}
-
+	
+	// get above working first
+	/*
 	while (isUniform == 0) {
 		if (myRank == 0) {
 			// Adapt bin edges
@@ -224,6 +227,7 @@ int main(int argc, char *argv[])
 			// Receive isUniform update
 		}
 	}
+	*/
 
 	MPI_Barrier(MPI_COMM_WORLD);
 

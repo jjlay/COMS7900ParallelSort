@@ -61,7 +61,8 @@ void importFiles(std::vector<std::string> files, int myRank,
 		
 		lineCount = 0;
 		// loop through lines of file
-		while( std::getline(infile, line)) { // JJL and lineCount < numLines ) {
+	//	while( std::getline(infile, line)) { // JJL and lineCount < numLines ) {
+		while( std::getline(infile, line) and lineCount < numLines ) {
 			
 			// add index
 			//	myData[lineCount].id = lineCount + 1;

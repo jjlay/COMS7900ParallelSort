@@ -42,16 +42,16 @@ int testUniformity( int *binC, int numWorkers, int total, double thresh ) {
 	
 	int isUniform; 	// final returned value
 	double avgPts = (1.0*total)/numWorkers;
-	double maxPts = binC[i];
-	double minPts = binC[i];
+	double maxPts = (double) binC[0];
+	double minPts = (double) binC[0];
 	double uniformity;
 	
 	for( int i = 1; i < numWorkers; i++ ) {
 		if( binC[i] > maxPts) {
-			maxPts = binC[i];
+			maxPts = (double) binC[i];
 		}
 		if( binC[i] < minPts) {
-			minPts = binC[i];
+			minPts = (double) binC[i];
 		}
 
 	}
@@ -63,7 +63,7 @@ int testUniformity( int *binC, int numWorkers, int total, double thresh ) {
 	if( uniformity < thresh ){
 		isUniform = 1;
 	} else {
-		isUniform = 0
+		isUniform = 0;
 	}
 	
 	return isUniform;
