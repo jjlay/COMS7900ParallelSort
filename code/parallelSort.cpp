@@ -39,6 +39,7 @@
 #include "transmitBinEdges.h"
 #include "receiveBinCounts.h"
 #include "transmitUniformity.h"
+#include "receiveBinIndices.h"
 
 
 // #include "Data.h"
@@ -169,8 +170,6 @@ int main(int argc, char *argv[])
 	
 	// same across all nodes
 	double *binE = new double[numWorkers+1];
-	// different across all nodes, master doesn't have one
-	int *binI = new int[numWorkers+1];
 	// different across all nodes, master is sum of others
 	int *binC = new int[numWorkers];
 	
@@ -180,13 +179,13 @@ int main(int argc, char *argv[])
 	int isUniform[1];
 	isUniform[0] = 1;
 	
-	// this next section requires:
-	// transmitBinEdges, transmitBinCounts,
-	// sortArray to have been used above,
-	// transmit uniformity test
-	
-	
 	if (myRank == 0) {
+		// 2D binI for master node
+		int **binI = new int*[numWorkers]; // [worker][bin]
+		for( int i = 0; i < numWorkers; i++ ) {
+			binI[i] = new int[numWorkers+1];
+		}
+		
 		// Calculate initial bin edges
 	//	getLinearBins( binE, numWorkers, myRank, myMin, myMax );  // for real
 		getLinearBins( binE, numWorkers, myRank, -1.0, 1.0 );     // for testing
@@ -197,6 +196,9 @@ int main(int argc, char *argv[])
 		// Receive initial bin counts
 		receiveBinCounts( binC, numWorkers );
 		
+		// Receive initial bin counts
+		receiveBinIndices( binI, numWorkers );
+		
 		// Determine if uniform
 	//	isUniform = testUniformity( binC, numWorkers, numLines, thresh );
 		
@@ -204,6 +206,7 @@ int main(int argc, char *argv[])
 		transmitUniformity( isUniform, numWorkers);
 	}
 	else {
+	//	int *binI = new int[numWorkers+1];
 		int result;
 		MPI_Status status;
 		
@@ -211,13 +214,17 @@ int main(int argc, char *argv[])
 		result = MPI_Recv( binE, numWorkers+1, MPI_DOUBLE, 0,
 			mpi_Tag_BinEdges, MPI_COMM_WORLD, &status );
 		
-		// get intitial bin counts
+		// get intitial bin counts, indices
 	//	binData( array, binE, myRank, sortInd,
 	//		numWorkers, numLines, binI, binC); // for real
-		int binC[3] = { myRank, myRank, myRank };  // for testing
+		int binI[4] = { myRank, myRank, myRank, myRank };  // for testing
 		
 		// Transmit initial bin counts
 		result = MPI_Send( binC, numWorkers, MPI_INT, 0,
+			mpi_Tag_BinCounts, MPI_COMM_WORLD );
+		
+		// Transmit initial bin indices
+		result = MPI_Send( binI, numWorkers+1, MPI_INT, 0,
 			mpi_Tag_BinCounts, MPI_COMM_WORLD );
 		
 		// Receive isUniform update
