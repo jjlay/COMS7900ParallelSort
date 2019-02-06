@@ -41,6 +41,7 @@
 
 #define mpi_Tag_isUnif       60
 
+
 //
 // MPI lengths
 //
@@ -55,7 +56,7 @@
 
 #define numLines	1000
 #define Rank0    0
-#define maxRows  300000000
+#define maxRows  200000000 // Max number of rows in file
 
 
 //
