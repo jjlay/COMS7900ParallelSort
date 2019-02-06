@@ -3,15 +3,6 @@
 //
 
 
-#undef _DEBUG_
-
-
-//
-// STL includes
-//
-
-#include <vector>
-
 //
 // Standard includes
 //
@@ -23,21 +14,9 @@
 
 
 //
-// Local includes
-//
-//
-
-//uncomment when adding to main
-//#include "definitions.h"
-//#include "Data.h"
-
-//
 // Function: importFiles
 //
 
-
-
-#include "sortArray.h"
 	
 using namespace std;
 
@@ -67,7 +46,6 @@ void sortArray(double myArray[], int rows, int cols, int sortByThisColumn) {
 		stop ++;	
 	}
 	cout << "Sort Completed"<< endl;
-	
 	
 }
 
