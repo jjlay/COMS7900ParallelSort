@@ -14,6 +14,13 @@
 
 
 //
+// Parallel includes
+//
+
+#include "mpi.h"
+
+
+//
 // Function: exportResults
 //
 // Parameters:
@@ -34,8 +41,34 @@ void exportResults(double *array, int rows, int cols, int numBins,
 	std::cout << "exportResults" << std::endl;
 #endif
 
+	//
+	// Receive results
+	//
 
+	auto mins = new double[numBins];
+	
+	if (myRank == Rank0) {
+		// Receive min max from other ranks
+		for (auto r = 1; r < numBins; r++) {
+		}
 
+	}
+	else {
+		// Send min max to rank 0
+	}
+
+	//
+	// Display results
+	//
+
+	if (myRank == Rank0) {
+		// Display results
+
+		MPI_Barrier(MPI_COMM_WORLD);
+	}
+	else {
+		MPI_Barrier(MPI_COMM_WORLD);
+	}
 }
 
 
