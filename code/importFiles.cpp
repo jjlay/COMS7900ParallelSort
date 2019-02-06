@@ -41,7 +41,7 @@ void importFiles(std::vector<std::string> files, int myRank,
 
 	*cols = _ROW_WIDTH_;
 
-	const std::string prefix = "datafile";
+	const std::string prefix = "./data/datafile";
 	const std::string suffix = ".txt";
 	const double rowsPerFile = maxRows;
 	unsigned int arrayIndex = 0;
@@ -66,8 +66,8 @@ void importFiles(std::vector<std::string> files, int myRank,
 
 		std::string extractedValue = f.substr(prefix.length(),
 			 f.length() - prefix.length() - suffix.length());
-
-		double fileIndex = stod(extractedValue) - 1;
+				
+		double fileIndex = std::stod(extractedValue) - 1;
 		double totalLineCount = 1 + fileIndex * rowsPerFile;
 
 		std::cout << f << " has " << extractedValue 
