@@ -40,9 +40,8 @@
 #include "receiveBinCounts.h"
 #include "transmitUniformity.h"
 #include "receiveBinIndices.h"
+#include "sortArray.h"
 
-
-// #include "Data.h"
 
 
 //
@@ -117,9 +116,6 @@ int main(int argc, char *argv[])
 
 	if (myRank != 0) {
 		// Read data files in
-		// Data_COMS *myData;
-		// myData = importFiles( FilenameArray, myRank );
-		//std::cout << myData << std::endl;
 
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		int rows = 0, cols = 0;
@@ -127,6 +123,7 @@ int main(int argc, char *argv[])
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
 		
 		// Perform initial sort
+		sortArray(array, rows, cols, _X_);
 	}
 	
 	MPI_Barrier(MPI_COMM_WORLD);
