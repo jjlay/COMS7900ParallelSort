@@ -43,7 +43,8 @@ void importFiles(std::vector<std::string> files, int myRank,
 
 	const std::string prefix = "datafile";
 	const std::string suffix = ".txt";
-
+	const double rowsPerFile = maxRows;
+	unsigned int arrayIndex = 0;
 
 	// loop through files to read
 	for ( auto f : files ) {
@@ -66,33 +67,32 @@ void importFiles(std::vector<std::string> files, int myRank,
 		std::string extractedValue = f.substr(prefix.length(),
 			 f.length() - prefix.length() - suffix.length());
 
-		int fileIndex = stoi(extractedValue);
-		int totalLineCount = fileIndex * numLines;
+		double fileIndex = stod(extractedValue) - 1;
+		double totalLineCount = 1 + fileIndex * rowsPerFile;
 
 		std::cout << f << " has " << extractedValue 
-			<< " which is " << fileIndex << std::endl;
+			<< " which is " << std::fixed << std::setprecision(0) << fileIndex 
+			<< " and starting line " << totalLineCount
+			<< " with maxRows of " << rowsPerFile
+			<< std::endl;
 
 	
 		// loop through lines of file
 		while( std::getline(infile, line) and lineCount < numLines ) {
 			
 			// add index
-			myData[totalLineCount * _ROW_WIDTH_ + _INDEX_] =
-				 static_cast<double>(totalLineCount+1); //JJL
-			
-			// ABOVE: we need to fix this so that
-			// different nodes don't have duplicate indices
+			myData[arrayIndex * _ROW_WIDTH_ + _INDEX_] = totalLineCount;
 			
 			// add 1 double
 			token = line.substr(11,12);
-			myData[totalLineCount * _ROW_WIDTH_ + _X_] = std::stod(token); //JJL
+			myData[arrayIndex * _ROW_WIDTH_ + _X_] = std::stod(token);
 
 			// add 2 double
 			token = line.substr(33,12);
-			myData[totalLineCount * _ROW_WIDTH_ + _Y_] = std::stod(token); //JJL
+			myData[arrayIndex * _ROW_WIDTH_ + _Y_] = std::stod(token);
 
 			token = line.substr(55,11);
-			myData[totalLineCount * _ROW_WIDTH_ + _Z_] = std::stod(token); //JJL
+			myData[arrayIndex * _ROW_WIDTH_ + _Z_] = std::stod(token);
 
 /*
 			std::cout << "Record " << std::fixed << std::setprecision(0)
@@ -106,13 +106,17 @@ void importFiles(std::vector<std::string> files, int myRank,
 */
 			lineCount++;
 			totalLineCount++;
+			arrayIndex++;
 		}
 
 
 	
 		// close the file
 		infile.close();
-		std::cout << "Rank " << myRank << " read " << lineCount << " lines from " << f << std::endl;
+		std::cout << "Rank " << myRank 
+			<< " read " << lineCount 
+			<< " lines from " << f 
+			<< std::endl;
 	}
 }
 
