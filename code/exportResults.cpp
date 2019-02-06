@@ -1,5 +1,19 @@
 
 //
+// Local includes
+//
+
+#include "definitions.h"
+
+
+//
+// Standard includes
+//
+
+#include <iostream>
+
+
+//
 // Function: exportResults
 //
 // Parameters:
@@ -15,6 +29,11 @@
 
 void exportResults(double *array, int rows, int cols, int numBins,
 		int myRank) {
+
+#ifdef _DEBUG_
+	std::cout << "exportResults" << std::endl;
+#endif
+
 
 
 }
