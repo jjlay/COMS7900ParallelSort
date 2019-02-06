@@ -15,6 +15,6 @@
 //
 
 void exportResults(double *array, int rows, int cols, int numBins,
-		int myRank);
+		int myRank, double min, double max);
 
 

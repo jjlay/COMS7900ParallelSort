@@ -4,6 +4,8 @@
 //
 
 #include "definitions.h"
+#include "receiveMinMax.h"
+#include "transmitMinMax.h"
 
 
 //
@@ -35,7 +37,7 @@
 //
 
 void exportResults(double *array, int rows, int cols, int numBins,
-		int myRank) {
+		int myRank, double min, double max) {
 
 #ifdef _DEBUG_
 	std::cout << "exportResults" << std::endl;
@@ -46,15 +48,21 @@ void exportResults(double *array, int rows, int cols, int numBins,
 	//
 
 	auto mins = new double[numBins];
-	
+	auto maxs = new double[numBins];
+
+	mins[0] = 0.0;
+	maxs[0] = 0.0;
+
 	if (myRank == Rank0) {
 		// Receive min max from other ranks
 		for (auto r = 1; r < numBins; r++) {
+			receiveMinMax(r, &mins[r], &maxs[r]);
 		}
 
 	}
 	else {
 		// Send min max to rank 0
+		transmitMinMax(min, max);
 	}
 
 	//
