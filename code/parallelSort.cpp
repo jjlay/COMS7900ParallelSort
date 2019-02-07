@@ -123,6 +123,7 @@ int main(int argc, char *argv[])
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
+		std::cout << "Rows: " << rows << ", Cols: " << cols << std::endl;
 		
 		// Perform initial sort
 		sortArray(array, rows, cols, _X_);

@@ -118,5 +118,7 @@ void importFiles(std::vector<std::string> files, int myRank,
 			<< " lines from " << f 
 			<< std::endl;
 	}
+
+	*rows = arrayIndex;
 }
 
