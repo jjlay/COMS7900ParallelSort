@@ -14,14 +14,14 @@
 
 
 //
-// Function: importFiles
+// Function: sortArray()
 //
 
 	
 using namespace std;
 
 void sortArray(double myArray[], int rows, int cols, int sortByThisColumn) {
-	cout << "Inside Sort before"<< endl;
+	//cout << "Inside Sort before"<< endl;
 	double curName, curX, curY, curZ;
 	int stop=1;
 	//Bubble SORT HERE
@@ -45,7 +45,7 @@ void sortArray(double myArray[], int rows, int cols, int sortByThisColumn) {
 		}
 		stop ++;	
 	}
-	cout << "Sort Completed"<< endl;
+	//cout << "Sort Completed"<< endl;
 	
 }
 

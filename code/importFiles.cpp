@@ -70,11 +70,11 @@ void importFiles(std::vector<std::string> files, int myRank,
 		double fileIndex = std::stod(extractedValue) - 1;
 		double totalLineCount = 1 + fileIndex * rowsPerFile;
 
-		std::cout << f << " has " << extractedValue 
-			<< " which is " << std::fixed << std::setprecision(0) << fileIndex 
-			<< " and starting line " << totalLineCount
-			<< " with maxRows of " << rowsPerFile
-			<< std::endl;
+//		std::cout << f << " has " << extractedValue 
+//			<< " which is " << std::fixed << std::setprecision(0) << fileIndex 
+//			<< " and starting line " << totalLineCount
+//			<< " with maxRows of " << rowsPerFile
+//			<< std::endl;
 
 	
 		// loop through lines of file

@@ -54,9 +54,6 @@ void distributeFiles(std::vector<std::string> files, int numWorkers) {
 	int mpiReturn;
 	MPI_Request request;
 
-#ifdef _DEBUG_
-	std::cout << "There are " << numWorkers << " workers" << std::endl;
-#endif
 
 	// Pointer to the char buffer to be passed to workers
 	const char *b;
@@ -72,13 +69,6 @@ void distributeFiles(std::vector<std::string> files, int numWorkers) {
 		mpiReturn = MPI_Isend(b, mpi_Max_Filename, MPI_BYTE, currentRank,
 				mpi_Tag_File, MPI_COMM_WORLD, &request);
 
-#ifdef _DEBUG_
-		std::cout << "Dest: " << currentRank
-			<< " :: f: " << f
-			<< " :: b: " << b 
-			<< " :: len: " << f.size() 
-			<< std::endl;
-#endif
 
 		// Loop through the worker nodes. When we reach
 		// the last node, start over with rank 1.

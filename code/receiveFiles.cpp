@@ -56,12 +56,6 @@ std::vector<std::string> receiveFiles(int myRank) {
 	MPI_Request request;
 	MPI_Status status;
 
-#ifdef _DEBUG_
-	std::cout << "I am rank " << myRank 
-		<< " max memory " << mpi_Max_Filename
-		<< std::endl;
-#endif
-
 	// Allocate memory for the buffer
 	char *buffer = static_cast<char *>(calloc(mpi_Max_Filename * 2, sizeof(char)));
 
@@ -82,12 +76,6 @@ std::vector<std::string> receiveFiles(int myRank) {
 
 		// Convert the filename to a C++ string
 		auto s = std::string(buffer);
-
-#ifdef _DEBUG_
-		std::cout << "Rank: " << myRank
-			<< " :: s: " << s
-			<< std::endl;
-#endif
 
 		// Have we received the signal to end?
 		if (s == strDone) {

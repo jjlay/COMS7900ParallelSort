@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
-		std::cout << "Rows: " << rows << ", Cols: " << cols << std::endl;
+		//std::cout << "Rows: " << rows << ", Cols: " << cols << std::endl;
 		
 		// Perform initial sort
 		sortArray(array, rows, cols, _X_);
@@ -149,8 +149,8 @@ int main(int argc, char *argv[])
 
 		for (auto r = 1; r < numNodes; r++) {
 			receiveMinMax(r, &allMins[r], &allMaxs[r]);
-			std::cout << "Rank " << r << " sent " << allMins[r]
-				<< " and " << allMaxs[r] << std::endl;
+			//std::cout << "Rank " << r << " sent " << allMins[r]
+			//	<< " and " << allMaxs[r] << std::endl;
 		}
 	} 
 	else {

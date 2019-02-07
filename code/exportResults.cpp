@@ -40,9 +40,6 @@
 void exportResults(double *array, int rows, int cols, int numBins,
 		int myRank, double min, double max) {
 
-#ifdef _DEBUG_
-	std::cout << "exportResults rank " << myRank << std::endl;
-#endif
 
 	//
 	// Receive results
@@ -71,7 +68,6 @@ void exportResults(double *array, int rows, int cols, int numBins,
 	//
 
 	if (myRank == Rank0) {
-		std::cout << "Debug me " << numBins << std::endl;
 		// Display results
 		for (auto r = 1; r <= numBins; r++)
 			std::cout << "Rank " << std::fixed << std::setprecision(0) << r
