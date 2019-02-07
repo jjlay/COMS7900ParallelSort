@@ -13,6 +13,7 @@
 //
 
 #include <iostream>
+#include <iomanip>
 
 
 //
@@ -73,9 +74,9 @@ void exportResults(double *array, int rows, int cols, int numBins,
 		std::cout << "Debug me " << numBins << std::endl;
 		// Display results
 		for (auto r = 1; r <= numBins; r++)
-			std::cout << "Rank " << r
-				 << " has a min of " << mins[r]
-				<< " and a max of " << maxs[r]
+			std::cout << "Rank " << std::fixed << std::setprecision(0) << r
+				 << " has a min of " << std::setprecision(6) << mins[r]
+				<< " and a max of " << std::setprecision(6) << maxs[r]
 				<< std::endl;
 
 		MPI_Barrier(MPI_COMM_WORLD);
