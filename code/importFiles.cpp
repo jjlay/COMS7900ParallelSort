@@ -84,14 +84,14 @@ void importFiles(std::vector<std::string> files, int myRank,
 			myData[arrayIndex * _ROW_WIDTH_ + _INDEX_] = totalLineCount;
 			
 			// add 1 double
-			token = line.substr(11,12);
+			token = line.substr(13, 21);
 			myData[arrayIndex * _ROW_WIDTH_ + _X_] = std::stod(token);
 
 			// add 2 double
-			token = line.substr(33,12);
+			token = line.substr(36, 21);
 			myData[arrayIndex * _ROW_WIDTH_ + _Y_] = std::stod(token);
 
-			token = line.substr(55,11);
+			token = line.substr(55, 21);
 			myData[arrayIndex * _ROW_WIDTH_ + _Z_] = std::stod(token);
 
 /*

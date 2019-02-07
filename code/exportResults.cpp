@@ -75,8 +75,8 @@ void exportResults(double *array, int rows, int cols, int numBins,
 		// Display results
 		for (auto r = 1; r <= numBins; r++)
 			std::cout << "Rank " << std::fixed << std::setprecision(0) << r
-				 << " has a min of " << std::setprecision(6) << mins[r]
-				<< " and a max of " << std::setprecision(6) << maxs[r]
+				 << " has a min of " << std::setprecision(16) << mins[r]
+				<< " and a max of " << std::setprecision(16) << maxs[r]
 				<< std::endl;
 
 		MPI_Barrier(MPI_COMM_WORLD);
