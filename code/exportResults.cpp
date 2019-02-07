@@ -56,12 +56,14 @@ void exportResults(double *array, int rows, int cols, int numBins,
 	if (myRank == Rank0) {
 		// Receive min max from other ranks
 		for (auto r = 1; r < numBins; r++) {
+			std::cout << "Rank 0 is receiving from " << r << std::endl;
 			receiveMinMax(r, &mins[r], &maxs[r]);
 		}
 
 	}
 	else {
 		// Send min max to rank 0
+		std::cout << "Rank " << myRank << " is sending to Rank 0" << std::endl;
 		transmitMinMax(min, max);
 	}
 

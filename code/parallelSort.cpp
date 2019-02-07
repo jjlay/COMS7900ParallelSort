@@ -41,7 +41,7 @@
 #include "transmitUniformity.h"
 #include "receiveBinIndices.h"
 #include "sortArray.h"
-
+#include "exportResults.h"
 
 
 //
@@ -113,12 +113,12 @@ int main(int argc, char *argv[])
 	double myMin = -1 * (double) myRank; 
 	double myMax = (double) myRank;
 	double *array;
+	int rows = 0, cols = 0;
 
 	if (myRank != 0) {
 		// Read data files in
 
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
-		int rows = 0, cols = 0;
 		
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
 		
@@ -294,6 +294,7 @@ int main(int argc, char *argv[])
 	
 	MPI_Barrier(MPI_COMM_WORLD);
 
+	exportResults(array, rows, cols, numWorkers, myRank, myMin, myMax);
 
 #ifdef _TIMING_	
 	auto timeEnd = std::chrono::system_clock::now();
