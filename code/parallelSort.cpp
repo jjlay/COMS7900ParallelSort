@@ -42,6 +42,8 @@
 #include "receiveBinIndices.h"
 #include "sortArray.h"
 #include "exportResults.h"
+#include "min.h"
+#include "max.h"
 
 
 //
@@ -152,6 +154,8 @@ int main(int argc, char *argv[])
 	} 
 	else {
 		// Send minimums and maximums
+		myMin = min(array, rows, cols, _X_);
+		myMax = max(array, rows, cols, _X_);
 		transmitMinMax(myMin, myMax);
 	}
 	
