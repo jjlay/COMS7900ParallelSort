@@ -45,6 +45,7 @@ void receiveBinCounts(int *binC, int numWorkers) {
 	
 	for( int i = 1; i < numWorkers+1; i++ ) {
 		
+	//	std::cout << "test " << 0 << std::endl;
 		// add the binC's
 		result = MPI_Recv( part, numWorkers, MPI_INT, i,
 			mpi_Tag_BinCounts, MPI_COMM_WORLD, &status );

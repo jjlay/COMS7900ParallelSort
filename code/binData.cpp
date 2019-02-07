@@ -44,10 +44,6 @@ void binData( double *data, double *binE, int myRank, int sortInd, int numWorker
 	int test, halves, curr, last, ind;
 	int dI = numPoints/numWorkers; // initial amount to move curr by
 	
-	// match with Wallin's 1 indexing
-	binI[0] = 0;
-	binI[numWorkers] = numPoints;
-	
 	/*
 	std::cout << std::endl;
 	std::cout << "Binning......" << std::endl;
@@ -59,7 +55,8 @@ void binData( double *data, double *binE, int myRank, int sortInd, int numWorker
 	for( int i = 1; i < numWorkers; i++) {
 		
 		// will be fed back into binI[i] later
-		ind = binI[i];
+		ind = i*dI;
+		
 		// don't bisect initially
 		halves = 0;
 		

@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 #endif
 	
 	int numWorkers = numNodes - 1;
+	int avgPtsPerWorker = numLines/numWorkers; // initial amount to move curr by
 	
 	// set cout to print doubles' full length
 	std::cout.precision(17);
@@ -123,10 +124,12 @@ int main(int argc, char *argv[])
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
 		
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
-		//std::cout << "Rows: " << rows << ", Cols: " << cols << std::endl;
+	//	std::cout << "Rows: " << rows << ", Cols: " << cols << std::endl;
 		
 		// Perform initial sort
-		sortArray(array, rows, cols, _X_);
+		sortArray(array, rows, cols, sortInd);
+		
+	//	std::cout << "rank " << myRank << ": " << array[cols*0+sortInd] << " " << array[cols*999+sortInd] << std::endl;
 	}
 	
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -141,6 +144,7 @@ int main(int argc, char *argv[])
 
 	auto allMins = new double[numNodes];
 	auto allMaxs = new double[numNodes];
+	double minGlobal, maxGlobal;
 
 	if (myRank == 0) {
 		// Receive minimums and maximums
@@ -152,6 +156,19 @@ int main(int argc, char *argv[])
 			//std::cout << "Rank " << r << " sent " << allMins[r]
 			//	<< " and " << allMaxs[r] << std::endl;
 		}
+		
+	//	std::cout.precision(17);
+		minGlobal = allMins[1];
+		maxGlobal = allMaxs[1];
+	//	std::cout << allMins[1] << " " << allMaxs[1] << std::endl;
+		for (auto r = 2; r < numNodes; r++) {
+			std::cout << allMins[r] << " " << allMaxs[r] << std::endl;
+			if( minGlobal > allMins[r] )
+				minGlobal = allMins[r];
+			if( maxGlobal < allMaxs[r] )
+				maxGlobal = allMaxs[r];
+		}
+	//	std::cout << minGlobal << " " << maxGlobal << std::endl;
 	} 
 	else {
 		// Send minimums and maximums
@@ -188,27 +205,34 @@ int main(int argc, char *argv[])
 			binI[i] = new int[numWorkers+1];
 		}
 		
+	//	std::cout << "min: " << minGlobal << std::endl;
+	//	std::cout << "max: " << maxGlobal << std::endl;
+		
 		// Calculate initial bin edges
-	//	getLinearBins( binE, numWorkers, myRank, myMin, myMax );  // for real
-		getLinearBins( binE, numWorkers, myRank, -1.0, 1.0 );     // for testing
+		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );  // for real
+		std::cout.precision(17);
+		std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
 		// Transmit initial bin edges
 		transmitBinEdges( binE, numWorkers );
 		
 		// Receive initial bin counts
 		receiveBinCounts( binC, numWorkers );
+		std::cout << "binC " <<  myRank << ": " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
 		// Receive initial bin counts
 		receiveBinIndices( binI, numWorkers );
+		for( int i = 0; i < numWorkers; i++ ) {
+			std::cout << i << " binI: " << binI[i][0] << " " << binI[i][1] << " " << binI[i][2] << " " << binI[i][3] << std::endl;
+		}
 		
 		// Determine if uniform
-	//	isUniform = testUniformity( binC, numWorkers, numLines, thresh );
+		*isUniform = testUniformity( binC, numWorkers, numLines, thresh );
 		
 		// Transmit isUniform update
 		transmitUniformity( isUniform, numWorkers);
-	}
-	else {
-	//	int *binI = new int[numWorkers+1];
+	} else {
+		int *binI = new int[numWorkers+1];
 		int result;
 		MPI_Status status;
 		
@@ -216,15 +240,22 @@ int main(int argc, char *argv[])
 		result = MPI_Recv( binE, numWorkers+1, MPI_DOUBLE, 0,
 			mpi_Tag_BinEdges, MPI_COMM_WORLD, &status );
 		
+		binI[0] = 0;
+		binI[numWorkers] = numLines;
+		for( int i = 1; i < numWorkers; i++ ) {
+			binI[i] = i*avgPtsPerWorker;
+		}
+		
 		// get intitial bin counts, indices
-	//	binData( array, binE, myRank, sortInd,
-	//		numWorkers, numLines, binI, binC); // for real
-		int binI[4] = { myRank, myRank, myRank, myRank };  // for testing
+		binData( array, binE, myRank, sortInd,
+			numWorkers, numLines, binI, binC); // for real
+		std::cout << "binC " <<  myRank << ": " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
 		// Transmit initial bin counts
 		result = MPI_Send( binC, numWorkers, MPI_INT, 0,
 			mpi_Tag_BinCounts, MPI_COMM_WORLD );
 		
+	//	std::cout << "binI " << myRank << ": " << binI[0] << " " << binI[1] << " " << binI[2] << " " << binI[3] << std::endl;
 		// Transmit initial bin indices
 		result = MPI_Send( binI, numWorkers+1, MPI_INT, 0,
 			mpi_Tag_BinCounts, MPI_COMM_WORLD );
@@ -232,6 +263,12 @@ int main(int argc, char *argv[])
 		// Receive isUniform update
 		result = MPI_Recv( isUniform, 1, MPI_INT, 0,
 			mpi_Tag_isUnif, MPI_COMM_WORLD, &status );
+		
+		if( *isUniform == 1 ) {
+			std::cout << "DONE: the bins are uniform" << std::endl;
+		} else {
+			std::cout << "CONTINUE: the bins aren't uniform" << std::endl;
+		}
 	}
 	
 	// this loop should look the same as the above
