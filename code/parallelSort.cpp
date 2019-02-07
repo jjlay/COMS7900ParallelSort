@@ -110,8 +110,8 @@ int main(int argc, char *argv[])
 #endif
 	
 	int sortInd = _X_;
-	double myMin = -1 * (double) myRank; 
-	double myMax = (double) myRank;
+	double myMin = -1 * (double) myRank; // ONLY FOR DEBUG! (JJL)
+	double myMax = (double) myRank;      // ONLY FOR DEBUG! (JJL)
 	double *array;
 	int rows = 0, cols = 0;
 

@@ -1,44 +1,20 @@
 //
-// sortArray
+// min
 //
 
-
-#undef _DEBUG_
-
-
-//
-// STL includes
-//
-
-#include <vector>
 
 //
 // Standard includes
 //
 
-#include <string>
 #include <iostream>
-#include <fstream>
 #include <math.h> 
 
 
 //
-// Local includes
-//
-//
-
-//uncomment when adding to main
-//#include "definitions.h"
-//#include "Data.h"
-
-//
-// Function: importFiles
+// Function: min()
 //
 
-
-
-#include "min.h"
-	
 using namespace std;
 
 // ****May need to make a limit for start and end point for the search for min min****

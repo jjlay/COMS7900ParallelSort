@@ -1,43 +1,19 @@
 //
-// sortArray
+// max
 //
-
-
-#undef _DEBUG_
-
-
-//
-// STL includes
-//
-
-#include <vector>
 
 //
 // Standard includes
 //
 
-#include <string>
 #include <iostream>
-#include <fstream>
 #include <math.h> 
 
 
 //
-// Local includes
-//
-//
-
-//uncomment when adding to main
-//#include "definitions.h"
-//#include "Data.h"
-
-//
-// Function: importFiles
+// Function: max()
 //
 
-
-
-#include "max.h"
 	
 using namespace std;
 

@@ -1,38 +1,7 @@
-//
-// importFiles
-//
-
-
-#undef _DEBUG_
-
+#pragma once
 
 //
-// STL includes
-//
-
-#include <vector>
-
-//
-// Standard includes
-//
-
-#include <string>
-#include <iostream>
-#include <fstream>
-
-
-//
-// Local includes
-//
-//
-
-//Uncomment here to run with main
-//#include "definitions.h"
-//#include "Data.h"
-
-
-//
-// Function: importFiles
+// Function: min()
 //
 
 // ****May need to make a limit for start and end point for the search for min max****
