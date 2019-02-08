@@ -30,7 +30,6 @@
 
 using namespace std;
 
-#undef _DEBUG_
 
 
 //
@@ -49,12 +48,6 @@ void importFiles(vector<string> files, int myRank,
 
 	// loop through files to read
 	for ( auto f : files ) {
-#ifdef _DEBUG_
-		cout << "=========================" << endl
-			<< "Importing " << f << endl
-			<< "=========================" << endl;
-#endif
-
 		ifstream infile( f );
 		string line;
 		string token;
@@ -72,13 +65,6 @@ void importFiles(vector<string> files, int myRank,
 		double fileIndex = stod(extractedValue) - 1;
 		double totalLineCount = 1 + fileIndex * rowsPerFile;
 
-#ifdef _DEBUG_
-		cout << f << " has " << extractedValue 
-			<< " which is " << fixed << setprecision(0) << fileIndex 
-			<< " and starting line " << totalLineCount
-			<< " with maxRows of " << rowsPerFile
-			<< endl;
-#endif
 	
 		// loop through lines of file
 		while( getline(infile, line) and lineCount < numLines ) {
@@ -97,16 +83,6 @@ void importFiles(vector<string> files, int myRank,
 			token = line.substr(55, 21);
 			myData[arrayIndex * _ROW_WIDTH_ + _Z_] = stod(token);
 
-/*
-			cout << "Record " << fixed << setprecision(0)
-				 << totalLineCount
-				<< ", Index " << myData[totalLineCount * _ROW_WIDTH_ + _INDEX_]
-				<< ", X " << fixed << setprecision(5)
-				 << myData[totalLineCount * _ROW_WIDTH_ + _X_]
-				<< ", Y " << myData[totalLineCount * _ROW_WIDTH_ + _Y_]
-				<< ", Z " << myData[totalLineCount * _ROW_WIDTH_ + _Z_]
-				 << endl;
-*/
 			lineCount++;
 			totalLineCount++;
 			arrayIndex++;
@@ -116,12 +92,6 @@ void importFiles(vector<string> files, int myRank,
 	
 		// close the file
 		infile.close();
-#ifdef _DEBUG_
-		cout << "Rank " << myRank 
-			<< " read " << lineCount 
-			<< " lines from " << f 
-			<< endl;
-#endif
 	}
 
 	*rows = arrayIndex;

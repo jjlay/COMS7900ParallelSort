@@ -22,9 +22,6 @@
 using namespace std;
 
 
-#undef _DEBUG_ 
-
-
 //
 // Function: listFiles
 //
@@ -86,12 +83,6 @@ vector<string> listFiles(string path) {
 
 	// All done, so close the directory connection
 	closedir(dp);
-
-	// During debugging, let's print out the files we kept
-	cout << "There are " << files.size() << " files" << endl;
-
-	for (auto f : files)
-		cout << f << endl;
 
 	return files;
 }

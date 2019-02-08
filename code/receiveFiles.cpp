@@ -35,8 +35,6 @@
 using namespace std;
 
 
-#undef _DEBUG_
-
 //
 // Function: receiveFiles
 //
