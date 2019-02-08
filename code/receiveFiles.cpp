@@ -3,9 +3,6 @@
 //
 
 
-#define _DEBUG_
-
-
 //
 // Parallel includes
 //
@@ -35,6 +32,10 @@
 
 #include "definitions.h"
 
+using namespace std;
+
+
+#undef _DEBUG_
 
 //
 // Function: receiveFiles
@@ -47,10 +48,10 @@
 //   for this process to work on.
 //
 
-std::vector<std::string> receiveFiles(int myRank) {
+vector<string> receiveFiles(int myRank) {
 
 	// The vector to hold the filenames
-	std::vector<std::string> files;
+	vector<string> files;
 
 	int mpiReturn;
 	MPI_Request request;
@@ -61,7 +62,7 @@ std::vector<std::string> receiveFiles(int myRank) {
 
 	// This is the expected string to signal that rank 0
 	// is done sending files.
-	std::string strDone = "DONE!";
+	string strDone = "DONE!";
 
 	int Run = 1;
 
@@ -75,7 +76,7 @@ std::vector<std::string> receiveFiles(int myRank) {
 		MPI_Wait(&request, &status);
 
 		// Convert the filename to a C++ string
-		auto s = std::string(buffer);
+		auto s = string(buffer);
 
 		// Have we received the signal to end?
 		if (s == strDone) {

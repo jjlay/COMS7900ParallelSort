@@ -2,7 +2,6 @@
 // Initialize MPI
 //
 
-
 //
 // Standard includes
 //
@@ -24,6 +23,7 @@
 
 #include "definitions.h"
 
+#undef _DEBUG_
 
 //
 // Function: initializeMPI

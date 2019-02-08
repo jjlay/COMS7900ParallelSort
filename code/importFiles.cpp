@@ -2,10 +2,6 @@
 // importFiles
 //
 
-
-#undef _DEBUG_
-
-
 //
 // STL includes
 //
@@ -34,6 +30,8 @@
 
 using namespace std;
 
+#undef _DEBUG_
+
 
 //
 // Function: importFiles
@@ -51,10 +49,11 @@ void importFiles(vector<string> files, int myRank,
 
 	// loop through files to read
 	for ( auto f : files ) {
-
-		//cout << "=========================" << endl
-		//	<< "Importing " << f << endl
-		//	<< "=========================" << endl;
+#ifdef _DEBUG_
+		cout << "=========================" << endl
+			<< "Importing " << f << endl
+			<< "=========================" << endl;
+#endif
 
 		ifstream infile( f );
 		string line;
@@ -73,12 +72,13 @@ void importFiles(vector<string> files, int myRank,
 		double fileIndex = stod(extractedValue) - 1;
 		double totalLineCount = 1 + fileIndex * rowsPerFile;
 
-//		cout << f << " has " << extractedValue 
-//			<< " which is " << fixed << setprecision(0) << fileIndex 
-//			<< " and starting line " << totalLineCount
-//			<< " with maxRows of " << rowsPerFile
-//			<< endl;
-
+#ifdef _DEBUG_
+		cout << f << " has " << extractedValue 
+			<< " which is " << fixed << setprecision(0) << fileIndex 
+			<< " and starting line " << totalLineCount
+			<< " with maxRows of " << rowsPerFile
+			<< endl;
+#endif
 	
 		// loop through lines of file
 		while( getline(infile, line) and lineCount < numLines ) {
@@ -116,10 +116,12 @@ void importFiles(vector<string> files, int myRank,
 	
 		// close the file
 		infile.close();
+#ifdef _DEBUG_
 		cout << "Rank " << myRank 
 			<< " read " << lineCount 
 			<< " lines from " << f 
 			<< endl;
+#endif
 	}
 
 	*rows = arrayIndex;

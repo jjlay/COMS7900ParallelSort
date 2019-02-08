@@ -3,9 +3,6 @@
 //
 
 
-#define _DEBUG_
-
-
 //
 // Parallel includes
 //
@@ -36,6 +33,9 @@
 
 
 using namespace std;
+
+
+#undef _DEBUG_
 
 
 //
