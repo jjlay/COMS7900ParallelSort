@@ -17,5 +17,6 @@ testbinsizing.o : testbinsizing.cpp
 clean :
 	rm -f testbinsizing parallelSort
 	rm -f *.o
+	rm -f core.2*
 
 
