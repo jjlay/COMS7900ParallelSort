@@ -84,6 +84,8 @@ vector<string> listFiles(string path) {
 	// All done, so close the directory connection
 	closedir(dp);
 
+	cout << "listFiles: There are " << files.size() << " to process" << endl;
+
 	return files;
 }
 
