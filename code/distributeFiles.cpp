@@ -3,9 +3,6 @@
 //
 
 
-#define _DEBUG_
-
-
 //
 // Parallel includes
 //
@@ -35,6 +32,12 @@
 #include "definitions.h"
 
 
+using namespace std;
+
+
+#undef _DEBUG_
+
+
 //
 // Function: distributeFiles
 //
@@ -48,7 +51,7 @@
 //   nothing
 //
 
-void distributeFiles(std::vector<std::string> files, int numWorkers) {
+void distributeFiles(vector<string> files, int numWorkers) {
 
 	int currentRank = 1;
 	int mpiReturn;

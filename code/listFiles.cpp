@@ -19,6 +19,9 @@
 #include <iostream>
 
 
+using namespace std;
+
+
 //
 // Function: listFiles
 //
@@ -26,12 +29,12 @@
 // Source:
 // https://www.linuxquestions.org/questions/programming-9/c-list-files-in-directory-379323/
 
-std::vector<std::string> listFiles(std::string path) {
+vector<string> listFiles(string path) {
 
 	// The list of files will be stored in an STL vector to
 	// avoid the hassle of memory management. The vector
 	// consists of strings
-	std::vector<std::string> files;
+	vector<string> files;
 
 	// The DIR and dirent types are defined in 
 	// dirent.h and should be portable to any
@@ -46,7 +49,7 @@ std::vector<std::string> listFiles(std::string path) {
 
 	// If the pointer is NULL, then the connection failed.
 	if (dp == NULL) {
-		std::cerr << "Unable to process " << path << std::endl;
+		cerr << "Unable to process " << path << endl;
 		// Since the connection failed, we will return an
 		// empty list back to the calling function
 		return files;
@@ -62,7 +65,7 @@ std::vector<std::string> listFiles(std::string path) {
 		// filename is d_name. It is a char*. Since our
 		// vector is expecting strings, it is converted.
 		// Plus we can use the handy C++ string functions.
-		auto s = std::string(dirp->d_name);
+		auto s = string(dirp->d_name);
 
 		// The file has to meet two criteria for inclusion:
 		//    (1) The filename has to be at least five
@@ -81,13 +84,7 @@ std::vector<std::string> listFiles(std::string path) {
 	// All done, so close the directory connection
 	closedir(dp);
 
-#ifdef _DEBUG_
-	// During debugging, let's print out the files we kept
-	std::cout << "There are " << files.size() << " files" << std::endl;
-
-	for (auto f : files)
-		std::cout << f << std::endl;
-#endif
+	cout << "listFiles: There are " << files.size() << " to process" << endl;
 
 	return files;
 }

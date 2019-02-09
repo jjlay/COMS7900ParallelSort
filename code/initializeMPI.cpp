@@ -2,7 +2,6 @@
 // Initialize MPI
 //
 
-
 //
 // Standard includes
 //
@@ -48,10 +47,5 @@ void initializeMPI(std::string *processorName, int *myRank, int *numNodes, int a
 	*myRank = localMyRank;
 	*numNodes = localNumProcs;
 	*processorName = std::string(localProcName);
-
-#ifdef _DEBUG_
-	std::cout << "Rank " << *myRank << " out of " << *numNodes << " nodes" 
-		<< " on Hostname: " << *processorName << std::endl;
-#endif
 
 }
