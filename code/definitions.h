@@ -9,7 +9,8 @@
 // 
 
 #define _DEBUG_
-#define _TIMING_
+//#define _TIMING_
+#undef _TIMING_
 
 
 //
@@ -54,7 +55,7 @@
 //
 
 
-#define numLines	1000
+#define numLines	90
 #define Rank0    0
 #define maxRows  200000000 // Max number of rows in file
 

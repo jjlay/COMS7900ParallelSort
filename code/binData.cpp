@@ -43,69 +43,68 @@ void binData( double *data, double *binE, int myRank, int sortInd, int numWorker
 	
 	int test, halves, curr, last, ind;
 	int dI = numPoints/numWorkers; // initial amount to move curr by
+	int iter = 0;
+	int rank = 3;
 	
-	/*
-	std::cout << std::endl;
-	std::cout << "Binning......" << std::endl;
-	std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
-	std::cout << std::endl;
-	*/
+	int a = 0, b = numLines-1, c;
+	
+//	if( myRank == rank ) {
+//		for( int i = 0; i < numPoints; i++ ) {
+//			std::cout << data[4*i + sortInd] << std::endl;
+//		}
+//	}
 	
 	// loop through movable bin edges
 	for( int i = 1; i < numWorkers; i++) {
 		
-		// will be fed back into binI[i] later
-		ind = i*dI;
-		
-		// don't bisect initially
-		halves = 0;
-		
-		if(        data[4*ind+sortInd] < binE[i] and data[4*ind+sortInd+1] <= binE[i] ) {
-			curr =  1;
-		} else if( binE[i] < data[4*ind+sortInd] and binE[i] < data[4*ind+sortInd+1] ) {
-			curr = -1;
+		if( binE[i] < data[sortInd] ) {
+			binI[i] = 0;
+		} else if( binE[i] > data[4*(numLines-1)+sortInd] ) {
+			binI[i] = numLines;
 		} else {
-			curr =  0;
-		}
-		
-		/*
-		std::cout << "ind: " << ind << std::endl;
-		std::cout << data[ind] << " " << binE[i] << " " << data[ind+1] << std::endl;
-		std::cout << "curr:  " << curr << std::endl;
-		std::cout << std::endl;
-		*/
-		
-		if( curr != 0 )
-			ind = ind + curr * (int)ceil(dI*pow(2.0,-halves));
-		
-		while( curr != 0 ) {
+			c = (int)ceil((a+b)/2.0);
 			
-			/*
-			std::cout << "ind: " << ind << std::endl;
-			std::cout << data[ind] << " " << binE[i] << " " << data[ind+1] << std::endl;
-			std::cout << "curr:  " << curr << std::endl;
-			*/
+			if( binE[i] < data[4*c+sortInd] )
+				
 			
-			last = curr;
 			
-			if(        data[4*ind+sortInd] < binE[i] and data[4*ind+sortInd+1] <= binE[i] ) {
+			
+			if(        data[4*ind+sortInd] < binE[i] and data[4*(ind+1)+sortInd] <= binE[i] ) {
 				curr =  1;
-			} else if( binE[i] < data[4*ind+sortInd] and binE[i] < data[4*ind+sortInd+1] ) {
+			} else if( binE[i] < data[4*ind+sortInd] and binE[i] < data[4*(ind+1)+sortInd] ) {
 				curr = -1;
 			} else {
 				curr =  0;
 			}
 			
-			if( curr == -last ) {
-				halves++;
+			iter = 1;
+		//	while( curr != 0 ) {
+			while( iter < 10 ) {
+				
+				last = curr;
+				
+				if(        data[4*ind+sortInd] < binE[i] and data[4*(ind+1)+sortInd] <= binE[i] ) {
+					curr =  1;
+				} else if( binE[i] < data[4*ind+sortInd] and binE[i] < data[4*(ind+1)+sortInd] ) {
+					curr = -1;
+				} else {
+					curr =  0;
+				}
+				
+				if( curr == -last ) {
+					halves++;
+				}
+				
+				ind = ind + curr * (int)ceil(dI*pow(2.0,-halves));
+				
+				if( myRank == rank )
+					std::cout << i << " " << ind << std::endl;
+				
+				iter++;
 			}
 			
-			ind = ind + curr * (int)ceil(dI*pow(2.0,-halves));
-			
-			std::cout << std::endl;
+			binI[i] = ind+1;
 		}
-		
-		binI[i] = ind+1;
 	}
 	
 	for( int i = 0; i < numWorkers; i++ )

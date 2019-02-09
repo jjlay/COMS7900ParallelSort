@@ -44,18 +44,20 @@ void adaptBins( double *binE, int *binC, int numWorkers) {
 		
 		dC = ( 2.0*(binC[i] - binC[i-1]) )/( binC[i] + binC[i-1] );
 		
-		if( dC > 0 ) {
-			dB = binE[i+1] - binE[i];
-		} else if( dC < 0 ) {
-			dB = -(binE[i] - binE[i-1]);
-		} else {
-			dB = 0;
-		}
+	//	if( dC > 0 ) {
+	//		dB = binE[i+1] - binE[i];
+	//	} else if( dC < 0 ) {
+	//		dB = -(binE[i] - binE[i-1]);
+	//	} else {
+	//		dB = 0;
+	//	}
+		dB = binE[i+1] - binE[i];
 		
-		diff[i] = 0.25*dC*dB;
+		diff[i] = 0.25*dC*dB/2.0;
 	}
 	
 	for( int i = 1; i < numWorkers; i++ ) {
+	//	std::cout << "adapt: " << i << " " << diff[i] << std::endl;
 		binE[i] = binE[i] + diff[i];
 	}
 	

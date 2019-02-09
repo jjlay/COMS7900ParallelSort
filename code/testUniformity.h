@@ -37,6 +37,6 @@
 // Function: importFiles
 //
 
-int testUniformity( int *binC, int numWorkers, int total, double thresh );
+int testUniformity( int *binC, int numWorkers, int total, double thresh, double *uniformity );
 	
 
