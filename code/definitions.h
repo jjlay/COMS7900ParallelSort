@@ -18,6 +18,7 @@
 //
 
 #define _OKAY_   0
+#define _FAIL_  -1
 
 
 //

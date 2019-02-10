@@ -104,6 +104,19 @@ int main(int argc, char *argv[])
 		FilenameArray = receiveFiles(myRank);
 	}
 
+
+	//
+	// Check to make sure there is actual work
+	//
+	
+	if (FilenameArray.size() == 0) {
+		// OMG! Nothing to do!
+		MPI_Finalize();
+		return _FAIL_;
+	}
+
+
+
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();
 	timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
