@@ -42,14 +42,14 @@ void importFiles(vector<string> files, int myRank,
 	*cols = _ROW_WIDTH_;
 
 	std::string homeDir = getenv("HOME");
-	std::string prefix = homeDir + "/localstorage/public/coms7900-data/";
+	std::string prefix = homeDir + "/localstorage/public/coms7900-data/datafile";
 	//const string prefix = "./data/datafile";
 	const string suffix = ".txt";
 	const double rowsPerFile = maxRows;
 	unsigned int arrayIndex = 0;
 
 	// loop through files to read
-	for ( auto f : files ) {
+	for (auto f : files) {
 		ifstream infile( f );
 		string line;
 		string token;
@@ -63,7 +63,7 @@ void importFiles(vector<string> files, int myRank,
 
 		string extractedValue = f.substr(prefix.length(),
 			 f.length() - prefix.length() - suffix.length());
-				
+		
 		double fileIndex = stod(extractedValue) - 1;
 		double totalLineCount = 1 + fileIndex * rowsPerFile;
 

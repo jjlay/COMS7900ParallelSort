@@ -135,7 +135,11 @@ int main(int argc, char *argv[])
 	if (myRank != 0) {
 		// Read data files in
 
-		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
+		unsigned int neededMemory = FilenameArray.size() * maxRows * _ROW_WIDTH_;
+		cout << "Needed memory on rank " << myRank << " is " 
+			<< neededMemory << " bytes or "
+			<< static_cast<double>(neededMemory) /1024.0/1024.0/1024.0 << " GB" << endl;
+		array = new double[neededMemory];
 		
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
 		
