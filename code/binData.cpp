@@ -41,12 +41,11 @@ void binData( double *data, double *binE, int myRank, int sortInd, int numWorker
 	// binE: bin edges, binI: bin edge indices, binC: bin counts
 	// sortInd: which column to sort by
 	
-	int test, halves, curr, last, ind;
-	int dI = numPoints/numWorkers; // initial amount to move curr by
+	int ind, done = 0;
 	int iter = 0;
 	int rank = 3;
 	
-	int a = 0, b = numLines-1, c;
+	int a, b, c;
 	
 //	if( myRank == rank ) {
 //		for( int i = 0; i < numPoints; i++ ) {
@@ -57,48 +56,37 @@ void binData( double *data, double *binE, int myRank, int sortInd, int numWorker
 	// loop through movable bin edges
 	for( int i = 1; i < numWorkers; i++) {
 		
-		if( binE[i] < data[sortInd] ) {
+		if( binE[i] <= data[sortInd] ) {
 			binI[i] = 0;
-		} else if( binE[i] > data[4*(numLines-1)+sortInd] ) {
+		} else if( data[4*(numLines-1)+sortInd] <= binE[i] ) {
 			binI[i] = numLines;
 		} else {
-			c = (int)ceil((a+b)/2.0);
+			a = 0;
+			b = numLines-1;
+			c = (int)floor((a+b)/2.0);
 			
-			if( binE[i] < data[4*c+sortInd] )
-				
-			
-			
-			
-			if(        data[4*ind+sortInd] < binE[i] and data[4*(ind+1)+sortInd] <= binE[i] ) {
-				curr =  1;
-			} else if( binE[i] < data[4*ind+sortInd] and binE[i] < data[4*(ind+1)+sortInd] ) {
-				curr = -1;
-			} else {
-				curr =  0;
+			if( binE[i] < data[4*c+sortInd] ) {
+				b = c;
+			} else if( data[4*(c+1)+sortInd] <= binE[i] ) {
+				a = c;
+			} else if( data[4*c+sortInd] <= binE[i] and binE[i] < data[4*(c+1)+sortInd] ) {
+				ind  = c;
+				done = 1;
 			}
 			
 			iter = 1;
-		//	while( curr != 0 ) {
+		//	while( done != 1 ) {
 			while( iter < 10 ) {
+				c = (int)floor((a+b)/2.0);
 				
-				last = curr;
-				
-				if(        data[4*ind+sortInd] < binE[i] and data[4*(ind+1)+sortInd] <= binE[i] ) {
-					curr =  1;
-				} else if( binE[i] < data[4*ind+sortInd] and binE[i] < data[4*(ind+1)+sortInd] ) {
-					curr = -1;
-				} else {
-					curr =  0;
+				if( binE[i] < data[4*c+sortInd] ) {
+					b = c;
+				} else if( data[4*(c+1)+sortInd] <= binE[i] ) {
+					a = c;
+				} else if( data[4*c+sortInd] <= binE[i] and binE[i] < data[4*(c+1)+sortInd] ) {
+					ind  = c;
+					done = 1;
 				}
-				
-				if( curr == -last ) {
-					halves++;
-				}
-				
-				ind = ind + curr * (int)ceil(dI*pow(2.0,-halves));
-				
-				if( myRank == rank )
-					std::cout << i << " " << ind << std::endl;
 				
 				iter++;
 			}

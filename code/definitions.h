@@ -55,7 +55,7 @@
 //
 
 
-#define numLines	90
+#define numLines	1000
 #define Rank0    0
 #define maxRows  200000000 // Max number of rows in file
 

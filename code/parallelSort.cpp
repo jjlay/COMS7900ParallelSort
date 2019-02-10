@@ -87,8 +87,8 @@ int main(int argc, char *argv[])
 
 	// Change the following variable to the actual
 	// location of the data files
-	// std::string path = "./data/";
-	std::string path = "/home/hal2a/localstorage/public/coms7900-data/";	
+	std::string path = "./data/";
+//	std::string path = "/home/hal2a/localstorage/public/coms7900-data/";	
 
 	std::vector<std::string> FilenameArray;
 
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 		
 
 	// uniformity threshold
-	double thresh = 0.15;
+	double thresh = 0.05;
 	double uniformity;
 	// Change to 0 when the functions are written
 	int isUniform[1];
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
 		}
 		
 		// Determine if uniform
-		*isUniform = testUniformity( binC, numWorkers, numLines, thresh, &uniformity );
+		*isUniform = testUniformity( binC, numWorkers, thresh, &uniformity );
 		
 		if( *isUniform == 1 ) {
 			std::cout << "Threshold:  " << thresh << std::endl;
@@ -289,8 +289,8 @@ int main(int argc, char *argv[])
 	int iterations = 1;
 	
 //	/*
-//	while( *isUniform == 0 ) {
-	while( iterations < 1 ) {
+	while( *isUniform == 0 ) {
+//	while( iterations < 1 ) {
 		std::cout << std::endl;
 		if( myRank == 0 ) {
 			std::cout << "ITERATION: " << iterations << std::endl;
@@ -315,7 +315,7 @@ int main(int argc, char *argv[])
 			}
 			
 			// Determine if uniform
-			*isUniform = testUniformity( binC, numWorkers, numLines, thresh, &uniformity );
+			*isUniform = testUniformity( binC, numWorkers, thresh, &uniformity );
 			
 			if( *isUniform == 1 ) {
 				std::cout << "Threshold:  " << thresh << std::endl;
