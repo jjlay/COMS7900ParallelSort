@@ -87,8 +87,8 @@ int main(int argc, char *argv[])
 
 	// Change the following variable to the actual
 	// location of the data files
-	std::string path = "./data/";
-//	std::string path = "/home/hal2a/localstorage/public/coms7900-data/";	
+//	std::string path = "./data/";
+	std::string path = "~/localstorage/public/coms7900-data/";	
 
 	std::vector<std::string> FilenameArray;
 
