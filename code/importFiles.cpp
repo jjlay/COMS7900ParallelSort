@@ -41,7 +41,9 @@ void importFiles(vector<string> files, int myRank,
 
 	*cols = _ROW_WIDTH_;
 
-	const string prefix = "./data/datafile";
+	std::string homeDir = getenv("HOME");
+	std::string prefix = homeDir + "/localstorage/public/coms7900-data/";
+	//const string prefix = "./data/datafile";
 	const string suffix = ".txt";
 	const double rowsPerFile = maxRows;
 	unsigned int arrayIndex = 0;
