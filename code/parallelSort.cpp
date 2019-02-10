@@ -46,6 +46,9 @@
 #include "max.h"
 
 
+using namespace std;
+
+
 //
 // Function: main
 //
@@ -88,7 +91,11 @@ int main(int argc, char *argv[])
 	// Change the following variable to the actual
 	// location of the data files
 //	std::string path = "./data/";
-	std::string path = "~/localstorage/public/coms7900-data/";	
+
+	std::string homeDir = getenv("HOME");
+	std::string path = homeDir + "/localstorage/public/coms7900-data/";
+
+	std::cout << "Data path: " << path << std::endl;
 
 	std::vector<std::string> FilenameArray;
 
