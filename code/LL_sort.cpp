@@ -145,7 +145,7 @@ void LL_sort(double myArray[], int rows, int cols, int ll_sortThisColumn){
 		lll++;
 		
 	}
-	cout << "LL_sort complete" << endl;
+	//cout << "LL_sort complete" << endl;
 	
 return;
 }

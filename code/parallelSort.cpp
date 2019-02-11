@@ -44,6 +44,7 @@
 #include "exportResults.h"
 #include "min.h"
 #include "max.h"
+#include "LL_sort.h"
 
 
 using namespace std;
@@ -148,7 +149,8 @@ int main(int argc, char *argv[])
 	//	std::cout << "Rows: " << rows << ", Cols: " << cols << std::endl;
 		
 		// Perform initial sort
-		sortArray(array, rows, cols, sortInd);
+//		sortArray(array, rows, cols, sortInd);
+		LL_sort(array, rows, cols, sortInd);
 		
 	//	std::cout << "rank " << myRank << ": " << array[cols*0+sortInd] << " " << array[cols*999+sortInd] << std::endl;
 	}
