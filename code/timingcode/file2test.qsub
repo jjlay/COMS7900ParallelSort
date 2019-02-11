@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## 
+#$ -N file2test
+#$ -pe mpi 32
+#$ -q amd8.q
+#$ -cwd
+#$ -l h_rt=0:05:00
+
+mpirun -np $NSLOTS $HOME/COMS7900ParallelSort/code/timingcode/file2test
+
