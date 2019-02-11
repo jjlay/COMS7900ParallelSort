@@ -136,7 +136,8 @@ int main(int argc, char *argv[])
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
 		
 		// Perform initial sort
-		//sortArray(array, rows, cols, sortInd);
+		timeBeginFileImport = std::chrono::system_clock::now();
+		sortArray(array, rows, cols, sortInd);
 	}
 	
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -145,7 +146,7 @@ int main(int argc, char *argv[])
 	timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
 	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(5) << timeElapsedSeconds.count() << " seconds "
-		<< " to import data" << std::endl;
+		<< " to sort data" << std::endl;
 
 
 
