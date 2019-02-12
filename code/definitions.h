@@ -42,6 +42,7 @@
 #define mpi_Tag_BinCounts    55
 
 #define mpi_Tag_isUnif       60
+#define mpi_Tag_RowCount     70
 
 
 //
