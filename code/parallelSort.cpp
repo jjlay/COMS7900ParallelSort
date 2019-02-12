@@ -70,7 +70,8 @@ int main(int argc, char *argv[])
 #endif
 	
 	int numWorkers = numNodes - 1;
-	int avgPtsPerWorker = numLines/numWorkers; // initial amount to move curr by
+	const unsigned int numLines = maxRows;
+	int avgPtsPerWorker = maxRows / numWorkers; // initial amount to move curr by
 	
 	// set cout to print doubles' full length
 //	std::cout.precision(17);

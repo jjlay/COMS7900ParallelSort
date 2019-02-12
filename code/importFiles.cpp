@@ -39,6 +39,10 @@ using namespace std;
 void importFiles(vector<string> files, int myRank,
 	double *myData, int *rows, int *cols) {
 
+	// DEBUG CONTROL
+	const unsigned int numLines = 100;
+
+
 	*cols = _ROW_WIDTH_;
 
 	std::string homeDir = getenv("HOME");
