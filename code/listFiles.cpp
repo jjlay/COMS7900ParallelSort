@@ -29,7 +29,7 @@ using namespace std;
 // Source:
 // https://www.linuxquestions.org/questions/programming-9/c-list-files-in-directory-379323/
 
-vector<string> listFiles(string path) {
+vector<string> listFiles(string path, int numFiles) {
 
 	// The list of files will be stored in an STL vector to
 	// avoid the hassle of memory management. The vector
@@ -60,6 +60,9 @@ vector<string> listFiles(string path) {
 
 	// Just like file I/O, we loop until there
 	// are no more entries
+	
+	int filesProcessed = 0;
+
 	while (dirp != NULL) {
 		// The field in the struct dirent that contains the
 		// filename is d_name. It is a char*. Since our
@@ -71,10 +74,12 @@ vector<string> listFiles(string path) {
 		//    (1) The filename has to be at least five
 		//        characters long, and
 		//    (2) The filename has to end with .txt
-		if ((s.size() > 4) && (s.substr(s.size()-4) == ".txt")) {
+		if ((s.size() > 4) && (s.substr(s.size()-4) == ".txt") &&
+			(filesProcessed < numFiles)) {
 			// If the filename meets our criteria, add it to our
 			// vector container
 			files.push_back(path + s);
+			filesProcessed++;
 		}
 
 		// Fetch the next entry

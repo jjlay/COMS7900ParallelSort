@@ -63,6 +63,8 @@ int main(int argc, char *argv[])
 	std::string processorName;
 	int myRank, numNodes;
 
+	int maxFilesToProc = 100;
+
 	initializeMPI(&processorName, &myRank, &numNodes, argc, argv);
 
 #ifdef _TIMING_
@@ -101,7 +103,7 @@ int main(int argc, char *argv[])
 	std::vector<std::string> FilenameArray;
 
 	if (myRank == 0)
-		FilenameArray = listFiles(path);
+		FilenameArray = listFiles(path, maxFilesToProc);
 
 	if (myRank == 0) {
 		distributeFiles(FilenameArray, numNodes-1);

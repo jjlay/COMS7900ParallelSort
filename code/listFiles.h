@@ -19,6 +19,6 @@
 // Function: listFiles
 //
 
-std::vector<std::string> listFiles(std::string path); 
+std::vector<std::string> listFiles(std::string path, int numFiles); 
 
 
