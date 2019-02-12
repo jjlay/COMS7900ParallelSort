@@ -205,6 +205,9 @@ MPI_Barrier(MPI_COMM_WORLD);
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to exchange min and max" << std::endl;
 #endif
+
+	MPI_Barrier(MPI_COMM_WORLD);
+	cout << "Rank " << myRank << " has reached the MinMax checkpoint" << endl;
 	
 	// same across all nodes
 	double *binE = new double[numWorkers+1];
