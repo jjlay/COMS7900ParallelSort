@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 	// number of lines PER FILE
 	int maxRows = 1000;
 	//number of lines TOTAL
-	const unsigned int numLines = maxRows*FilenameArray.size();
+	const unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node
 	int avgPtsPerWorker = numLines / numWorkers;
 
