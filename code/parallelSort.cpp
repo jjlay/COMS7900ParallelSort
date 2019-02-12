@@ -45,6 +45,7 @@
 #include "min.h"
 #include "max.h"
 #include "LL_sort.h"
+#include "swapArrayParts.h"
 
 
 using namespace std;
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
 	// total number of files to read
 	int maxFilesToProc = numWorkers;
 	// number of lines PER FILE
-	int maxRows = 100000;
+	int maxRows = 1000;
 	//number of lines TOTAL
 	unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node
@@ -450,15 +451,46 @@ int main(int argc, char *argv[])
 			<< "to identify bins" << std::endl;
 	}
 #endif
-
+	
+	// Broadcast binI_2D to workers
+	for( int i = 0; i < numWorkers; i++ ) {
+		result = MPI_Bcast( binI_2D[i], numWorkers+1, MPI_DOUBLE, 0,
+			MPI_COMM_WORLD );
+	}
+/*
+	if( myRank == 1 ) {
+		for( int i = 0; i < numWorkers; i++ ) {
+			std::cout << i+1 << " binI_2D: " << binI_2D[i][0] 
+				<< " " << binI_2D[i][1] << " " 
+				<< binI_2D[i][2] << " " 
+				<< binI_2D[i][3] << std::endl;
+		}
+	}
+*/	
+	
 	if (myRank != 0) {
+		int *rowPTR;
+		int *colPTR;
+		double **array2;
+		
+		array2 = &array;
+		
 		// Transmit elements to appropriate nodes
-
-		// Receive elements from other nodes
-
+		for( int fromWho = 1; fromWho <= numWorkers; fromWho++ ){
+			if( fromWho != myRank ) {
+				// should numRanks be numNodes or numWorkers???
+				swapArrayParts( array2, rowPTR, colPTR, myRank, numWorkers, binI_2D[fromWho-1], fromWho, myRank );
+			}
+		}
+		
+		
+		
+		// Cleanup elements from same node
+		
 		// Final sort
-
+		
 		// Export results
+		
 	}
 
 
