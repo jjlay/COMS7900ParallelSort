@@ -37,11 +37,7 @@ using namespace std;
 //
 
 void importFiles(vector<string> files, int myRank,
-	double *myData, int *rows, int *cols) {
-
-	// DEBUG CONTROL
-	const unsigned int maxLines = maxRows;
-
+	double *myData, int *rows, int *cols, int maxRows) {
 
 	*cols = _ROW_WIDTH_;
 
@@ -73,7 +69,7 @@ void importFiles(vector<string> files, int myRank,
 
 	
 		// loop through lines of file
-		while( getline(infile, line) and lineCount < maxLines ) {
+		while( getline(infile, line) and lineCount < maxRows ) {
 			
 			// add index
 			myData[arrayIndex * _ROW_WIDTH_ + _INDEX_] = totalLineCount;

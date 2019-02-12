@@ -125,9 +125,13 @@ int main(int argc, char *argv[])
 
 
 MPI_Barrier(MPI_COMM_WORLD);
-
-	const unsigned int numLines = maxRows * FilenameArray.size();
-	int avgPtsPerWorker = numLines / numWorkers; // initial amount to move curr by
+	
+	// number of lines PER FILE
+	int maxRows = 1000;
+	//number of lines TOTAL
+	const unsigned int numLines = maxRows*FilenameArray.size();
+	// average lines per worker node
+	int avgPtsPerWorker = numLines / numWorkers;
 
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();
@@ -147,8 +151,8 @@ MPI_Barrier(MPI_COMM_WORLD);
 		// Read data files in
 
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
-
-		importFiles(FilenameArray, myRank, array, &rows, &cols);
+		
+		importFiles(FilenameArray, myRank, array, &rows, &cols, maxRows);
 		
 		// Perform initial sort
 		sortArray(array, rows, cols, sortInd);
