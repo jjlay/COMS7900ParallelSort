@@ -63,16 +63,24 @@ int main(int argc, char *argv[])
 	std::string processorName;
 	int myRank, numNodes;
 
-	int maxFilesToProc = 100;
-
 	initializeMPI(&processorName, &myRank, &numNodes, argc, argv);
 
 #ifdef _TIMING_
 	auto timeStart = std::chrono::system_clock::now();
 #endif
 	
+	// number of worker nodes
 	int numWorkers = numNodes - 1;
-	
+	// total number of files to read
+	int maxFilesToProc = numWorkers;
+	// number of lines PER FILE
+	int maxRows = 1000;
+	//number of lines TOTAL
+	const unsigned int numLines = maxRows*FilenameArray.size();
+	// average lines per worker node
+	int avgPtsPerWorker = numLines / numWorkers;
+
+
 	// set cout to print doubles' full length
 //	std::cout.precision(17);
 	
@@ -125,16 +133,9 @@ int main(int argc, char *argv[])
 		return _FAIL_;
 	}
 
-
-MPI_Barrier(MPI_COMM_WORLD);
 	
-	// number of lines PER FILE
-	int maxRows = 1000;
-	//number of lines TOTAL
-	const unsigned int numLines = maxRows*FilenameArray.size();
-	// average lines per worker node
-	int avgPtsPerWorker = numLines / numWorkers;
-
+	MPI_Barrier(MPI_COMM_WORLD);
+	
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();
 	timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
