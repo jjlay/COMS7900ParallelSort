@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 	// number of lines PER FILE
 	int maxRows = 1000;
 	//number of lines TOTAL
-	const unsigned int numLines = maxRows*maxFilesToProc;
+	unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node
 	int avgPtsPerWorker = numLines / numWorkers;
 
@@ -151,16 +151,42 @@ int main(int argc, char *argv[])
 	int rows = 0, cols = 0;
 
 	if (myRank != 0) {
-		// Read data files in
-
-		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
-		
-		importFiles(FilenameArray, myRank, array, &rows, &cols, maxRows);
-		
-		// Perform initial sort
-		sortArray(array, rows, cols, sortInd);
-		//LL_sort(array, rows, cols, sortInd);
+	        // Read data files in
+	
+	        array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
+	
+	        importFiles(FilenameArray, myRank, array, &rows, &cols, maxRows);
+	
+	        MPI_Request tempRequest;
+	        MPI_Isend(&rows, 1, MPI_INT, Rank0, mpi_Tag_RowCount, MPI_COMM_WORLD, &tempRequest);
+	
+	        // Perform initial sort
+	        sortArray(array, rows, cols, sortInd);
+	        //LL_sort(array, rows, cols, sortInd);
 	}
+	else {
+	        // Rank 0 is going to receive the number of lines on each
+	        // worker node
+	
+	        auto allRows = new int[numNodes];
+	        allRows[0] = 0;
+	        numLines = 0;
+	
+	        MPI_Status tempStatus;
+	
+	        for (auto r = 1; r < numNodes; r++) {
+	                MPI_Recv(&allRows[r], 1, MPI_INT, r, mpi_Tag_RowCount,
+	                        MPI_COMM_WORLD, &tempStatus);
+	                numLines += allRows[r];
+	        }
+	
+	        for (auto r = 1; r < numNodes; r++)
+	                cout << "Rank " << r << " sent " << allRows[r] << " rows" << endl;
+	
+	
+	        cout << "There were a total of " << numLines << " rows across all workers" << endl;
+	}
+
 	
 	MPI_Barrier(MPI_COMM_WORLD);
 
