@@ -40,7 +40,7 @@ void importFiles(vector<string> files, int myRank,
 	double *myData, int *rows, int *cols) {
 
 	// DEBUG CONTROL
-	const unsigned int numLines = 100;
+	const unsigned int maxLines = 100;
 
 
 	*cols = _ROW_WIDTH_;
@@ -73,7 +73,7 @@ void importFiles(vector<string> files, int myRank,
 
 	
 		// loop through lines of file
-		while( getline(infile, line) and lineCount < numLines ) {
+		while( getline(infile, line) and lineCount < maxLines ) {
 			
 			// add index
 			myData[arrayIndex * _ROW_WIDTH_ + _INDEX_] = totalLineCount;

@@ -83,12 +83,10 @@ int main(int argc, char *argv[])
 
 #ifdef _TIMING_
 	auto timeBeginFilenameDistribute = std::chrono::system_clock::now();
-	if (myRank == Rank0) {
-		chrono::duration<double> timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
-		cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-			<< " to initialize MPI" << endl;
-	}
+	chrono::duration<double> timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
+	cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to initialize MPI" << endl;
 #endif
 
 	// Change the following variable to the actual
@@ -133,12 +131,10 @@ MPI_Barrier(MPI_COMM_WORLD);
 
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();
-	if (myRank == 0) {
-		timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
-		std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-			<< " to distribute the filenames" << std::endl;
-	}
+	timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to distribute the filenames" << std::endl;
 #endif
 	
 	int sortInd = _X_;
@@ -163,12 +159,10 @@ MPI_Barrier(MPI_COMM_WORLD);
 
 #ifdef _TIMING_	
 	auto timeBeginMinMax = std::chrono::system_clock::now();
-	if (myRank == Rank0) {
-		timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
-		cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-			<< " to import data" << endl;
-	}
+	timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
+	cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to import data" << endl;
 #endif
 
 	auto allMins = new double[numNodes];
@@ -206,12 +200,10 @@ MPI_Barrier(MPI_COMM_WORLD);
 
 #ifdef _TIMING_	
 	auto timeBeginBinning = std::chrono::system_clock::now();
-	if (myRank == Rank0) {
-		timeElapsedSeconds = timeBeginBinning - timeBeginMinMax;
-		std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-			<< " to exchange min and max" << std::endl;
-	}
+	timeElapsedSeconds = timeBeginBinning - timeBeginMinMax;
+	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to exchange min and max" << std::endl;
 #endif
 	
 	// same across all nodes

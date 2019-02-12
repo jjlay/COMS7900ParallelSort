@@ -9,8 +9,8 @@
 // 
 
 #define _DEBUG_
-//#define _TIMING_
-#undef _TIMING_
+#define _TIMING_
+//#undef _TIMING_
 
 
 //
