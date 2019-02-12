@@ -464,7 +464,7 @@ int main(int argc, char *argv[])
 		int *colPTR;
 		double **array2;
 		
-		*array2 = array;
+		array2 = &array;
 		
 		// Transmit elements to appropriate nodes
 		for( int fromWho = 1; fromWho <= numWorkers; fromWho++ ){
