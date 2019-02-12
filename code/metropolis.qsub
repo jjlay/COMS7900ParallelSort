@@ -2,7 +2,7 @@
 
 ## 
 #$ -N MetropolisSort
-#$ -pe mpi 192
+#$ -pe mpi 16
 #$ -q amd8.q
 #$ -cwd
 #$ -l h_rt=1:05:00

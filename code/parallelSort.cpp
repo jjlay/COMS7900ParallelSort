@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 	int avgPtsPerWorker = numLines/numWorkers; // initial amount to move curr by
 	
 	// set cout to print doubles' full length
-	std::cout.precision(17);
+//	std::cout.precision(17);
 	
 /*	
 	std::cout << "Rank " << myRank
@@ -237,13 +237,13 @@ MPI_Barrier(MPI_COMM_WORLD);
 	int isUniform[1];
 	isUniform[0] = 1;
 	
-	std::cout << std::endl;
+//	std::cout << std::endl;
 	if (myRank == 0) {
-		std::cout << "ITERATION: 0" << std::endl;
+	//	std::cout << "ITERATION: 0" << std::endl;
 		
 		// Calculate initial bin edges
 		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );  // for real
-		std::cout.precision(17);
+//		std::cout.precision(17);
 		//std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
 		// Transmit initial bin edges
@@ -264,7 +264,7 @@ MPI_Barrier(MPI_COMM_WORLD);
 */		
 		// Determine if uniform
 		*isUniform = testUniformity( binC, numWorkers, thresh, &uniformity );
-		
+/*		
 		if( *isUniform == 1 ) {
 			std::cout << "Threshold:  " << thresh << std::endl;
 			std::cout << "Uniformity: " << uniformity << std::endl;
@@ -274,7 +274,7 @@ MPI_Barrier(MPI_COMM_WORLD);
 			std::cout << "Uniformity: " << uniformity << std::endl;
 			std::cout << "CONTINUE: the bins aren't uniform" << std::endl;
 		}
-		
+*/	
 		// Transmit isUniform update
 		transmitUniformity( isUniform, numWorkers);
 	} else {
@@ -308,9 +308,8 @@ MPI_Barrier(MPI_COMM_WORLD);
 	int iterations = 1;
 	
 	while (( *isUniform == 0 ) && (iterations < abortCount)) {
-		std::cout << std::endl;
 		if( myRank == 0 ) {
-			std::cout << "ITERATION: " << iterations << std::endl;
+			cout << "ITERATION: " << iterations << endl;
 			
 			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
