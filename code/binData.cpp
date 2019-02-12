@@ -48,6 +48,8 @@ void binData( double *data, double *binE, int myRank, int sortInd,
 	
 	int a, b, c;
 	
+//	std::cout.precision(17);
+//	std::cout << "maxRows " << numPoints << std::endl;
 //	if( myRank == rank ) {
 //		for( int i = 0; i < numPoints; i++ ) {
 //			std::cout << data[4*i + sortInd] << std::endl;
@@ -76,7 +78,7 @@ void binData( double *data, double *binE, int myRank, int sortInd,
 			}
 			
 			iter = 1;
-		//	while( done != 1 ) {
+		//	while( done != 1 and iter < abortCount ) {
 			while( iter < 10 ) {
 				c = (int)floor((a+b)/2.0);
 				
@@ -95,6 +97,7 @@ void binData( double *data, double *binE, int myRank, int sortInd,
 			binI[i] = ind+1;
 		}
 	}
+//	std::cout << "binI[end] " << binI[3] << std::endl;
 	
 	for( int i = 0; i < numWorkers; i++ )
 		binC[i] = binI[i+1] - binI[i];
