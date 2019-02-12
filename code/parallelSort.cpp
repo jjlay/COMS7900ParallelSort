@@ -467,7 +467,13 @@ int main(int argc, char *argv[])
 		}
 	}
 */	
-	
+
+	//////////////////////////////
+	//                          //
+	// Swap Data Between Nodes  //
+	//                          //
+	//////////////////////////////
+
 	if (myRank != 0) {
 		int *rowPTR;
 		int *colPTR;
