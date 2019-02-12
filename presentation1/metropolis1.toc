@@ -2,8 +2,8 @@
 \beamer@subsectionintoc {1}{1}{Distributing/Importing Files}{5}{0}{1}
 \beamer@subsectionintoc {1}{2}{Sorting}{6}{0}{1}
 \beamer@subsectionintoc {1}{3}{Binning}{7}{0}{1}
-\beamer@subsectionintoc {1}{4}{Exchanging data}{10}{0}{1}
-\beamer@sectionintoc {2}{Testing}{11}{0}{2}
-\beamer@subsectionintoc {2}{1}{Methodology}{12}{0}{2}
-\beamer@subsectionintoc {2}{2}{Results}{12}{0}{2}
-\beamer@sectionintoc {3}{Conclusions}{12}{0}{3}
+\beamer@subsectionintoc {1}{4}{Exchanging data}{12}{0}{1}
+\beamer@sectionintoc {2}{Testing}{13}{0}{2}
+\beamer@subsectionintoc {2}{1}{Methodology}{14}{0}{2}
+\beamer@subsectionintoc {2}{2}{Results}{14}{0}{2}
+\beamer@sectionintoc {3}{Conclusions}{14}{0}{3}
