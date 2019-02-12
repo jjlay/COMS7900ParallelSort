@@ -36,7 +36,7 @@ void receiveBinCounts(int *binC, int numWorkers) {
 	int result;
 	MPI_Status status;
 	
-	std::cout << "Receiving bin counts" << std::endl;
+//	std::cout << "Receiving bin counts" << std::endl;
 	
 	// reset binC for accumulation
 	for( int i = 0; i < numWorkers; i++ ) {

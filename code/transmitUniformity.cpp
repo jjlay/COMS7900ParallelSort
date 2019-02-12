@@ -34,7 +34,7 @@ void transmitUniformity( int *isUniform, int numWorkers) {
 
 	int result;
 	
-	std::cout << "Transmitting uniformity" << std::endl;
+//	std::cout << "Transmitting uniformity" << std::endl;
 	
 	for( int i = 1; i < numWorkers+1; i++ ) {
 		

@@ -36,7 +36,7 @@ void receiveBinIndices(int **binI, int numWorkers) {
 	int result;
 	MPI_Status status;
 	
-	std::cout << "Receiving bin indices" << std::endl;
+//	std::cout << "Receiving bin indices" << std::endl;
 	
 	for( int i = 1; i < numWorkers+1; i++ ) {
 		

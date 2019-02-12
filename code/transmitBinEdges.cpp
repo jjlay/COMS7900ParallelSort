@@ -34,7 +34,7 @@ void transmitBinEdges(double *binE, int numWorkers) {
 
 	int result;
 	
-	std::cout << "Transmitting bins" << std::endl;
+//	std::cout << "Transmitting bins" << std::endl;
 	
 	for( int i = 1; i < numWorkers+1; i++ ) {
 		

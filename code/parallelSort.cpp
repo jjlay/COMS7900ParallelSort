@@ -75,18 +75,21 @@ int main(int argc, char *argv[])
 	// set cout to print doubles' full length
 	std::cout.precision(17);
 	
-	
+/*	
 	std::cout << "Rank " << myRank
 		<< " running on " << processorName 
 		<< " with " << numNodes << " total processes" 
 		<< std::endl;
+*/
 
 #ifdef _TIMING_
 	auto timeBeginFilenameDistribute = std::chrono::system_clock::now();
-	std::chrono::duration<double> timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-		<< " to initialize MPI" << std::endl;
+	if (myRank == Rank0) {
+		chrono::duration<double> timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
+		cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+			<< " to initialize MPI" << endl;
+	}
 #endif
 
 	// Change the following variable to the actual
@@ -96,7 +99,7 @@ int main(int argc, char *argv[])
 	std::string homeDir = getenv("HOME");
 	std::string path = homeDir + "/localstorage/public/coms7900-data/";
 
-	std::cout << "Data path: " << path << std::endl;
+//	std::cout << "Data path: " << path << std::endl;
 
 	std::vector<std::string> FilenameArray;
 
@@ -104,7 +107,6 @@ int main(int argc, char *argv[])
 		FilenameArray = listFiles(path);
 
 	if (myRank == 0) {
-		// Distribute files
 		distributeFiles(FilenameArray, numNodes-1);
 	} 
 	else {
@@ -120,18 +122,21 @@ int main(int argc, char *argv[])
 	if (FilenameArray.size() == 0) {
 		// OMG! Nothing to do!
 		MPI_Finalize();
+		cout << "Failed!" << endl;
 		return _FAIL_;
 	}
 
 
+MPI_Barrier(MPI_COMM_WORLD);
 
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();
-	timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-		<< " to distribute the filenames" << std::endl;
-
+	if (myRank == 0) {
+		timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
+		std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+			<< " to distribute the filenames" << std::endl;
+	}
 #endif
 	
 	int sortInd = _X_;
@@ -144,25 +149,24 @@ int main(int argc, char *argv[])
 		// Read data files in
 
 		array = new double[FilenameArray.size() * maxRows * _ROW_WIDTH_]; //JJL
-		
+
 		importFiles(FilenameArray, myRank, array, &rows, &cols);
-	//	std::cout << "Rows: " << rows << ", Cols: " << cols << std::endl;
 		
 		// Perform initial sort
-//		sortArray(array, rows, cols, sortInd);
-		LL_sort(array, rows, cols, sortInd);
-		
-	//	std::cout << "rank " << myRank << ": " << array[cols*0+sortInd] << " " << array[cols*999+sortInd] << std::endl;
+		sortArray(array, rows, cols, sortInd);
+		//LL_sort(array, rows, cols, sortInd);
 	}
 	
 	MPI_Barrier(MPI_COMM_WORLD);
 
 #ifdef _TIMING_	
 	auto timeBeginMinMax = std::chrono::system_clock::now();
-	timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-		<< " to import data" << std::endl;
+	if (myRank == Rank0) {
+		timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
+		cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+			<< " to import data" << endl;
+	}
 #endif
 
 	auto allMins = new double[numNodes];
@@ -176,17 +180,12 @@ int main(int argc, char *argv[])
 
 		for (auto r = 1; r < numNodes; r++) {
 			receiveMinMax(r, &allMins[r], &allMaxs[r]);
-			//std::cout << "Rank " << r << " sent " << allMins[r]
-			//	<< " and " << allMaxs[r] << std::endl;
 		}
 		
-	//	std::cout.precision(17);
 		minGlobal = allMins[1];
 		maxGlobal = allMaxs[1];
-	//	std::cout << "mins maxs" << std::endl;
-	//	std::cout << allMins[1] << " " << allMaxs[1] << std::endl;
+
 		for (auto r = 2; r < numNodes; r++) {
-	//		std::cout << allMins[r] << " " << allMaxs[r] << std::endl;
 			if( minGlobal > allMins[r] )
 				minGlobal = allMins[r];
 			if( maxGlobal < allMaxs[r] )
@@ -205,10 +204,12 @@ int main(int argc, char *argv[])
 
 #ifdef _TIMING_	
 	auto timeBeginBinning = std::chrono::system_clock::now();
-	timeElapsedSeconds = timeBeginBinning - timeBeginMinMax;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-		<< " to exchange min and max" << std::endl;
+	if (myRank == Rank0) {
+		timeElapsedSeconds = timeBeginBinning - timeBeginMinMax;
+		std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+			<< " to exchange min and max" << std::endl;
+	}
 #endif
 	
 	// same across all nodes
@@ -240,28 +241,27 @@ int main(int argc, char *argv[])
 	if (myRank == 0) {
 		std::cout << "ITERATION: 0" << std::endl;
 		
-		
-	//	std::cout << "min: " << minGlobal << std::endl;
-	//	std::cout << "max: " << maxGlobal << std::endl;
-		
 		// Calculate initial bin edges
 		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );  // for real
 		std::cout.precision(17);
-		std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
+		//std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
 		// Transmit initial bin edges
 		transmitBinEdges( binE, numWorkers );
 		
 		// Receive initial bin counts
 		receiveBinCounts( binC, numWorkers );
-		std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
+		//std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
 		// Receive initial bin indices
 		receiveBinIndices( binI_2D, numWorkers );
+/*
 		for( int i = 0; i < numWorkers; i++ ) {
-			std::cout << i+1 << " binI_2D: " << binI_2D[i][0] << " " << binI_2D[i][1] << " " << binI_2D[i][2] << " " << binI_2D[i][3] << std::endl;
+			std::cout << i+1 << " binI_2D: " << binI_2D[i][0] 
+				<< " " << binI_2D[i][1] << " " 
+				<< binI_2D[i][2] << " " << binI_2D[i][3] << std::endl;
 		}
-		
+*/		
 		// Determine if uniform
 		*isUniform = testUniformity( binC, numWorkers, thresh, &uniformity );
 		
@@ -288,17 +288,14 @@ int main(int argc, char *argv[])
 			binI_1D[i] = i*avgPtsPerWorker;
 		}
 		
-	//	std::cout << "test" << std::endl;
 		// get intitial bin counts, indices
 		binData( array, binE, myRank, sortInd,
 			numWorkers, numLines, binI_1D, binC); // for real
-	//	std::cout << "binC " <<  myRank << ": " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
 		// Transmit initial bin counts
 		result = MPI_Send( binC, numWorkers, MPI_INT, 0,
 			mpi_Tag_BinCounts, MPI_COMM_WORLD );
 		
-	//	std::cout << "binI " << myRank << ": " << binI[0] << " " << binI[1] << " " << binI[2] << " " << binI[3] << std::endl;
 		// Transmit initial bin indices
 		result = MPI_Send( binI_1D, numWorkers+1, MPI_INT, 0,
 			mpi_Tag_BinCounts, MPI_COMM_WORLD );
@@ -310,32 +307,40 @@ int main(int argc, char *argv[])
 	
 	int iterations = 1;
 	
-//	/*
-	while( *isUniform == 0 ) {
-//	while( iterations < 1 ) {
+	while (( *isUniform == 0 ) && (iterations < abortCount)) {
 		std::cout << std::endl;
 		if( myRank == 0 ) {
 			std::cout << "ITERATION: " << iterations << std::endl;
 			
 			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
-			
+/*			
 			std::cout.precision(17);
-			std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
-			
+			std::cout << "binE: " << binE[0] << " " 
+				<< binE[1] << " " 
+				<< binE[2] << " " 
+				<< binE[3] << std::endl;
+*/			
 			// Transmit current bin edges
 			transmitBinEdges( binE, numWorkers );
 			
 			// Receive current bin counts
 			receiveBinCounts( binC, numWorkers );
-			std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
-			
+/*
+			std::cout << myRank << " binC: " << binC[0] 
+				<< " " << binC[1] 
+				<< " " << binC[2] << std::endl;
+*/			
 			// Receive current bin indices
 			receiveBinIndices( binI_2D, numWorkers );
+/*
 			for( int i = 0; i < numWorkers; i++ ) {
-				std::cout << i+1 << " binI_2D: " << binI_2D[i][0] << " " << binI_2D[i][1] << " " << binI_2D[i][2] << " " << binI_2D[i][3] << std::endl;
+				std::cout << i+1 << " binI_2D: " << binI_2D[i][0] 
+					<< " " << binI_2D[i][1] << " " 
+					<< binI_2D[i][2] << " " 
+					<< binI_2D[i][3] << std::endl;
 			}
-			
+*/			
 			// Determine if uniform
 			*isUniform = testUniformity( binC, numWorkers, thresh, &uniformity );
 			
@@ -384,17 +389,21 @@ int main(int argc, char *argv[])
 		
 		iterations++;
 	}
-	std::cout << std::endl;
-//	*/
+
+	if ((iterations >= abortCount) && (myRank == Rank0)) {
+		cout << "Aborted adaptBins!" << endl;
+	}		
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
 #ifdef _TIMING_	
 	auto timeBeginSwapping = std::chrono::system_clock::now();
-	timeElapsedSeconds = timeBeginSwapping - timeBeginBinning;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-		<< "to identify bins" << std::endl;
+	if (myRank == Rank0) {
+		timeElapsedSeconds = timeBeginSwapping - timeBeginBinning;
+		std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+			<< "to identify bins" << std::endl;
+	}
 #endif
 
 	if (myRank != 0) {
