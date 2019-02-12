@@ -56,9 +56,11 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	//
-	// MPI setup
-	//
+	////////////////
+	//            //
+	// MPI setup  //
+	//            //
+	////////////////
 
 	std::string processorName;
 	int myRank, numNodes;
@@ -99,20 +101,23 @@ int main(int argc, char *argv[])
 		<< " to initialize MPI" << endl;
 #endif
 
-	// Change the following variable to the actual
-	// location of the data files
-//	std::string path = "./data/";
+	//////////////////
+	//              //
+	// Data Import  //
+	//              //
+	//////////////////
 
+	// location of the data files
 	std::string homeDir = getenv("HOME");
 	std::string path = homeDir + "/localstorage/public/coms7900-data/";
 
-//	std::cout << "Data path: " << path << std::endl;
-
 	std::vector<std::string> FilenameArray;
 
+	// Retrieve the list of files to process
 	if (myRank == 0)
 		FilenameArray = listFiles(path, maxFilesToProc);
 
+	// Distribute files to workers
 	if (myRank == 0) {
 		distributeFiles(FilenameArray, numNodes-1);
 	} 
@@ -145,8 +150,8 @@ int main(int argc, char *argv[])
 #endif
 	
 	int sortInd = _X_;
-	double myMin = -1 * (double) myRank; // ONLY FOR DEBUG! (JJL)
-	double myMax = (double) myRank;      // ONLY FOR DEBUG! (JJL)
+	double myMin = 0.0;
+	double myMax = 0.0;
 	double *array;
 	int rows = 0, cols = 0;
 
@@ -182,7 +187,6 @@ int main(int argc, char *argv[])
 	
 	        for (auto r = 1; r < numNodes; r++)
 	                cout << "Rank " << r << " sent " << allRows[r] << " rows" << endl;
-	
 	
 	        cout << "There were a total of " << numLines << " rows across all workers" << endl;
 	}
@@ -240,8 +244,13 @@ int main(int argc, char *argv[])
 #endif
 
 	MPI_Barrier(MPI_COMM_WORLD);
-	cout << "Rank " << myRank << " has reached the MinMax checkpoint" << endl;
-	
+
+	//////////////////////
+	//                  //
+	// Adapt Bin Sizes  //
+	//                  //
+	//////////////////////
+
 	// same across all nodes
 	double *binE = new double[numWorkers+1];
 	// different across all nodes, master is sum of others
