@@ -40,7 +40,7 @@ void importFiles(vector<string> files, int myRank,
 	double *myData, int *rows, int *cols) {
 
 	// DEBUG CONTROL
-	const unsigned int maxLines = 100;
+	const unsigned int maxLines = maxRows;
 
 
 	*cols = _ROW_WIDTH_;
