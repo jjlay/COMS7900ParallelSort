@@ -53,8 +53,9 @@ void adaptBins( double *binE, int *binC, int numWorkers) {
 	//	}
 		dB = binE[i+1] - binE[i];
 		
-	//	diff[i] = 0.25*dC*dB;
-		diff[i] = 0.45*dC*dB;
+	//	diff[i] = 0.15*dC*dB;
+	//	diff[i] = 0.45*dC*dB;
+		diff[i] = 0.475*dC*dB;
 	}
 	
 	for( int i = 1; i < numWorkers; i++ ) {

@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	// total number of files to read
 	int maxFilesToProc = numWorkers;
 	// number of lines PER FILE
-	int maxRows = 1000;
+	int maxRows = 100000;
 	//number of lines TOTAL
 	unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
 		
 
 	// uniformity threshold
-	double thresh = 0.05;
+	double thresh = 0.101;
 	double uniformity;
 	// Change to 0 when the functions are written
 	int isUniform[1];
@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
 		
 		// Calculate initial bin edges
 		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );  // for real
-//		std::cout.precision(17);
+		std::cout.precision(17);
 //		std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
 		// Transmit initial bin edges
@@ -280,7 +280,11 @@ int main(int argc, char *argv[])
 		
 		// Receive initial bin counts
 		receiveBinCounts( binC, numWorkers );
-		std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
+		std::cout << myRank << " binC: ";
+		for( int i = 0; i < numWorkers; i++ ) {
+			std::cout <<binC[i] << " ";
+		}
+		std::cout << std::endl;
 		
 		// Receive initial bin indices
 		receiveBinIndices( binI_2D, numWorkers );
@@ -342,25 +346,27 @@ int main(int argc, char *argv[])
 		if( myRank == 0 ) {
 			cout << "ITERATION: " << iterations << endl;
 			
+			std::cout.precision(17);
+			
 			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
-//	/*			
-			std::cout.precision(17);
+	/*			
 			std::cout << "binE: " << binE[0] << " " 
 				<< binE[1] << " " 
 				<< binE[2] << " " 
 				<< binE[3] << std::endl;
-//	*/			
+	*/			
 			// Transmit current bin edges
 			transmitBinEdges( binE, numWorkers );
 			
 			// Receive current bin counts
 			receiveBinCounts( binC, numWorkers );
-//	/*
-			std::cout << myRank << "     binC: " << binC[0] 
-				<< " " << binC[1] 
-				<< " " << binC[2] << std::endl;
-//	*/			
+			std::cout << myRank << " binC: ";
+			for( int i = 0; i < numWorkers; i++ ) {
+				std::cout <<binC[i] << " ";
+			}
+			std::cout << std::endl;
+			
 			// Receive current bin indices
 			receiveBinIndices( binI_2D, numWorkers );
 /*

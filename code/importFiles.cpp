@@ -47,7 +47,6 @@ void importFiles(vector<string> files, int myRank,
 	const string suffix = ".txt";
 	const double rowsPerFile = maxRows;
 	unsigned int arrayIndex = 0;
-	std::cout << "test" << std::endl;
 	
 	// loop through files to read
 	for (auto f : files) {
