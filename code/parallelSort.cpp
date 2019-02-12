@@ -241,21 +241,20 @@ int main(int argc, char *argv[])
 	int isUniform[1];
 	isUniform[0] = 1;
 	
-//	std::cout << std::endl;
 	if (myRank == 0) {
-	//	std::cout << "ITERATION: 0" << std::endl;
+		std::cout << "ITERATION: 0" << std::endl;
 		
 		// Calculate initial bin edges
 		getLinearBins( binE, numWorkers, myRank, minGlobal, maxGlobal );  // for real
 //		std::cout.precision(17);
-		//std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
+		std::cout << "binE: " << binE[0] << " " << binE[1] << " " << binE[2] << " " << binE[3] << std::endl;
 		
 		// Transmit initial bin edges
 		transmitBinEdges( binE, numWorkers );
 		
 		// Receive initial bin counts
 		receiveBinCounts( binC, numWorkers );
-		//std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
+		std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
 		// Receive initial bin indices
 		receiveBinIndices( binI_2D, numWorkers );
@@ -294,7 +293,8 @@ int main(int argc, char *argv[])
 		
 		// get intitial bin counts, indices
 		binData( array, binE, myRank, sortInd,
-			numWorkers, numLines, binI_1D, binC); // for real
+			numWorkers, maxRows, binI_1D, binC); // for real
+		std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
 		// Transmit initial bin counts
 		result = MPI_Send( binC, numWorkers, MPI_INT, 0,
@@ -311,29 +311,30 @@ int main(int argc, char *argv[])
 	
 	int iterations = 1;
 	
-	while (( *isUniform == 0 ) && (iterations < abortCount)) {
+//	while( ( *isUniform == 0 ) && (iterations < abortCount) ) {
+	while( iterations < 2 ) {
 		if( myRank == 0 ) {
 			cout << "ITERATION: " << iterations << endl;
 			
 			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
-/*			
+//	/*			
 			std::cout.precision(17);
 			std::cout << "binE: " << binE[0] << " " 
 				<< binE[1] << " " 
 				<< binE[2] << " " 
 				<< binE[3] << std::endl;
-*/			
+//	*/			
 			// Transmit current bin edges
 			transmitBinEdges( binE, numWorkers );
 			
 			// Receive current bin counts
 			receiveBinCounts( binC, numWorkers );
-/*
+//	/*
 			std::cout << myRank << " binC: " << binC[0] 
 				<< " " << binC[1] 
 				<< " " << binC[2] << std::endl;
-*/			
+//	*/			
 			// Receive current bin indices
 			receiveBinIndices( binI_2D, numWorkers );
 /*
@@ -373,7 +374,7 @@ int main(int argc, char *argv[])
 			
 			// get current bin counts, indices
 			binData( array, binE, myRank, sortInd,
-				numWorkers, numLines, binI_1D, binC); // for real
+				numWorkers, maxRows, binI_1D, binC); // for real
 		//	std::cout << "binC " <<  myRank << ": " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 			
 			// Transmit current bin counts
