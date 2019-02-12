@@ -70,8 +70,6 @@ int main(int argc, char *argv[])
 #endif
 	
 	int numWorkers = numNodes - 1;
-	const unsigned int numLines = maxRows;
-	int avgPtsPerWorker = maxRows / numWorkers; // initial amount to move curr by
 	
 	// set cout to print doubles' full length
 //	std::cout.precision(17);
@@ -129,6 +127,9 @@ int main(int argc, char *argv[])
 
 
 MPI_Barrier(MPI_COMM_WORLD);
+
+	const unsigned int numLines = maxRows * FilenameArray.size();
+	int avgPtsPerWorker = numLines / numWorkers; // initial amount to move curr by
 
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();

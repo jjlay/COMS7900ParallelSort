@@ -37,7 +37,8 @@
 // returns binC, updates binI
 //
 
-void binData( double *data, double *binE, int myRank, int sortInd, int numWorkers, int numPoints, int *binI, int *binC) {
+void binData( double *data, double *binE, int myRank, int sortInd, 
+	int numWorkers, int numPoints, int *binI, int *binC) {
 	// binE: bin edges, binI: bin edge indices, binC: bin counts
 	// sortInd: which column to sort by
 	
@@ -58,11 +59,11 @@ void binData( double *data, double *binE, int myRank, int sortInd, int numWorker
 		
 		if( binE[i] <= data[sortInd] ) {
 			binI[i] = 0;
-		} else if( data[4*(numLines-1)+sortInd] <= binE[i] ) {
-			binI[i] = numLines;
+		} else if( data[4*(numPoints-1)+sortInd] <= binE[i] ) {
+			binI[i] = numPoints;
 		} else {
 			a = 0;
-			b = numLines-1;
+			b = numPoints-1;
 			c = (int)floor((a+b)/2.0);
 			
 			if( binE[i] < data[4*c+sortInd] ) {
