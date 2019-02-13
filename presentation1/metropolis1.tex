@@ -121,24 +121,25 @@ James Farzi, JJ Lay, Graham West}
 
 \subsection{Sorting}
 
-\begin{frame}	
-	\frametitle{Sorting}
-	
-	We implemented Merge and Bubble Sort
-	
-	\begin{block}{xxx}
-		\begin{itemize}
-			\item xxx
-			\item xxx
-		\end{itemize}
-	\end{block}
-	
-	\begin{block}{xxx}
-		\begin{itemize}
-			\item xxx
-			\item xxx
-		\end{itemize}
-	\end{block}
+\begin{frame}    
+    \frametitle{Sorting}
+    
+    We implemented Linked List Insertion Sort and Bubble Sort
+    
+    \begin{block}{Linked List Insertion Sort}
+        \begin{itemize}
+            \item Best Case N , Worst Case $N^2$
+            \item Selects items one at a time and inserts them in the appropriate place along a linked list
+            \item Then replaces the original array with the elements from the linked list
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Bubble Sort}
+        \begin{itemize}
+            \item Use- time testing for efficiency
+            \item Not to be used during normal operations
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \subsection{Binning}
@@ -221,26 +222,28 @@ James Farzi, JJ Lay, Graham West}
 
 
 
+
 \subsection{Exchanging data}
 
-\begin{frame}	
-	\frametitle{Exchanging data}
-	
-	\begin{block}{xxx}
-		\begin{itemize}
-			\item xxx
-			\item xxx
-		\end{itemize}
-	\end{block}
-	
-	\begin{block}{xxx}
-		\begin{itemize}
-			\item xxx
-			\item xxx
-		\end{itemize}
-	\end{block}
+\begin{frame}    
+    \frametitle{Exchanging data: using swapArrayParts then cleanUp}
+    
+    \begin{block}{swapArrayParts}
+        \begin{itemize}
+            \item Takes a specified amount of data from one node and appends it to the end of the existing data for the receiving array
+            \item Inside the function- first transmits the length of data to be received then transfers the data
+            \item No data is to be deleted at this time
+            \item Allows for flexibility in implementation algorithm
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{cleanUp}
+        \begin{itemize}
+            \item To be used after all nodes have performed a swapArrayParts to all other nodes
+            \item Will go back through each nodes array removing data that had been transferred by swapArrayParts and resizing the array for each node
+        \end{itemize}
+    \end{block}
 \end{frame}
-
 
 %%%%%%%%%%%%
 %%% new section %%%
