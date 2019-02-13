@@ -483,6 +483,7 @@ int main(int argc, char *argv[])
 		
 		// Transmit elements to appropriate nodes
 		for( int fromWho = 1; fromWho <= numWorkers; fromWho++ ){
+			cout << "Rank " << myRank << " is requesting data from " << fromWho << endl;
 			if( fromWho != myRank ) {
 				// should numRanks be numNodes or numWorkers???
 				swapArrayParts( array2, rowPTR, colPTR, myRank, numWorkers, binI_2D[fromWho-1], fromWho, myRank );
