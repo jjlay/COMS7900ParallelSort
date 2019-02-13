@@ -38,7 +38,6 @@
 //
 //Function: swapArrayParts
 //
-
 using namespace std;
 
 struct Node{
@@ -52,7 +51,6 @@ struct Node{
 void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numranks, int *binIPTR, int fromWho, int toWho){
 	MPI_Request request;
 	MPI_Status status;
-
 	int maxRank = numranks;
 	int myRank = myrank;
 	int *myBinI;
@@ -74,14 +72,10 @@ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, i
 	if(fromWho == myRank) {
 		for(int mi =0; mi<maxRank+1; mi++){
 			myBinI[mi] = binIPTR[mi];
-		}
-
-		cout << "Rank " << myRank << " is sending data to " << toWho << endl;
+		}	
 		MPI_Isend(myBinI, (maxRank+1), MPI_INT, toWho,999, MPI_COMM_WORLD, &request);
 	}
-
-	if(myRank == toWho) {
-		cout << "Rank " << myRank << " is waiting for " << fromWho << " to send it data" << endl;
+	if(myRank ==toWho){
 		MPI_Recv(yourBinI, (maxRank+1), MPI_INT, fromWho , 999, MPI_COMM_WORLD, &status);
 		myStartRow = yourBinI[myRank];
 		myEndRow = yourBinI[myrank+1];
@@ -90,19 +84,13 @@ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, i
 		for (int itest = 1; itest< maxRank+1; itest++){
 		}
 	}
-
-	cout << "Rank " << myRank << " has reached the first barrier in swapArray" << endl;
 	MPI_Barrier(MPI_COMM_WORLD);
-
 	if(myRank ==fromWho){
 		myAmountToSend = 4*(myBinI[toWho+1]-myBinI[toWho]);
 		mySendStartingPoint = 4*(myBinI[toWho]);
 		MPI_Isend(&myArray[mySendStartingPoint], myAmountToSend, MPI_DOUBLE, toWho, 888,  MPI_COMM_WORLD, &request); 
-	}
-	
-	cout << "Rank " << myRank << " has reached the second barrier in swapArray" << endl;
+	}	
 	MPI_Barrier(MPI_COMM_WORLD);
-
 	if(myRank == toWho){
 		myAmountToReceive = 4*(myEndRow-myStartRow);
 		double *receiveThis;
@@ -120,8 +108,6 @@ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, i
 
 		rowPTR[0]= rowPTR[0]+ myAmountToReceive/4;
 	}
-
-	cout << "Rank " << myRank << " has reached the last barrier in swapArray" << endl;
 	MPI_Barrier(MPI_COMM_WORLD);
 
 
