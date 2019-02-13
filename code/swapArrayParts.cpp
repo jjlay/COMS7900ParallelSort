@@ -76,12 +76,12 @@ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, i
 			myBinI[mi] = binIPTR[mi];
 		}
 
-		cout << "Rank " << myRank << " is sending to " << toWho << endl;
+		cout << "Rank " << myRank << " is sending data to " << toWho << endl;
 		MPI_Isend(myBinI, (maxRank+1), MPI_INT, toWho,999, MPI_COMM_WORLD, &request);
 	}
 
 	if(myRank == toWho) {
-		cout << "Rank " << myRank << " is waiting for " << fromWho << endl;
+		cout << "Rank " << myRank << " is waiting for " << fromWho << " to send it data" << endl;
 		MPI_Recv(yourBinI, (maxRank+1), MPI_INT, fromWho , 999, MPI_COMM_WORLD, &status);
 		myStartRow = yourBinI[myRank];
 		myEndRow = yourBinI[myrank+1];
