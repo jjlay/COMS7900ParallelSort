@@ -68,10 +68,18 @@ James Farzi, JJ Lay, Graham West}
 	\end{figure}
 \end{frame}
 
-\begin{comment}
+\section{The Algorithm}
 
 %%%%%%%%%%%%%
 %%%%%%%%%%%%%
+\begin{frame}	
+	\begin{Huge}
+		\begin{center}
+			The Algorithm
+		\end{center}
+	\end{Huge}
+\end{frame}
+
 \begin{frame}	
 	\frametitle{The Algorithm}
 	
@@ -87,8 +95,8 @@ James Farzi, JJ Lay, Graham West}
 		\begin{itemize}
 			\item Import data from files
 			\item Perform initial sort
-			\item Identify bins
-			\item Distribute data
+			\item Find uniform bins
+			\item Exchange data
 			\item Perform final sort
 		\end{itemize}
 	\end{block}
@@ -109,7 +117,7 @@ James Farzi, JJ Lay, Graham West}
 	\begin{block}{importFiles}
 		\begin{itemize}
 			\item Allocate 1D array of length: \\ \texttt{NumFiles} $\times$ \texttt{MaxLinesPerFile} $\times$ 4 columns
-			\item Each worker reads files and appends data to array
+			\item Each worker reads ASCII files and appends data to array
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -123,7 +131,7 @@ James Farzi, JJ Lay, Graham West}
     
     \begin{block}{Linked List Insertion Sort}
         \begin{itemize}
-            \item Best Case N , Worst Case $N^2$
+            \item Best Case N, Worst Case $N^2$
             \item Selects items one at a time and inserts them in the appropriate place along a linked list
             \item Then replaces the original array with the elements from the linked list
         \end{itemize}
@@ -131,12 +139,11 @@ James Farzi, JJ Lay, Graham West}
     
     \begin{block}{Bubble Sort}
         \begin{itemize}
-            \item Use- time testing for efficiency
+            \item Use: time testing for efficiency
             \item Not to be used during normal operations
         \end{itemize}
     \end{block}
 \end{frame}
-\end{comment}
 
 \subsection{Binning}
 
@@ -150,10 +157,10 @@ James Farzi, JJ Lay, Graham West}
 		\end{itemize}
 	\end{block}
 	
-	\begin{block}{xxx}
+	\begin{block}{Initial bin edges}
 		\begin{itemize}
-			\item xxx
-			\item xxx
+			\item As a first approximation, we assume that the bin edges are equally-spaced
+			\item We then improve this over time
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -216,9 +223,6 @@ James Farzi, JJ Lay, Graham West}
 	\end{figure}
 \end{frame}
 
-
-
-
 \subsection{Exchanging data}
 
 \begin{frame}    
@@ -227,7 +231,7 @@ James Farzi, JJ Lay, Graham West}
     \begin{block}{swapArrayParts}
         \begin{itemize}
             \item Takes a specified amount of data from one node and appends it to the end of the existing data for the receiving array
-            \item Inside the function- first transmits the length of data to be received then transfers the data
+            \item Inside the function: first transmits the length of data to be received then transfers the data
             \item No data is to be deleted at this time
             \item Allows for flexibility in implementation algorithm
         \end{itemize}
@@ -244,7 +248,17 @@ James Farzi, JJ Lay, Graham West}
 %%%%%%%%%%%%
 %%% new section %%%
 %%%%%%%%%%%%
-\subsection{Results}
+\section{Testing}
+
+\begin{frame}	
+	\begin{Huge}
+		\begin{center}
+			Testing
+		\end{center}
+	\end{Huge}
+\end{frame}
+
+%\subsection{Results}
 
 \begin{frame}	
 	\frametitle{distributeFiles}
@@ -302,6 +316,8 @@ James Farzi, JJ Lay, Graham West}
 	\end{Huge}
 \end{frame}
 
+\subsection{Challenges}
+
 \begin{frame}	
 	\frametitle{Challenges}
 	
@@ -333,6 +349,40 @@ James Farzi, JJ Lay, Graham West}
 	\end{block}
 
 \end{frame}
+
+\subsection{Future Work}
+
+\begin{frame}	
+	\frametitle{Future Work}
+	
+	\begin{block}{Reading the data}
+		\begin{itemize}
+			\item Read binary datainstead of ASCII for speedup
+		\end{itemize}
+	\end{block}
+	
+	\begin{block}{Data types}
+		\begin{itemize}
+			\item For simplicity, use vectors/structs instead of arrays
+		\end{itemize}
+	\end{block}
+	
+	\begin{block}{Finish data swap}
+		\begin{itemize}
+			\item Resolve scaling issues (overflowing buffer)
+		\end{itemize}
+	\end{block}
+	
+	\begin{block}{Testing}
+		\begin{itemize}
+			\item Easier collection of performance data
+			\item Use loops in qsub files to automate multiple runs
+		\end{itemize}
+	\end{block}
+	
+\end{frame}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
