@@ -474,31 +474,45 @@ int main(int argc, char *argv[])
 	//                          //
 	//////////////////////////////
 
-	if (myRank != 0) {
-		int *rowPTR;
-		int *colPTR;
-		double **array2;
-		
-		array2 = &array;
-		
-		// Transmit elements to appropriate nodes
-		for( int fromWho = 1; fromWho <= numWorkers; fromWho++ ){
-			cout << "Rank " << myRank << " is requesting data from " << fromWho << endl;
-			if( fromWho != myRank ) {
-				// should numRanks be numNodes or numWorkers???
-				swapArrayParts( array2, rowPTR, colPTR, myRank, numWorkers, binI_2D[fromWho-1], fromWho, myRank );
-			}
-		}
-		
-		
-		
-		// Cleanup elements from same node
-		
-		// Final sort
-		
-		// Export results
-		
-	}
+	MPI_Barrier(MPI_COMM_WORLD);
+        cout << "\n **********Farzi here ******* with rank : " << myRank  << endl;
+
+        sleep(2);
+        int F_rows = int(numLines);
+        int F_cols = 4;
+        int toWho;
+        int fromWho;
+        for( fromWho = 1; fromWho < numNodes; fromWho++ ){
+               for( int toWho = 1; toWho< numNodes; toWho++){
+                        if(toWho!=fromWho){
+                                if(myRank ==toWho || myRank ==fromWho){
+                                        cout << "Rank " << myRank << " towho: " << toWho << " is entering swap parts with  " << fromWho << endl;
+                                        swapArrayParts( &array, &F_rows, &F_cols, myRank, numNodes, binI_2D[fromWho-1], fromWho, toWho );
+                                        cout << "^^^^^^^^^Rank " << myRank << " towho: " << toWho << " exited swap parts with  " << fromWho << endl;
+                                }
+                        MPI_Barrier(MPI_COMM_WORLD);
+                //      sleep(5);
+
+                        }
+                }
+                if(myRank == fromWho){
+                        cout << "Rank: " << fromWho << " has sent all its data " << endl;
+                }
+                //sleep(1);
+        }
+        MPI_Barrier(MPI_COMM_WORLD);
+        cout << "**************Rank: "<< myRank<< " has exited the swap loops"  << endl;
+//      sleep( 99999999);
+        numLines = (unsigned int)F_rows;
+        MPI_Barrier(MPI_COMM_WORLD);
+                // Cleanup elements from same node
+        for(int clean = 1; clean< numNodes; clean++){
+        //      cleanUp(&array, &F_rows, &F_cols, myRank, numNodes, binI_2D[myRank]);   
+        }
+        cout << "Rank: " << myRank << " cleanUp complete " << endl;
+                // Final sort
+
+                // Export results
 
 
 #ifdef _TIMING_	
