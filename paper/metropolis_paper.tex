@@ -1,1 +1,138 @@
+\documentclass{article}
+
+\usepackage[a4paper,margin=1.15in,footskip=0.25in]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{textpos}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{algorithmic}
+\usepackage{verbatim}
+\usepackage{textcomp}
+\usepackage{varwidth}
+\usepackage[linesnumbered,ruled]{algorithm2e}
+
+% Theorem
+\newtheorem{theorem}{Theorem}
+
+% lists
+\usepackage{outlines}
+\usepackage{enumitem}
+\newenvironment{tight_enum}{
+\begin{enumerate}[label=\alph*.]
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+}{\end{enumerate}}
+
+% \subsubsubsection{}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+\newcommand\simpleparagraph[1]{%
+  \stepcounter{paragraph}\paragraph*{\theparagraph\quad{}#1}}
+
+
+%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%
+%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%
+%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%
+
+\begin{document}
+
+\title{An optimization-inspired approach to parallel sorting}
+\author{Team Metropolis: \\
+		James Farzi, JJ Lay, and Graham West}
+\date{COMS 7900, Capstone}
+
+\maketitle
+
+\begin{abstract}
+We present a novel method influenced by ideas in the field optimization to efficiently sort large amounts of data in parallel on a cluster of computing nodes. We describe in depth the different challenges which beset such a method, including distributing/importing files, locally sorting the data on each node, uniformly binning the data, and exchanging data between the nodes. We also present the results of several different timing tests applied to the method. These tests demonstrate how the method scales when the number of files and/or the number of nodes is increased. Finally, we summarize the the greatest challenges in implementing the method, as well as the components of the method which were the most successful. We conclude with a discussion on ways in which the method could be improved.
+\end{abstract}
+
+
+\tableofcontents
+
+
+%%%%%%%%%%%%%
+%%% NEW SECTION %%%
+%%%%%%%%%%%%%
+\section{The Method}
+Introduction:
+
+We used C++ with C MPI calls
+
+Used GitHub
+
+Workflow description
+
+
+% JJ
+\subsection{File I/O}
+\subsubsection{Distributing files}
+\subsubsection{Importing files}
+
+
+% JF
+\subsection{Sorting}
+\subsubsection{Linked list merge sort}
+\subsubsection{Bubble sort}
+
+
+% GW
+\subsection{Binning}
+% This is where the optimization stuff is
+\subsubsection{Adapting bin edges}
+\subsubsection{Data binning w/ binary search}
+\subsubsection{Stopping criterion: the uniformity metric}
+
+
+% JF
+\subsection{Exchanging data}
+\subsubsection{Data swap}
+\subsubsection{Cleanup}
+
+
+%%%%%%%%%%%%%
+%%% NEW SECTION %%%
+%%%%%%%%%%%%%
+\section{Testing}
+
+
+% GW
+\subsection{Adaptive binning}
+\subsubsection{Prototyping in MATLAB}
+\subsubsection{C++ runs}
+
+% JJ
+\subsection{Everything Else}
+% Call this section whatever you want, JJ, and divide it into whatever subsubsections you deem appropriate
+
+
+%%%%%%%%%%%%%
+%%% NEW SECTION %%%
+%%%%%%%%%%%%%
+\section{Conclusions}
+We will now conclude with two discussions on 1) the most difficult and most successful aspects of our method and 2) ways of improving the both the method's performance/efficiency and our workflow as a group.
+
+\subsection{Challenges and successes}
+
+
+\subsection{Future work}
+
+
+
+%%%%%%%%%%%%%%%
+%%%%% THE END %%%%%
+%%%%%%%%%%%%%%%
+
+
+\end{document}
+
+
+
+
 
