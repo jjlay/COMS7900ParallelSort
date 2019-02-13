@@ -71,30 +71,24 @@ James Farzi, JJ Lay, Graham West}
 
 %%%%%%%%%%%%%
 %%%%%%%%%%%%%
-\section{The Algorithm}
-
-\begin{frame}	
-	\begin{Huge}
-		\begin{center}
-			The Algorithm
-		\end{center}
-	\end{Huge}
-\end{frame}
-
 \begin{frame}	
 	\frametitle{The Algorithm}
 	
-	\begin{block}{xxx}
+	\begin{block}{Initial Phase}
 		\begin{itemize}
-			\item xxx
-			\item xxx
+			\item Initialize MPI
+			\item Read list of available data files
+			\item Distribute available data files to workers
 		\end{itemize}
 	\end{block}
 	
-	\begin{block}{xxx}
+	\begin{block}{Work Phase}
 		\begin{itemize}
-			\item xxx
-			\item xxx
+			\item Import data from files
+			\item Perform initial sort
+			\item Identify bins
+			\item Distribute data
+			\item Perform final sort
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -104,17 +98,17 @@ James Farzi, JJ Lay, Graham West}
 \begin{frame}	
 	\frametitle{Distributing/Importing Files}
 	
-	\begin{block}{xxx}
+	\begin{block}{distributeFiles}
 		\begin{itemize}
-			\item xxx
-			\item xxx
+			\item Rank 0 reads files matching \texttt{datafile000000.txt}
+			\item Files are distributed round robin to workers
 		\end{itemize}
 	\end{block}
 	
-	\begin{block}{xxx}
+	\begin{block}{importFiles}
 		\begin{itemize}
-			\item xxx
-			\item xxx
+			\item Allocate 1D array of length: \\ \texttt{NumFiles} $\times$ \texttt{MaxLinesPerFile} $\times$ 4 columns
+			\item Each worker reads files and appends data to array
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -248,24 +242,54 @@ James Farzi, JJ Lay, Graham West}
 %%%%%%%%%%%%
 %%% new section %%%
 %%%%%%%%%%%%
-\section{Testing}
-
-\begin{frame}	
-	\begin{Huge}
-		\begin{center}
-			Testing
-		\end{center}
-	\end{Huge}
-\end{frame}
-
-\subsection{Methodology}
-
-
 \subsection{Results}
 
+\begin{frame}	
+	\frametitle{distributeFiles}
+	
+	\begin{figure}[!htb]
+		\centering
+		\vspace{-5pt}
+		\includegraphics[scale = 0.30]{distributeFiles.png}
+		\vspace{-10pt}
+		\caption{Time to read directory and distribute files to workers}
+	\end{figure}
+	
+\end{frame}
+
+\begin{frame}	
+	\frametitle{importFiles}
+	
+	\begin{figure}[!htb]
+		\centering
+		\vspace{-5pt}
+		\includegraphics[scale = 0.30]{importFiles.png}
+		\vspace{-10pt}
+		\caption{Time to import 1000 rows from each file}
+	\end{figure}
+	
+\end{frame}
+
+\begin{frame}	
+	\frametitle{initialSort}
+	
+	\begin{figure}[!htb]
+		\centering
+		\vspace{-5pt}
+		\includegraphics[scale = 0.30]{initialSort.png}
+		\vspace{-10pt}
+		\caption{Time to sort 501000 rows}
+	\end{figure}
+	
+\end{frame}
+
+
 %%%%%%%%%%%%
-%%% new section %%%
+%%
+%% Conclusions
+%%
 %%%%%%%%%%%%
+
 \section{Conclusions}
 
 \begin{frame}	
@@ -276,7 +300,37 @@ James Farzi, JJ Lay, Graham West}
 	\end{Huge}
 \end{frame}
 
+\begin{frame}	
+	\frametitle{Challenges}
+	
+	\begin{block}{Integration}
+		\begin{itemize}
+			\item Identifying structure of parameters and return values
+			\item Needed better planning of data types up front
+		\end{itemize}
+	\end{block}
+	
+	\begin{block}{Git}
+		\begin{itemize}
+			\item Resolving merge conflicts
+			\item Basic Git workflow
+		\end{itemize}
+	\end{block}
 
+	\begin{block}{Coding}
+		\begin{itemize}
+			\item Forgot to remove debug controls while collecting performance data
+		\end{itemize}
+	\end{block}
+
+	\begin{block}{Testing}
+		\begin{itemize}
+			\item Long runtimes when testing with full dataset
+			\item Failures during long runs
+		\end{itemize}
+	\end{block}
+
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
