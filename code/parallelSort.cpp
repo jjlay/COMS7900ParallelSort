@@ -542,6 +542,7 @@ if(myRank !=0){
 
 if(myRank !=0){
 	cout << "Rank " << myRank << " array after clean up " << endl;
+
 	for(int iii =0 ; iii< maxRows ; iii++){
 		cout << "Row: " << iii << " : " ;
 		for(int kkk =0; kkk < 4; kkk++){
@@ -549,6 +550,7 @@ if(myRank !=0){
 		}
 		cout << endl;
 	}
+
 }
 	sleep(10);
 	cout << "Rank: " << myRank << " has made it through clean up *******************" << endl;

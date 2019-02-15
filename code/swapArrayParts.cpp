@@ -71,7 +71,7 @@ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, i
 	
 	if(fromWho == myRank) {
                 for(int mi =0; mi<maxRank+1; mi++){
-                        myBinI[mi] = binIPTR[mi-1];
+                        myBinI[mi+1] = binIPTR[mi];
                 }
                 MPI_Isend(myBinI, (maxRank+1), MPI_INT, toWho,999, MPI_COMM_WORLD, &request);
       //          cout << "Rank: " << myRank << " has sent ibin to: " << toWho << endl;
