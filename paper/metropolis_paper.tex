@@ -61,13 +61,50 @@ We present a novel method influenced by ideas in the field optimization to effic
 %%% NEW SECTION %%%
 %%%%%%%%%%%%%
 \section{The Method}
+
 Introduction:
 
 We used C++ with C MPI calls
 
 Used GitHub
 
-Workflow description
+Workflow description\\
+
+
+
+Conventions (NOTE: be consistent with the indices):
+
+$N$: number of nodes
+
+$W$: number of workers ($N-1$)
+
+$L$: number of lines to read per file
+
+$L_w$: number of lines on the $w$th worker
+
+$M$: max number of allowed time steps
+
+Indices:
+\begin{tight_enum}
+	\item $m = 0, \cdots, M$ is the time step of the bin adaptation scheme (likely less than $M$)
+	\item $n = 0, \cdots, W$ spans the nodes
+	\item $w = 1, \cdots, W$ spans the workers
+	\item $i = 0, \cdots, W$ spans the bin edges/indices
+	\item $j = 1, \cdots, W$ spans the bin counts (this will occasionally subscript binI/E as well)
+	\item $\ell_w = 0, \cdots, L_w-1$ spans the lines on the $w$th worker
+	\item $k = 0, \cdots, 3$ is the data column being sorted
+\end{tight_enum}
+
+$\textrm{data}^w_{4\ell+k}$: data point on $k$th line and $\ell$th column (0 indexed) on the $w$th worker (1 indexed)
+
+$\textrm{binE}_j$: bin edges (0 indexed)
+
+$\textrm{binI}^w_j$: bin indices on worker $w$ (0 indexed)
+
+$\textrm{binC}^w_j$: bin counts on worker $w$ (1 indexed w.r.t. $w$)
+
+$\textrm{binC}^0_j$: bin counts on head node (sum of worker binC's)
+
 
 
 % JJ
@@ -85,9 +122,37 @@ Workflow description
 % GW
 \subsection{Binning}
 % This is where the optimization stuff is
-\subsubsection{Adapting bin edges}
+We now discuss the optimization-inspired portion of the method. We use an iterative scheme to adjust the bin edges through time. As an initial condition/approximation, we  set the bin edges to be equally-spaced between the global min and max of the data.
+
 \subsubsection{Data binning w/ binary search}
+Since each node could theoretically have millions of data points, repeatedly looping through the data to find the bin in which each point lies would be inefficient. As such, we use the fact that the data is sorted to expedite the process significantly by using binary search. Now, each worker will have the same bin edges $\textrm{binE}_i$ (where $i = 0, \cdots, W$), but the the location of the edges with respect to the data indices on each worker will likely be quite different if the data distribution across workers varies. With this in mind, for each worker, we search for the data indices at which each bin edge lies, giving us the new variables $\textrm{binI}^w_i$ (note the superscript $w$, indicating that each worker has its own unique set of bin indices). To do this, we search for the index $\ell$ such that
+\begin{equation}
+	\textrm{data}^w_{4\ell+k} < \textrm{binE}^m_i < \textrm{data}^w_{{4(\ell+1)+k}}
+\end{equation}
+giving $\textrm{binI}^w_i = \ell+1$. We also set $\textrm{binI}^w_0 = 0$ and $\textrm{binI}^w_W = L_w$. We then calculate $\textrm{binC}^w_j$:
+\begin{equation}
+	\textrm{binC}^w_j = \textrm{binI}^w_j - \textrm{binI}^w_{j-1}, \quad j = 1, \cdots, W
+\end{equation}
+Lastly, we calculate the total bin counts on the master node:
+\begin{equation}
+	\textrm{binC}^0_j = \sum_{w=1}^{W} \textrm{binC}^w_j, \quad j = 1, \cdots, W
+\end{equation}
+
+
 \subsubsection{Stopping criterion: the uniformity metric}
+
+
+\begin{equation}
+	U^n = \textrm{max}( \dfrac{c_{\textrm{max}} - c_{\textrm{avg}}}{c_{\textrm{avg}}}, \dfrac{c_{\textrm{avg}} - c_{\textrm{min}}}{c_{\textrm{avg}}} )
+\end{equation}
+
+
+\subsubsection{Adapting bin edges}
+If the data is not uniform in the first step, we move on to adapt the bins.
+
+
+
+
 
 
 % JF
@@ -102,14 +167,18 @@ Workflow description
 \section{Testing}
 
 
-% GW
-\subsection{Adaptive binning}
+\subsection{File I/O}
+
+\subsection{Sorting}
+\subsubsection{Linked list merge sort}
+\subsubsection{Bubble sort}
+
+\subsection{Binning}
 \subsubsection{Prototyping in MATLAB}
 \subsubsection{C++ runs}
 
-% JJ
-\subsection{Everything Else}
-% Call this section whatever you want, JJ, and divide it into whatever subsubsections you deem appropriate
+\subsection{Exchanging data}
+
 
 
 %%%%%%%%%%%%%
