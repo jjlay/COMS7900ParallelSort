@@ -47,16 +47,26 @@ void cleanUp(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numr
 	int myRank = myrank;
 	double *myArray = *pmyArray;
 	double *tempArray;
-	int reserveThisMuchSpace =  (4*((binIPTR[myRank+1]-binIPTR[myRank])+rowPTR[0]-binIPTR[maxRank])); 
+//Fix bini ???
+	int *myBinI;	
+	sleep(myRank);
+//	cout << "Rank: " << myRank << " adusted binI: " ;
+	for (int ii =0; ii< maxRank +1; ii++){
+		myBinI[ii] = binIPTR[ii-1];
+//		cout << " : " << myBinI[ii];
+	}
+//	cout << endl;
+	int reserveThisMuchSpace =  (4*((myBinI[myRank+1]-myBinI[myRank])+rowPTR[0]-myBinI[maxRank])); 
 	tempArray = (double*)malloc((reserveThisMuchSpace)*sizeof(double));
 	int tempArrayCounter =0;
-	for (int j = binIPTR[myRank]; j< binIPTR[myRank+1]; j++){
+//	cout << "rank: " << myRank << " Inside clean up with binI "<< endl;
+	for (int j = myBinI[myRank]; j< myBinI[myRank+1]; j++){
 		for(int k =0; k< colPTR[0] ; k++){
 			tempArray[tempArrayCounter] = myArray[j*4+k];
 			tempArrayCounter ++;
 		}
 	}	
-	for (int j = binIPTR[maxRank]; j< (rowPTR[0]); j++){
+	for (int j = myBinI[maxRank]; j< (rowPTR[0]); j++){
 		for(int l =0; l< colPTR[0] ; l++){
 			tempArray[tempArrayCounter] = myArray[j*4+l];
 			tempArrayCounter ++; 

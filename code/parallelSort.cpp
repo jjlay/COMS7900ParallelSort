@@ -12,7 +12,8 @@
 #include <string>
 #include <chrono> 
 
-
+#include <unistd.h>
+#include <time.h>
 //
 // Parallel includes
 //
@@ -46,6 +47,7 @@
 #include "max.h"
 #include "LL_sort.h"
 #include "swapArrayParts.h"
+#include "cleanUp.h"
 
 
 using namespace std;
@@ -77,7 +79,7 @@ int main(int argc, char *argv[])
 	// total number of files to read
 	int maxFilesToProc = numWorkers;
 	// number of lines PER FILE
-	int maxRows = 1000;
+	int maxRows = 10000;
 	//number of lines TOTAL
 	unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node
@@ -167,8 +169,8 @@ int main(int argc, char *argv[])
 	        MPI_Isend(&rows, 1, MPI_INT, Rank0, mpi_Tag_RowCount, MPI_COMM_WORLD, &tempRequest);
 	
 	        // Perform initial sort
-	        sortArray(array, rows, cols, sortInd);
-	        //LL_sort(array, rows, cols, sortInd);
+	        // sortArray(array, rows, cols, sortInd);
+	        LL_sort(array, rows, cols, sortInd);
 	}
 	else {
 	        // Rank 0 is going to receive the number of lines on each
@@ -476,8 +478,18 @@ int main(int argc, char *argv[])
 
 	MPI_Barrier(MPI_COMM_WORLD);
         cout << "\n **********Farzi here ******* with rank : " << myRank  << endl;
-
-        sleep(2);
+if (myRank!=0){
+//	sleep(myRank);
+//	cout << "Rank " << myRank << " array " << endl;
+	for(int iii =0 ; iii< maxRows ; iii++){
+//		cout << "Row: " << iii << " : " ;
+		for(int kkk =0; kkk <4; kkk++){
+//			cout << array[4*iii+kkk] << " : " ;
+		}
+//		cout << endl;
+	}
+}
+  //      sleep(2);
         int F_rows = int(numLines);
         int F_cols = 4;
         int toWho;
@@ -487,10 +499,9 @@ int main(int argc, char *argv[])
                         if(toWho!=fromWho){
                                 if(myRank ==toWho || myRank ==fromWho){
                                         cout << "Rank " << myRank << " towho: " << toWho << " is entering swap parts with  " << fromWho << endl;
-                                        swapArrayParts( &array, &F_rows, &F_cols, myRank, numNodes, binI_2D[fromWho-1], fromWho, toWho );
+                                        swapArrayParts( &array, &maxRows, &F_cols, myRank, numNodes, binI_2D[fromWho-1], fromWho, toWho );
                                         cout << "^^^^^^^^^Rank " << myRank << " towho: " << toWho << " exited swap parts with  " << fromWho << endl;
                                 }
-                        MPI_Barrier(MPI_COMM_WORLD);
                 //      sleep(5);
 
                         }
@@ -498,18 +509,50 @@ int main(int argc, char *argv[])
                 if(myRank == fromWho){
                         cout << "Rank: " << fromWho << " has sent all its data " << endl;
                 }
+		cout << "#######################################################\n##########################\nRank: " << myRank << " Has a new row length of : " << maxRows << endl;
                 //sleep(1);
+        	MPI_Barrier(MPI_COMM_WORLD);
         }
         MPI_Barrier(MPI_COMM_WORLD);
         cout << "**************Rank: "<< myRank<< " has exited the swap loops"  << endl;
-//      sleep( 99999999);
-        numLines = (unsigned int)F_rows;
+
+//	sleep(5);
+	sleep(myRank);
+if(myRank !=0){
+	cout << "Rank " << myRank << " array " << endl;
+	for(int iii =0 ; iii< maxRows ; iii++){
+		cout << "Row: " << iii << " : " ;
+		for(int kkk =0; kkk < 4; kkk++){
+			cout << array[4*iii+kkk] << " : " ;
+		}
+		cout << endl;
+	}
+}
+//	sleep(5);
+	cout << "rank: " << myRank << " has made it to cleanup !!!!!!!!!!!!!!!!!!!!!!!!! " << endl;
         MPI_Barrier(MPI_COMM_WORLD);
                 // Cleanup elements from same node
         for(int clean = 1; clean< numNodes; clean++){
-        //      cleanUp(&array, &F_rows, &F_cols, myRank, numNodes, binI_2D[myRank]);   
+		if(myRank == clean){
+             		cleanUp(&array, &maxRows, &F_cols, clean, numNodes, binI_2D[myRank-1]);   
+		}
         }
-        cout << "Rank: " << myRank << " cleanUp complete " << endl;
+	MPI_Barrier(MPI_COMM_WORLD);
+//	sleep(myRank);
+
+if(myRank !=0){
+	cout << "Rank " << myRank << " array after clean up " << endl;
+	for(int iii =0 ; iii< maxRows ; iii++){
+		cout << "Row: " << iii << " : " ;
+		for(int kkk =0; kkk < 4; kkk++){
+			cout << array[4*iii+kkk] << " : " ;
+		}
+		cout << endl;
+	}
+}
+	sleep(10);
+	cout << "Rank: " << myRank << " has made it through clean up *******************" << endl;
+	sleep(999999);
                 // Final sort
 
                 // Export results
