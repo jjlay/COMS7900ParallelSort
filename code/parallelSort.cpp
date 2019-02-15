@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	// total number of files to read
 	int maxFilesToProc = numWorkers;
 	// number of lines PER FILE
-	int maxRows = 100000;
+	int maxRows = 100;
 	//number of lines TOTAL
 	unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node
@@ -555,9 +555,9 @@ if(myRank !=0){
 
 }
 */
-	sleep(5);
+//	sleep(5);
 	cout << "Rank: " << myRank << " has made it through clean up *******************" << endl;
-	sleep(999999);
+//	sleep(999999);
                 // Final sort
 
                 // Export results
