@@ -74,6 +74,8 @@ Workflow description\\
 
 Conventions (NOTE: be consistent with the indices):
 
+HEAD node (not master node)
+
 $N$: number of nodes
 
 $W$: number of workers ($N-1$)
@@ -97,13 +99,13 @@ Indices:
 
 $\textrm{data}^w_{4\ell+k}$: data point on $k$th line and $\ell$th column (0 indexed) on the $w$th worker (1 indexed)
 
-$\textrm{binE}_j$: bin edges (0 indexed)
+$\textrm{binE}^m_j$: bin edges (0 indexed) at time step $m$
 
-$\textrm{binI}^w_j$: bin indices on worker $w$ (0 indexed)
+$\textrm{binI}^{w,m}_j$: bin indices on worker $w$ (0 indexed)
 
-$\textrm{binC}^w_j$: bin counts on worker $w$ (1 indexed w.r.t. $w$)
+$\textrm{binC}^{w,m}_j$: bin counts on worker $w$ (1 indexed w.r.t. $w$) at time step $m$
 
-$\textrm{binC}^0_j$: bin counts on head node (sum of worker binC's)
+$\textrm{binC}^{0,m}_j$: bin counts on head node (sum of worker binC's) at time step $m$
 
 
 
@@ -122,33 +124,45 @@ $\textrm{binC}^0_j$: bin counts on head node (sum of worker binC's)
 % GW
 \subsection{Binning}
 % This is where the optimization stuff is
-We now discuss the optimization-inspired portion of the method. We use an iterative scheme to adjust the bin edges through time. As an initial condition/approximation, we  set the bin edges to be equally-spaced between the global min and max of the data.
+We now discuss the optimization-inspired portion of the method. It has optimization properties since we need to find the bin edges such that we maximum the uniformity of the distribution. However, it is a constrained form of optimization since the bin edges must always maintain the relation
+\begin{equation}
+	\textrm{binE}^m_i < \textrm{binE}^m_{i+1}
+\end{equation}
+As we will see, the way we construct our adaptation formulae ensures that this constraint is always met.
 
 \subsubsection{Data binning w/ binary search}
-Since each node could theoretically have millions of data points, repeatedly looping through the data to find the bin in which each point lies would be inefficient. As such, we use the fact that the data is sorted to expedite the process significantly by using binary search. Now, each worker will have the same bin edges $\textrm{binE}_i$ (where $i = 0, \cdots, W$), but the the location of the edges with respect to the data indices on each worker will likely be quite different if the data distribution across workers varies. With this in mind, for each worker, we search for the data indices at which each bin edge lies, giving us the new variables $\textrm{binI}^w_i$ (note the superscript $w$, indicating that each worker has its own unique set of bin indices). To do this, we search for the index $\ell$ such that
+Since we use an iterative scheme to adjust the bin edges through time, we use as an initial condition/approximation equally-spaced bin edges between the global min and max of the data. Now, since each worker could theoretically have millions of data points, repeatedly looping through the data to find the bin in which each point lies would be inefficient. As such, we use the fact that the data is sorted to expedite the process significantly by using binary search. Now, each worker will have the same bin edges $\textrm{binE}^m_i$ (where $i = 0, \cdots, W$), but the the location of the edges with respect to the data indices on each worker will likely be quite different if the data distribution across workers varies. With this in mind, for each worker, we search for the data indices at which each bin edge lies, giving us the new variables $\textrm{binI}^{w,m}_i$ (note the superscript $w$, indicating that each worker has its own unique set of bin indices). To do this, we search for the index $\ell$ such that
 \begin{equation}
 	\textrm{data}^w_{4\ell+k} < \textrm{binE}^m_i < \textrm{data}^w_{{4(\ell+1)+k}}
 \end{equation}
-giving $\textrm{binI}^w_i = \ell+1$. We also set $\textrm{binI}^w_0 = 0$ and $\textrm{binI}^w_W = L_w$. We then calculate $\textrm{binC}^w_j$:
+giving $\textrm{binI}^{w,m}_i = \ell+1$. We also set $\textrm{binI}^{w,m}_0 = 0$ and $\textrm{binI}^{w,m}_W = L_w$. We then calculate $\textrm{binC}^{w,m}_j$:
 \begin{equation}
-	\textrm{binC}^w_j = \textrm{binI}^w_j - \textrm{binI}^w_{j-1}, \quad j = 1, \cdots, W
+	\textrm{binC}^{w,m}_j = \textrm{binI}^{w,m}_j - \textrm{binI}^{w,m}_{j-1}, \quad j = 1, \cdots, W
 \end{equation}
-Lastly, we calculate the total bin counts on the master node:
+Lastly, all workers send their bin counts to the head node and we calculate the total bin counts:
 \begin{equation}
-	\textrm{binC}^0_j = \sum_{w=1}^{W} \textrm{binC}^w_j, \quad j = 1, \cdots, W
+	\textrm{binC}^{0,m}_j = \sum_{w=1}^{W} \textrm{binC}^{w,m}_j, \quad j = 1, \cdots, W
 \end{equation}
 
 
 \subsubsection{Stopping criterion: the uniformity metric}
-
-
+Once the head node has calculated the total bin counts it then determines how uniformly the data distributed across the bins:
 \begin{equation}
-	U^n = \textrm{max}( \dfrac{c_{\textrm{max}} - c_{\textrm{avg}}}{c_{\textrm{avg}}}, \dfrac{c_{\textrm{avg}} - c_{\textrm{min}}}{c_{\textrm{avg}}} )
+	U^m = \textrm{max} \bigg( \dfrac{\textrm{binC}^{0,m}_{\textrm{max}} - \textrm{binC}^{0,m}_{\textrm{avg}}}{\textrm{binC}^{0,m}_{\textrm{avg}}}, \dfrac{\textrm{binC}^{0,m}_{\textrm{avg}} - \textrm{binC}^{0,m}_{\textrm{min}}}{\textrm{binC}^{0,m}_{\textrm{avg}}} \bigg)
 \end{equation}
+If $U$ is below a set threshold (usually $\approx 0.1$), then the the data distribution is deemed to be uniform in the sense that each worker will have within $\approx 10\%$ of the average data per worker; thus sorting on each worker will take roughly equal time.
 
 
 \subsubsection{Adapting bin edges}
-If the data is not uniform in the first step, we move on to adapt the bins.
+If the data is not uniform in the first step, we move on to adapt the interior bin edges:	\begin{equation}
+	\begin{split}
+		\Delta C & = 2.0 ( \textrm{binC}^{0,m}_i - \textrm{binC}^{0,m}_{i-1} ) / ( \textrm{binC}^{0,m}_i + \textrm{binC}^{0,m}_{i-1} ) \\
+		\Delta B & = \textrm{binE}^m_{i+1} - \textrm{binE}^m_i \\
+		\textrm{binE}^{m+1}_i & = \textrm{binE}^m_i + \alpha \Delta C \Delta B
+	\end{split}
+\end{equation}
+where $0 < \alpha < 0.5$. Now, each of these terms is designed the allow the bins to adapt the maximum amount possible without the bin edges becoming out of order.
+
 
 
 
