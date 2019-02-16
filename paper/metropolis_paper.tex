@@ -35,6 +35,32 @@
 \newcommand\simpleparagraph[1]{%
   \stepcounter{paragraph}\paragraph*{\theparagraph\quad{}#1}}
 
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{mdframed}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+% \usepackage{courier}
+\lstset{%frame=tb,
+language=C++,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\small\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=3
+}
 
 %%%%%%%%% BEGIN DOCUMENT %%%%%%%%%
 %%%%%%%%% BEGIN DOCUMENT %%%%%%%%%
@@ -64,59 +90,98 @@ We present a novel method influenced by ideas in the field optimization to effic
 
 Introduction:
 
+
+
+\subsection{Overview}
+
+
+\subsubsection{Workflow}
 We used C++ with C MPI calls
 
 Used GitHub
 
-Workflow description\\
+Workflow description
 
 
+\subsubsection{Variables and conventions}
+%%% NOTE %%%
+%%% NOTE %%%
+% 1) be consistent with the indices:
+% 2) say head node (not master node)
+% 3) say worker (not node) whenever possible
+%%% NOTE %%%
+%%% NOTE %%%
 
-Conventions (NOTE: be consistent with the indices):
+Here we provide a helpful list of conventions, notations, and variable names used throughout this paper.
 
-HEAD node (not master node)
+\begin{mdframed}[backgroundcolor=blue!20]
+	Counts:
+	\setlength\itemsep{0.1pt}
+	\setlength\parskip{0.1pt}
+	\begin{itemize}
+		\setlength\itemsep{0.1pt}
+		\setlength\parskip{0.1pt}
+		\item $N$: number of nodes
+		\item $W$: number of workers ($N-1$)
+		\item $L$: number of lines to read per file
+		\item $L_w$: number of lines on the $w$th worker
+		\item $M$: max number of allowed time steps
+	\end{itemize}
+\end{mdframed}
 
-$N$: number of nodes
+\begin{mdframed}[backgroundcolor=blue!20]
+	Indices:
+	\setlength\itemsep{0.1pt}
+	\setlength\parskip{0.1pt}
+	\begin{itemize}
+		\setlength\itemsep{0.1pt}
+		\setlength\parskip{0.1pt}
+		\item $m = 0, \cdots, M$ is the time step of the bin adaptation scheme (likely less than $M$)
+		\item $n = 0, \cdots, W$ spans the nodes
+		\item $w = 1, \cdots, W$ spans the workers
+		\item $i = 0, \cdots, W$ spans the bin edges/indices
+		\item $j = 1, \cdots, W$ spans the bin counts (this will occasionally subscript binI/E as well)
+		\item $\ell_w = 0, \cdots, L_w-1$ spans the lines on the $w$th worker
+		\item $k = 0, \cdots, 3$ is the data column being sorted
+	\end{itemize}
+\end{mdframed}
 
-$W$: number of workers ($N-1$)
-
-$L$: number of lines to read per file
-
-$L_w$: number of lines on the $w$th worker
-
-$M$: max number of allowed time steps
-
-Indices:
-\begin{tight_enum}
-	\item $m = 0, \cdots, M$ is the time step of the bin adaptation scheme (likely less than $M$)
-	\item $n = 0, \cdots, W$ spans the nodes
-	\item $w = 1, \cdots, W$ spans the workers
-	\item $i = 0, \cdots, W$ spans the bin edges/indices
-	\item $j = 1, \cdots, W$ spans the bin counts (this will occasionally subscript binI/E as well)
-	\item $\ell_w = 0, \cdots, L_w-1$ spans the lines on the $w$th worker
-	\item $k = 0, \cdots, 3$ is the data column being sorted
-\end{tight_enum}
-
-$\textrm{data}^w_{4\ell+k}$: data point on $k$th line and $\ell$th column (0 indexed) on the $w$th worker (1 indexed)
-
-$\textrm{binE}^m_j$: bin edges (0 indexed) at time step $m$
-
-$\textrm{binI}^{w,m}_j$: bin indices on worker $w$ (0 indexed)
-
-$\textrm{binC}^{w,m}_j$: bin counts on worker $w$ (1 indexed w.r.t. $w$) at time step $m$
-
-$\textrm{binC}^{0,m}_j$: bin counts on head node (sum of worker binC's) at time step $m$
-
+\begin{mdframed}[backgroundcolor=blue!20]
+	Variables:
+	\setlength\itemsep{0.1pt}
+	\setlength\parskip{0.1pt}
+	\begin{itemize}
+		\setlength\itemsep{0.1pt}
+		\setlength\parskip{0.1pt}
+		\item $\textrm{data}^w_{4\ell+k}$: data point on $\ell$th line and $k$th column (0 indexed)\\ on the $w$th worker (1 indexed)
+		\item $\textrm{binE}^m_j$: bin edges (0 indexed) at time step $m$
+		\item $\textrm{binI}^{w,m}_j$: bin indices on worker $w$ (0 indexed)
+		\item $\textrm{binC}^{w,m}_j$: bin counts on worker $w$ (1 indexed w.r.t. $w$) at time step $m$
+		\item $\textrm{binC}^{0,m}_j$: bin counts on head node (sum of worker binC's) at time step $m$
+	\end{itemize}
+\end{mdframed}
 
 
 % JJ
 \subsection{File I/O}
+
+% here's how to insert code into LaTeX
+\begin{lstlisting}
+	walk = RandomWalk(nStep, initPos, stdDev)
+\end{lstlisting}
+
 \subsubsection{Distributing files}
 \subsubsection{Importing files}
 
 
 % JF
 \subsection{Sorting}
+
+% here's how to insert code into LaTeX
+\begin{lstlisting}
+	walk = RandomWalk(nStep, initPos, stdDev)
+\end{lstlisting}
+
 \subsubsection{Linked list merge sort}
 \subsubsection{Bubble sort}
 
@@ -146,7 +211,7 @@ Lastly, all workers send their bin counts to the head node and we calculate the 
 
 
 \subsubsection{Stopping criterion: the uniformity metric}
-Once the head node has calculated the total bin counts it then determines how uniformly the data distributed across the bins:
+Once the head node has calculated the total bin counts, it then determines how uniformly the data distributed across the bins:
 \begin{equation}
 	U^m = \textrm{max} \bigg( \dfrac{\textrm{binC}^{0,m}_{\textrm{max}} - \textrm{binC}^{0,m}_{\textrm{avg}}}{\textrm{binC}^{0,m}_{\textrm{avg}}}, \dfrac{\textrm{binC}^{0,m}_{\textrm{avg}} - \textrm{binC}^{0,m}_{\textrm{min}}}{\textrm{binC}^{0,m}_{\textrm{avg}}} \bigg)
 \end{equation}
@@ -154,14 +219,15 @@ If $U$ is below a set threshold (usually $\approx 0.1$), then the the data distr
 
 
 \subsubsection{Adapting bin edges}
-If the data is not uniform in the first step, we move on to adapt the interior bin edges:	\begin{equation}
+If the data is not uniform in the first step, we move on to adapt the interior bin edges ($i = 1, \cdots, W-1$):
+\begin{equation}
 	\begin{split}
-		\Delta C & = 2.0 ( \textrm{binC}^{0,m}_i - \textrm{binC}^{0,m}_{i-1} ) / ( \textrm{binC}^{0,m}_i + \textrm{binC}^{0,m}_{i-1} ) \\
+		\Delta C & = 2.0 ( \textrm{binC}^{0,m}_{i+1} - \textrm{binC}^{0,m}_i ) / ( \textrm{binC}^{0,m}_{i+1} + \textrm{binC}^{0,m}_i ) \\
 		\Delta B & = \textrm{binE}^m_{i+1} - \textrm{binE}^m_i \\
 		\textrm{binE}^{m+1}_i & = \textrm{binE}^m_i + \alpha \Delta C \Delta B
 	\end{split}
 \end{equation}
-where $0 < \alpha < 0.5$. Now, each of these terms is designed the allow the bins to adapt the maximum amount possible without the bin edges becoming out of order.
+where $0 < \alpha < 0.5$. Each of these terms is designed the allow the bins to adapt the maximum amount possible without the bin edges becoming out of order. The quantity $\Delta B$ scales the maximum change to be within the current bin width. The quantity $0 \le \Delta C \le 1$ is a type of normalized gradient which will direct the bin edges toward regions with higher density. Lastly, $\alpha$ is a form of rate constant. It must remain less than 0.5 to maintain the constraint. It is usually set between 0.25-0.475.
 
 
 
@@ -188,8 +254,45 @@ where $0 < \alpha < 0.5$. Now, each of these terms is designed the allow the bin
 \subsubsection{Bubble sort}
 
 \subsection{Binning}
+
+
 \subsubsection{Prototyping in MATLAB}
+Prior to our implementation in C++, we prototype the adaptation scheme in MATLAB as a proof of concept. For these tests, we read 1000 lines from one of the provided data files and applied the adaptive binning scheme to it, varying the number of nodes, iterations, and the value of $\alpha$.
+\begin{figure}[!htb]
+	\centering
+	\vspace{-5pt}
+	\includegraphics[scale = 0.25]{AdaptiveBinning_5Nodes_1000Lines_0475alpha}
+	\vspace{-10pt}
+	\caption{5 nodes, 1000 data points, $\alpha = 0.475$}
+	\label{5,0.475}
+\end{figure}
+\begin{figure}[!htb]
+	\centering
+	\vspace{-5pt}
+	\includegraphics[scale = 0.25]{AdaptiveBinning_10Nodes_1000Lines_0475alpha}
+	\vspace{-10pt}
+	\caption{10 nodes, 1000 data points, $\alpha = 0.475$}
+	\label{10,0.475}
+\end{figure}
+\begin{figure}[!htb]
+	\centering
+	\vspace{-5pt}
+	\includegraphics[scale = 0.25]{AdaptiveBinning_10Nodes_1000Lines_0250alpha}
+	\vspace{-10pt}
+	\caption{10 nodes, 1000 data points, $\alpha = 0.25$}
+	\label{10,0.250}
+\end{figure}
+
+As can be seen from the Figure \ref{5,0.475}, with $W=5$ and $\alpha=0.475$, the method converges to a highly uniform distribution in roughly 20 steps. However, when increasing the number of workers to 10 (Figure \ref{10,0.475}), the method struggles to converge in the same amount of time. This problem arises because adding more workers adds more bin edges. Since the test only uses 1000 data points, then there is only an average of 100 points per bin, which is not sufficiently smooth for the method to perform at its optimal level. As such, we must decrease $\alpha$ so that we can remove the wild oscillations present in the plots. This is what Figure \ref{10,0.250} demonstrates. Though it still does not converge quite as fast as the 5 worker test, it is sufficiently better than the second test.
+
+These tests demonstrate two general rules which describe the performance of the method. First, the method performs better (faster convergence, less oscillations) with more data since altering the bin edges on average won't have as drastic an effect on the bin counts. Also, the method performs worse (slower convergence, possible oscillatory behavior) with more workers (i.e., bin edges). There are two reasons for this. First, relating to the previous rule, since more granular divisions of the data counter the positive effects that large amounts of data have on performance. This being said, in practice, this effect is not significant when dealing with millions or billions of data points because no practical number of workers can make the data significantly granular. Second, since we use only a local bin updating scheme (a form of normalized gradient of the bin counts), the bin edges near the boundary of the data range do not have much room to move since the interior bin edges must move first (since we must maintain the constraint). Consequently, this makes our method susceptible to very poor performance if there is an outlier in the data, because there will be a large number of bin edges between the outlier and the rest of the data which cannot move until some data is propagated toward them. A clear improvement which could be made to the method would be to replace the local bin count gradient with a global analogue (whicj still maintains the constraint, of course).
+
+
 \subsubsection{C++ runs}
+
+
+
+
 
 \subsection{Exchanging data}
 
