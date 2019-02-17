@@ -52,7 +52,7 @@ void binData2( double *data, double *binE, int myRank, int sortInd,
 
 		auto stop = binE[bin+1];
 
-		while (data[(currentRow * 4) + sortInd] < stop) {
+		while ((data[(currentRow * 4) + sortInd] < stop) && (currentRow < numPoints)) {
 			binC[bin]++;
 			currentRow++;
 		}
