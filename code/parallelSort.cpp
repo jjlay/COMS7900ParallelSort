@@ -497,12 +497,14 @@ int main(int argc, char *argv[])
 			<< "to identify bins" << std::endl;
 	}
 #endif
-	
+/*	
 	// Broadcast binI_2D to workers
 	for( int i = 0; i < numWorkers; i++ ) {
 		result = MPI_Bcast( binI_2D[i], numWorkers+1, MPI_DOUBLE, 0,
 			MPI_COMM_WORLD );
 	}
+*/
+
 /*
 	if( myRank == 1 ) {
 		for( int i = 0; i < numWorkers; i++ ) {
