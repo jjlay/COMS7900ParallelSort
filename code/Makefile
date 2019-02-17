@@ -18,11 +18,11 @@ clean :
 	rm -f testbinsizing parallelSort
 	rm -f *.o
 	rm -f core.*
-	mv -f MetropolisSort.e* output
-	mv -f MetropolisSort.o* output
+	rm -f MetropolisSort.e*
+	rm -f MetropolisSort.o*
 
 
 nolog :
 	rm -f core.*
-	mv -f MetropolisSort.e* output
-	mv -f MetropolisSort.o* output
+	rm -f MetropolisSort.e*
+	rm -f MetropolisSort.o*
