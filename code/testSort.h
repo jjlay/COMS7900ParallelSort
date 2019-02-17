@@ -22,6 +22,6 @@
 	
 using namespace std;
 
-void testSort(double myArray[], int rows, int cols, int sortByThisColumn);
+int testSort(double myArray[], int rows, int cols, int sortByThisColumn);
 	
 

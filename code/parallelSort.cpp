@@ -48,6 +48,7 @@
 #include "LL_sort.h"
 #include "swapArrayParts.h"
 #include "cleanUp.h"
+#include "testSort.h"
 
 
 using namespace std;
@@ -171,6 +172,8 @@ int main(int argc, char *argv[])
 	        // Perform initial sort
 	        sortArray(array, rows, cols, sortInd);
 	        //LL_sort(array, rows, cols, sortInd);
+	        
+	        auto deleteme = testSort(array, rows, cols, sortInd);
 	}
 	else {
 	        // Rank 0 is going to receive the number of lines on each
