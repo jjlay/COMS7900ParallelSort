@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 	// total number of files to read
 	int maxFilesToProc = 501;
 	// number of lines PER FILE
-	int maxRows = 100;
+	int maxRows = 1000;
 	//number of lines TOTAL
 	unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node
@@ -170,10 +170,26 @@ int main(int argc, char *argv[])
 	        MPI_Request tempRequest;
 	        MPI_Isend(&rows, 1, MPI_INT, Rank0, mpi_Tag_RowCount, MPI_COMM_WORLD, &tempRequest);
 	
+#ifdef _TIMING_	
+	auto timeBeginSort = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeBeginSort - timeBeginFileImport;
+	cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to import data" << endl;
+#endif
+
 	        // Perform initial sort
 	        //sortArray(array, rows, cols, sortInd);
 	        LL_sort(array, rows, cols, sortInd);
 	        
+#ifdef _TIMING_	
+	auto timeAfterSort = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeAfterSort - timeBeginSort;
+	cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< " to sort data" << endl;
+#endif
+
 	        auto deleteme = testSort(array, rows, cols, sortInd);
 	}
 	else {
@@ -203,10 +219,6 @@ int main(int argc, char *argv[])
 
 #ifdef _TIMING_	
 	auto timeBeginMinMax = std::chrono::system_clock::now();
-	timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
-	cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
-		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-		<< " to import data" << endl;
 #endif
 
 	auto allMins = new double[numNodes];
