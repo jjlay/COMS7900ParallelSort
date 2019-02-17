@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	// total number of files to read
 	int maxFilesToProc = numWorkers;
 	// number of lines PER FILE
-	int maxRows = 100;
+	int maxRows = 1000;
 	//number of lines TOTAL
 	unsigned int numLines = maxRows*maxFilesToProc;
 	// average lines per worker node

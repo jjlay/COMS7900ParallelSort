@@ -22,3 +22,7 @@ clean :
 	mv -f MetropolisSort.o* output
 
 
+nolog :
+	rm -f core.*
+	mv -f MetropolisSort.e* output
+	mv -f MetropolisSort.o* output
