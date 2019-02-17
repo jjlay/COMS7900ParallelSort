@@ -340,8 +340,8 @@ int main(int argc, char *argv[])
 		
 		// get intitial bin counts, indices
 		binData2( array, binE, myRank, sortInd,
-			numWorkers, maxRows, binI_1D, binC); // for real
-//		std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
+			numWorkers, rows, binI_1D, binC); // for real
+		std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
 		// Transmit initial bin counts
 		result = MPI_Send( binC, numWorkers, MPI_INT, 0,
