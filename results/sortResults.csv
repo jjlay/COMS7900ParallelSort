@@ -25,4 +25,5 @@ Nodes, Files, TotalLines, Section, Runtime
 64, 501, 501000, 0.35, sortData
 64, 501, 501000, 2.74, importData
 64, 501, 501000, 0.00, exchangeMinMax
+64, 501, 501000, 0.72, adaptBins
 64, 501, 501000, 63.98, swapData
