@@ -295,7 +295,8 @@ int main(int argc, char *argv[])
 		
 		// Receive initial bin counts
 		receiveBinCounts( binC, numWorkers );
-		std::cout << myRank << " binC: ";
+
+		std::cout << myRank << " Initial binC: ";
 		for( int i = 0; i < numWorkers; i++ ) {
 			std::cout <<binC[i] << " ";
 		}
@@ -353,7 +354,8 @@ int main(int argc, char *argv[])
 		result = MPI_Recv( isUniform, 1, MPI_INT, 0,
 			mpi_Tag_isUnif, MPI_COMM_WORLD, &status );
 	}
-	
+
+/*	
 	int iterations = 1;
 	int deathCount = 100;  // Number of iterations we will allow adaptBins to be stuck
 	
@@ -371,12 +373,12 @@ int main(int argc, char *argv[])
 			
 			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
-	/*			
-			std::cout << "binE: " << binE[0] << " " 
-				<< binE[1] << " " 
-				<< binE[2] << " " 
-				<< binE[3] << std::endl;
-	*/			
+	//			
+	//		std::cout << "binE: " << binE[0] << " " 
+	//			<< binE[1] << " " 
+	//			<< binE[2] << " " 
+	//			<< binE[3] << std::endl;
+	//			
 			// Transmit current bin edges
 			transmitBinEdges( binE, numWorkers );
 			
@@ -407,14 +409,14 @@ int main(int argc, char *argv[])
 			
 			// Receive current bin indices
 			receiveBinIndices( binI_2D, numWorkers );
-/*
-			for( int i = 0; i < numWorkers; i++ ) {
-				std::cout << i+1 << " binI_2D: " << binI_2D[i][0] 
-					<< " " << binI_2D[i][1] << " " 
-					<< binI_2D[i][2] << " " 
-					<< binI_2D[i][3] << std::endl;
-			}
-*/			
+//
+//			for( int i = 0; i < numWorkers; i++ ) {
+//				std::cout << i+1 << " binI_2D: " << binI_2D[i][0] 
+//					<< " " << binI_2D[i][1] << " " 
+//					<< binI_2D[i][2] << " " 
+//					<< binI_2D[i][3] << std::endl;
+//			}
+//			
 			// Determine if uniform
 			*isUniform = testUniformity( binC, numWorkers, thresh, &uniformity );
 			
@@ -467,14 +469,21 @@ int main(int argc, char *argv[])
 	if ((iterations >= abortCount) && (myRank == Rank0)) {
 		cout << "===========================================" << endl;
 		cout << "Aborted adaptBins at iteration " << iterations << endl;
+*/
+		cout << "Rank " << myRank << " Bin counts are:" << endl;
 
-		cout << "Bin counts are:" << endl;
+		for (auto i = 0; i < numWorkers; i++) {
+			cout << "binC[" << i << "] = " << binC[i] << ", "
+				<< "binE[" << i << "] = " << binE[i] << ", ";
 
-		for (auto i = 0; i < numWorkers; i++)
-			cout << "binC[" << i << "] = " << binC[i] << endl;
+			if (myRank != Rank0)
+				cout << "binI[" << i << "] = " << binI_1D[i];
+
+			cout << endl;
+		}
 
 		cout << "===========================================" << endl << endl;
-	}		
+//	}		
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
