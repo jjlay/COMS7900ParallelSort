@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 #ifdef _TIMING_
 	auto timeBeginFilenameDistribute = std::chrono::system_clock::now();
 	chrono::duration<double> timeElapsedSeconds = timeBeginFilenameDistribute - timeStart;
-	cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+	cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to initialize MPI" << endl;
 #endif
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 #ifdef _TIMING_
 	auto timeBeginFileImport = std::chrono::system_clock::now();
 	timeElapsedSeconds = timeBeginFileImport - timeBeginFilenameDistribute;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+	std::cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to distribute the filenames" << std::endl;
 #endif
@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
 #ifdef _TIMING_	
 	auto timeBeginMinMax = std::chrono::system_clock::now();
 	timeElapsedSeconds = timeBeginMinMax - timeBeginFileImport;
-	cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+	cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to import data" << endl;
 #endif
@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
 #ifdef _TIMING_	
 	auto timeBeginBinning = std::chrono::system_clock::now();
 	timeElapsedSeconds = timeBeginBinning - timeBeginMinMax;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+	std::cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< " to exchange min and max" << std::endl;
 #endif
@@ -492,7 +492,7 @@ int main(int argc, char *argv[])
 	auto timeBeginSwapping = std::chrono::system_clock::now();
 	if (myRank == Rank0) {
 		timeElapsedSeconds = timeBeginSwapping - timeBeginBinning;
-		std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		std::cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 			<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 			<< "to identify bins" << std::endl;
 	}
@@ -653,7 +653,7 @@ if(myRank !=0){
 #ifdef _TIMING_	
 	auto timeEndSwapping = std::chrono::system_clock::now();
 	timeElapsedSeconds = timeEndSwapping - timeBeginSwapping;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+	std::cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< "to swap, sort, and export data" << std::endl;
 #endif
@@ -670,7 +670,7 @@ if(myRank !=0){
 #ifdef _TIMING_	
 	auto timeEnd = std::chrono::system_clock::now();
 	timeElapsedSeconds = timeEnd - timeStart;
-	std::cout << "Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+	std::cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
 		<< "to run" << std::endl;
 #endif
