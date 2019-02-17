@@ -52,6 +52,7 @@ int testSort(double myArray[], int rows, int cols, int sortByThisColumn) {
 		}
 	}
 
+	cout << "All " << rows << " rows of data is sorted" << endl;
 	return _OKAY_;
 }
 

@@ -355,6 +355,7 @@ int main(int argc, char *argv[])
 	}
 	
 	int iterations = 1;
+	int deathCount = 100;  // Number of iterations we will allow adaptBins to be stuck
 	
 	while( ( *isUniform == 0 ) && (iterations < abortCount) ) {
 //	while( iterations < 1 ) {
@@ -362,6 +363,11 @@ int main(int argc, char *argv[])
 			cout << "ITERATION: " << iterations << endl;
 			
 			std::cout.precision(17);
+			
+			// Make sure we aren't stuck
+			auto binPrevious = new int[numWorkers];
+			for (auto b = 0; b < numWorkers; b++)
+				binPrevious[b] = binC[b];
 			
 			// Adapt bin edges
 			adaptBins( binE, binC, numWorkers);
@@ -376,11 +382,28 @@ int main(int argc, char *argv[])
 			
 			// Receive current bin counts
 			receiveBinCounts( binC, numWorkers );
+
 			std::cout << myRank << " binC: ";
+
+			int didWeMatchPrevious = 0;
+
 			for( int i = 0; i < numWorkers; i++ ) {
 				std::cout <<binC[i] << " ";
+
+				if (binC[i] == binPrevious[i])
+					didWeMatchPrevious++;
 			}
+
 			std::cout << std::endl;
+
+			if (didWeMatchPrevious == numWorkers)
+				deathCount--;
+
+			if (deathCount == 0) {
+				cout << "adaptBins is stuck" << endl;
+				MPI_Abort(MPI_COMM_WORLD, _FAIL_);
+			}
+				
 			
 			// Receive current bin indices
 			receiveBinIndices( binI_2D, numWorkers );
