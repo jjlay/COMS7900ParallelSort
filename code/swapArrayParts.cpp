@@ -28,12 +28,10 @@
 //
 //Local includes
 //
-//
-#include "swapArrayParts.h"
 
-//#include "definitions.h"
-//#include "data.h"
-//
+#include "swapArrayParts.h"
+#include "definitions.h"
+
 
 //
 //Function: swapArrayParts
