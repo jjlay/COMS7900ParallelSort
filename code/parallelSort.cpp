@@ -639,6 +639,14 @@ if(myRank !=0){
 		}
         }
 	MPI_Barrier(MPI_COMM_WORLD);
+
+#ifdef _TIMING_	
+	auto timeEndSwapping = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeEndSwapping - timeBeginSwapping;
+	std::cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
+		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
+		<< "to swap data" << std::endl;
+#endif
 //	sleep(myRank);
 /*
 if(myRank !=0){
@@ -663,11 +671,11 @@ if(myRank !=0){
 
 
 #ifdef _TIMING_	
-	auto timeEndSwapping = std::chrono::system_clock::now();
-	timeElapsedSeconds = timeEndSwapping - timeBeginSwapping;
+	auto timeEndSort2 = std::chrono::system_clock::now();
+	timeElapsedSeconds = timeEndSwapping - timeEndSort2;
 	std::cout << "TIMING : Rank " << std::fixed << std::setprecision(0) << myRank << " took "
 		<< std::setprecision(2) << timeElapsedSeconds.count() << " seconds "
-		<< "to swap, sort, and export data" << std::endl;
+		<< " second sort" << std::endl;
 #endif
 
 
