@@ -49,6 +49,10 @@ struct Node{
 };
 
 void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numranks, int *binIPTR, int fromWho, int toWho){
+
+	if (toWho == fromWho)
+		return;
+
 	MPI_Request request;
         MPI_Status status;
         int maxRank = numranks;
@@ -89,9 +93,21 @@ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, i
            //     }
             //    cout << endl;
         }
-        if(myRank ==fromWho){
+
+        if(myRank == fromWho){
                 myAmountToSend = 4*(myBinI[toWho+1]-myBinI[toWho]);
+
+		if (myAmountToSend < 0) {
+			cout << "Error! Amount to send is negative!" << endl
+				<< "Rank " << myRank << endl
+				<< "toWho " << toWho << " fromWho " << fromWho << endl
+				<< "myBinI[" << toWho+1 << "] = " << myBinI[toWho+1] << endl
+				<< "myBinI[" << toWho << "] = " << myBinI[toWho] << endl;
+			MPI_Abort(MPI_COMM_WORLD, _FAIL_);
+		}
+
                 mySendStartingPoint = 4*(myBinI[toWho]);
+		cout << "Rank " << myRank << " is sending " << myAmountToSend << " to " << toWho << endl;
                 MPI_Isend(&myArray[mySendStartingPoint], myAmountToSend, MPI_DOUBLE, toWho, 888,  MPI_COMM_WORLD, &request);
               //  cout << "Rank: " << myRank << " has sent the array to: " << toWho << " of size " << myAmountToSend << endl;
                 //cout << "Last Rank: " << myRank << " received: loc-" << myArray[4*999] << " :x- " << myArray[4*999+1] << " :y- " << myArray[4*999+2] << " :z- " <<myArray[999*4+3]<< endl;
