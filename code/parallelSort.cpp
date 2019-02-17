@@ -35,6 +35,7 @@
 #include "adaptBins.h"
 #include "testUniformity.h"
 #include "binData.h"
+#include "binData2.h"
 #include "receiveMinMax.h"
 #include "transmitMinMax.h"
 #include "transmitBinEdges.h"
@@ -338,7 +339,7 @@ int main(int argc, char *argv[])
 		}
 		
 		// get intitial bin counts, indices
-		binData( array, binE, myRank, sortInd,
+		binData2( array, binE, myRank, sortInd,
 			numWorkers, maxRows, binI_1D, binC); // for real
 //		std::cout << myRank << " binC: " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 		
