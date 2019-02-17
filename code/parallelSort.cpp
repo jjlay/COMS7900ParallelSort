@@ -514,6 +514,47 @@ int main(int argc, char *argv[])
 	}
 */	
 
+
+	//////////////////////////////
+	//                          //
+	// Verify the bin info is   //
+	// valid                    //
+	//                          //
+	//////////////////////////////
+	
+	if (myRank == Rank0) {
+
+
+
+
+	}
+	else {
+		for (auto i = 1; i < numWorkers; i++) {
+			if (binI_1D[i] < binI_1D[i-1]) {
+				cout << "Rank " << myRank << " : binI[" << i << "] (" << binI_1D[i] << ") is less than "
+					<< "binI[" << i-1 << "] (" << binI_1D[i-1] << ") ***" << endl;
+			} 
+			else {
+				cout << "Rank " << myRank << " : binI[" << i << "] (" << binI_1D[i] << ") is greater than "
+					<< "binI[" << i-1 << "] (" << binI_1D[i-1] << ")" << endl;
+			}
+
+			if (binE[i] < binE[i-1]) {
+				cout << "Rank " << myRank << " : binE[" << i << "] (" << binE[i] << ") is less than "
+					<< "binE[" << i-1 << "] (" << binE[i-1] << ") ***" << endl;
+			}
+			else {
+				cout << "Rank " << myRank << " : binE[" << i << "] (" << binE[i] << ") is greater than "
+					<< "binE[" << i-1 << "] (" << binE[i-1] << ")" << endl;
+			}
+		}
+
+
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+
 	//////////////////////////////
 	//                          //
 	// Swap Data Between Nodes  //
