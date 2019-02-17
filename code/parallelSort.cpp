@@ -171,8 +171,8 @@ int main(int argc, char *argv[])
 	        MPI_Isend(&rows, 1, MPI_INT, Rank0, mpi_Tag_RowCount, MPI_COMM_WORLD, &tempRequest);
 	
 	        // Perform initial sort
-	        sortArray(array, rows, cols, sortInd);
-	        //LL_sort(array, rows, cols, sortInd);
+	        //sortArray(array, rows, cols, sortInd);
+	        LL_sort(array, rows, cols, sortInd);
 	        
 	        auto deleteme = testSort(array, rows, cols, sortInd);
 	}
@@ -356,7 +356,7 @@ int main(int argc, char *argv[])
 			mpi_Tag_isUnif, MPI_COMM_WORLD, &status );
 	}
 
-/*	
+	
 	int iterations = 1;
 	int deathCount = 100;  // Number of iterations we will allow adaptBins to be stuck
 	
@@ -446,8 +446,8 @@ int main(int argc, char *argv[])
 		//	}
 			
 			// get current bin counts, indices
-			binData( array, binE, myRank, sortInd,
-				numWorkers, maxRows, binI_1D, binC); // for real
+			binData2( array, binE, myRank, sortInd,
+				numWorkers, rows, binI_1D, binC); // for real
 		//	std::cout << "binC " <<  myRank << ": " << binC[0] << " " << binC[1] << " " << binC[2] << std::endl;
 			
 			// Transmit current bin counts
@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
 	if ((iterations >= abortCount) && (myRank == Rank0)) {
 		cout << "===========================================" << endl;
 		cout << "Aborted adaptBins at iteration " << iterations << endl;
-*/
+
 		cout << "Rank " << myRank << " Bin counts are:" << endl;
 
 		for (auto i = 0; i < numWorkers; i++) {
@@ -484,7 +484,7 @@ int main(int argc, char *argv[])
 		}
 
 		cout << "===========================================" << endl << endl;
-//	}		
+	}		
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
