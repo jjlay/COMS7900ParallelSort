@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 	// number of worker nodes
 	int numWorkers = numNodes - 1;
 	// total number of files to read
-	int maxFilesToProc = numWorkers;
+	int maxFilesToProc = 501;
 	// number of lines PER FILE
 	int maxRows = 1000;
 	//number of lines TOTAL
@@ -169,8 +169,8 @@ int main(int argc, char *argv[])
 	        MPI_Isend(&rows, 1, MPI_INT, Rank0, mpi_Tag_RowCount, MPI_COMM_WORLD, &tempRequest);
 	
 	        // Perform initial sort
-	        // sortArray(array, rows, cols, sortInd);
-	        LL_sort(array, rows, cols, sortInd);
+	        sortArray(array, rows, cols, sortInd);
+	        //LL_sort(array, rows, cols, sortInd);
 	}
 	else {
 	        // Rank 0 is going to receive the number of lines on each
@@ -439,7 +439,15 @@ int main(int argc, char *argv[])
 	}
 
 	if ((iterations >= abortCount) && (myRank == Rank0)) {
-		cout << "Aborted adaptBins!" << endl;
+		cout << "===========================================" << endl;
+		cout << "Aborted adaptBins at iteration " << iterations << endl;
+
+		cout << "Bin counts are:" << endl;
+
+		for (auto i = 0; i < numWorkers; i++)
+			cout << "binC[" << i << "] = " << binC[i] << endl;
+
+		cout << "===========================================" << endl << endl;
 	}		
 
 	MPI_Barrier(MPI_COMM_WORLD);
