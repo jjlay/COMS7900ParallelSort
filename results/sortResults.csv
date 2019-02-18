@@ -1,4 +1,4 @@
-Nodes, Files, TotalLines, Section, Runtime
+Nodes, Files, TotalLines, Runtime, Section
 8, 501, 501000, 0.00, initializeMPI
 8, 501, 501000, 0.02, distributeFileNames
 8, 501, 501000, 3.03, importData
