@@ -1,1 +1,16 @@
-hello wlksd
+Worker nodes import files using the \texttt{getline} function to read each line individually into a \texttt{string}. Fields are then parsed from the string based on their positions.
+
+\begin{tabular}{l l l l}
+\textbf{Field} & \textbf{Starting Pos} & \textbf{Ending Pos} & \textbf{Data Type} \\
+Index &  0 & 12  & Ignored \\
+X     & 13 & 35  & double  \\
+Y     & 36 & 54  & double  \\
+Z     & 55 & EOL & double \\
+\end{tabular}
+
+The \texttt{Index} field is calculated using the value from the filename and a maximum number of rows in each file of 20000000. The starting index value for a file is:
+
+$I_0 = (Filename - 1) * 20000000$
+
+The index is then incremented for each row and used in lieu of the value from the file. By storing the index as a double, the need for a complex C \texttt{struct} is avoided, and the data can be stored in a one-dimensional array of doubles.
+
