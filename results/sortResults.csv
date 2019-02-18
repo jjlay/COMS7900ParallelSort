@@ -14,12 +14,12 @@ Nodes, Files, TotalLines, Runtime, Section
 16, 501, 501000, 0.02, adaptBins 
 16, 501, 501000, 15.05, swapData
 32, 501, 501000, 0.00, initializeMPI
-32, 501, 501000, 0.37, distributeFileNames
-32, 501, 501000, 7.29, importData
-32, 501, 501000, 1.16, sortData
+32, 501, 501000, 0.05, distributeFileNames
+32, 501, 501000, 2.42, importData
+32, 501, 501000, 1.12, sortData
 32, 501, 501000, 0.00, exchangeMinMax
-32, 501, 501000, 5.29, adaptBins
-32, 501, 501000, 31.28, swapData
+32, 501, 501000, 4.81, adaptBins
+32, 501, 501000, 31.26, swapData
 64, 501, 501000, 0.00, initializeMPI
 64, 501, 501000, 0.13, distributeFileNames
 64, 501, 501000, 0.35, sortData
