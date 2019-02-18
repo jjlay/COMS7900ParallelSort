@@ -88,7 +88,9 @@ We present a novel method influenced by ideas in the field optimization to effic
 %%%%%%%%%%%%%
 \section{The Method}
 
-Introduction:
+
+As our first project for COMS 7900, the objective was to develop a system that would use MPI and the Babbage cluster to read in a significant amount of raw data and output that data in sorted sections. The data consisted of 500 files each with 20 million lines of data points. Each data point contained a integer number with three floating point coordinates. The project must allow for the sorting of data by any of the coordinate columns of data points. Additionally, the project must output the sorted information using qsub and have the data stored in files listed from smallest to largest. Finally, the system must allow for testing the output for verification of the sorting and a method for process timing. After the assignment was distributed, the team members met to discuss and develop a brief outline of how the assignment would be handled. It was concluded that a prototype would be developed using Mat Lab, and the final project would use C++ with C MPI calls. It was at that time Graham began working with the Metropolis algorithm. As the project took shape JJ set up GitHub and provided Graham and James with additional GitHub training. JJ also set up the structure for how the code would be presented, including general outline of the main program's structure and the outline for different files needed. Then the team met and presented with Graham's Mat Lab prototyping. It was after the second meeting that work assignments began to be handed out and we agreed upon several variables and conventions. Several pieces of the C++ code were developed simultaneously. JJ worked on file I/O and distribution, Graham developed bin adapting, and James worked on sorting and data exchanging. The code was assembled and any remaining issues resolved. 
+
 
 
 
