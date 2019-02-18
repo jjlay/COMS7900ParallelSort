@@ -70,7 +70,7 @@ tabsize=3
 
 \title{An optimization-inspired approach to parallel sorting}
 \author{Team Metropolis: \\
-		James Farzi, JJ Lay, and Graham West}
+		Jamshid 'James' Farzidayeri, JJ Lay, and Graham West}
 \date{COMS 7900, Capstone}
 
 \maketitle
@@ -179,14 +179,36 @@ Here we provide a helpful list of conventions, notations, and variable names use
 
 % JF
 \subsection{Sorting}
-
+In this section we address the two options for sorting the data. Since the majority of the groups are using qsort or some variation of that. We felt it would be interesting to have some alternative options for comparison for the class. Therefore we offer two options while using our process: a linked list insertion sort and bubble sort. Both options require the user pass information in the following format. 
 % here's how to insert code into LaTeX
 \begin{lstlisting}
-	walk = RandomWalk(nStep, initPos, stdDev)
+            void LL_sort(double myArray[], int rows, int cols, int sortThisColumn)
+\end{lstlisting}
+Each option first uses the value in 'sortThisColumn' to determine which column the user is requesting the sort on. Both options also make modifications to the existing 'myArray[]'. The rows and column are used during the iteration process to determine the 'shape' of the array during iteration. The limiting factor for both options is that the user is currently restricted to just the four columns. However, the function could be easily modified the accept more columns.
+\subsubsection{Linked list insertion sort}
+The better of our two options by a significant margin is or linked list insertion sort. Inside this function is a one directional singly linked list made with the following node structure.
+\begin{lstlisting}
+                                    struct Node{
+	                                    double ll_location;
+	                                    double ll_x;
+	                                    double ll_y;
+	                                    double ll_z;
+	                                    struct Node *next;
+                                    };
+
+\end{lstlisting}
+The function initializes the linked with the first data point in the myArray[]. Then inserts each additional piece of data from myArray[] into the linked list using the traditional head, current, and previous pointer methods. After the method has iterated through all the data in myArray[] and has a now sorted linked list,  then the data is placed back into myArray[] and exits the program.
+\subsubsection{Bubble sort}
+This function is by far the weaker of the two options and considered one of the least desirable of all sort functions. However, it is quite easy to implement, very robust, requires no additional large memory sections, and extremely reliable. This method simply sorts in place using the classic bubble sort process below.
+\begin{lstlisting}
+           for (int iii = 0 ; iii < (rows);iii++){
+		        for(int jjj=0; jjj<(rows-stop); jjj++){
+			            if(myArray[cols*jjj+sortByThisColumn]>
+			                myArray[cols*(jjj+1)+sortByThisColumn]){
+				                //perform swap
 \end{lstlisting}
 
-\subsubsection{Linked list merge sort}
-\subsubsection{Bubble sort}
+Although this will not be used as part of our regular process, we are interested in seeing how poorly it performs compared to other algorithms. This method does does not attempt to resort the 'last' space of the previous iteration. This is a slight reduction in the $N^2$ average that is usually expected from bubble sort methods. 
 
 
 % GW
@@ -269,8 +291,26 @@ These tests demonstrate two general rules which describe the performance of the 
 
 % JF
 \subsection{Exchanging data}
+The exchanging data process for our design includes two steps: Data swap and Clean up. This is to allow flexibility in the main program during its implementation of the functions. 
 \subsubsection{Data swap}
+When this function is called, it uses a from/to process. Meaning that given the following set of options it will transfer a specific set of data from one node to another. 
+\begin{lstlisting}
+ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numranks, int *binIPTR, int fromWho, int toWho)        
+\end{lstlisting}
+The first thing the process does is pass information regarding the length of the data to be received from the array. If the node that called the function is considered 'fromWho' it will pass its binI information to the node who called the function as the 'toWho'. At this point, the node who is 'toWho' creates a temporary array that is large enough to fit both the current set of data plus the additional set of data it is about to receive. After that is completed the node 'fromWho' then passes the pointer to the beginning of the data point in pmyArray where the node 'toWho' begins it's length of data to transfer. Here the node who is considered 'fromWho' will exit the function and the node who is 'toWho' will simply insert the data from its current pmyArray into the temporary array. Then in the remaining spaces inserts the information it just received from 'fromWho'. Finally, the 'toWho' node will increase the number of rows to include the additional data points. Then 'toWho' exits the function. At this point, the 'fromWho' node still has all of its original data and the 'toWho' node now has its original data plus the additional data sent over from the 'fromWho' node. Since this is a one to one transfer, it can be implemented in anyway the main program chooses. For the purposes of our group's needs we choose to have one node send all of its information to each other then increment through all nodes in the following method.
+\begin{lstlisting}
+                for( fromWho = 1; fromWho < numNodes; fromWho++ ){
+                    for( int toWho = 1; toWho< numNodes; toWho++){
+                        if(toWho!=fromWho){
+                            if(myRank ==toWho || myRank ==fromWho){
+                                perform swapArrayParts
+\end{lstlisting}
 \subsubsection{Cleanup}
+Once this method is complete each node will have all the information from each other node appended to the end of their existing array. However, each node will still have the information that it has passed to others and will now need to remove from their own array. This is where the cleanUp function is utilized. Whenever a function calls cleanUp it will need to receive the following parameters.
+\begin{lstlisting}
+                void cleanUp(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numranks, int *binIPTR)
+\end{lstlisting}
+CleanUp first uses the information in '*binIPTR' to determine the amount and locations of the data that was given to other nodes and the amount of information it should retain inside its array. Then we malloc a temporary array with the correct size. The information that should be kept is inserted into the temporary array while excluding the data that should not be included. Then '*pmyArray[]' is pointed to the beginning of the temporary array and the row size is adjusted to reflect the new and correct size of the node's array. The node now exits the function with the correct size and information however the data is no longer sorted and a new sort must be completed. This function must be called individually for all nodes used in the swapArrayParts method. 
 
 
 %%%%%%%%%%%%%
