@@ -232,33 +232,6 @@ If the data is not uniform in the first step, we move on to adapt the interior b
 \end{equation}
 where $0 < \alpha < 0.5$. Each of these terms is designed the allow the bins to adapt the maximum amount possible without the bin edges becoming out of order. The quantity $\Delta B$ scales the maximum change to be within the current bin width. The quantity $0 \le \Delta C \le 1$ is a type of normalized gradient which will direct the bin edges toward regions with higher density. Lastly, $\alpha$ is a form of rate constant. It must remain less than 0.5 to maintain the constraint. It is usually set between 0.25-0.475.
 
-
-
-
-
-
-
-% JF
-\subsection{Exchanging data}
-\subsubsection{Data swap}
-\subsubsection{Cleanup}
-
-
-%%%%%%%%%%%%%
-%%% NEW SECTION %%%
-%%%%%%%%%%%%%
-\section{Testing}
-
-
-\subsection{File I/O}
-
-\subsection{Sorting}
-\subsubsection{Linked list merge sort}
-\subsubsection{Bubble sort}
-
-\subsection{Binning}
-
-
 \subsubsection{Prototyping in MATLAB}
 Prior to our implementation in C++, we prototype the adaptation scheme in MATLAB as a proof of concept. For these tests, we read 1000 lines from one of the provided data files and applied the adaptive binning scheme to it, varying the number of nodes, iterations, and the value of $\alpha$.
 \begin{figure}[!htb]
@@ -291,13 +264,21 @@ As can be seen from the Figure \ref{5,0.475}, with $W=5$ and $\alpha=0.475$, the
 These tests demonstrate two general rules which describe the performance of the method. First, the method performs better (faster convergence, less oscillations) with more data since altering the bin edges on average won't have as drastic an effect on the bin counts. Also, the method performs worse (slower convergence, possible oscillatory behavior) with more workers (i.e., bin edges). There are two reasons for this. First, relating to the previous rule, since more granular divisions of the data counter the positive effects that large amounts of data have on performance. This being said, in practice, this effect is not significant when dealing with millions or billions of data points because no practical number of workers can make the data significantly granular. Second, since we use only a local bin updating scheme (a form of normalized gradient of the bin counts), the bin edges near the boundary of the data range do not have much room to move since the interior bin edges must move first (since we must maintain the constraint). Consequently, this makes our method susceptible to very poor performance if there is an outlier in the data, because there will be a large number of bin edges between the outlier and the rest of the data which cannot move until some data is propagated toward them. A clear improvement which could be made to the method would be to replace the local bin count gradient with a global analogue (whicj still maintains the constraint, of course).
 
 
-\subsubsection{C++ runs}
 
 
 
-
-
+% JF
 \subsection{Exchanging data}
+\subsubsection{Data swap}
+\subsubsection{Cleanup}
+
+
+%%%%%%%%%%%%%
+%%% NEW SECTION %%%
+%%%%%%%%%%%%%
+\section{Performance}
+
+JJ's performance data sections go here
 
 
 

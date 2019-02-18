@@ -1,5 +1,5 @@
 \select@language {english}
-\contentsline {section}{\numberline {1}The Method}{2}
+\contentsline {section}{\numberline {1}The Method}{1}
 \contentsline {subsection}{\numberline {1.1}Overview}{2}
 \contentsline {subsubsection}{\numberline {1.1.1}Workflow}{2}
 \contentsline {subsubsection}{\numberline {1.1.2}Variables and conventions}{2}
@@ -13,18 +13,11 @@
 \contentsline {subsubsection}{\numberline {1.4.1}Data binning w/ binary search}{3}
 \contentsline {subsubsection}{\numberline {1.4.2}Stopping criterion: the uniformity metric}{3}
 \contentsline {subsubsection}{\numberline {1.4.3}Adapting bin edges}{3}
-\contentsline {subsection}{\numberline {1.5}Exchanging data}{4}
-\contentsline {subsubsection}{\numberline {1.5.1}Data swap}{4}
-\contentsline {subsubsection}{\numberline {1.5.2}Cleanup}{4}
-\contentsline {section}{\numberline {2}Testing}{4}
-\contentsline {subsection}{\numberline {2.1}File I/O}{4}
-\contentsline {subsection}{\numberline {2.2}Sorting}{4}
-\contentsline {subsubsection}{\numberline {2.2.1}Linked list merge sort}{4}
-\contentsline {subsubsection}{\numberline {2.2.2}Bubble sort}{4}
-\contentsline {subsection}{\numberline {2.3}Binning}{4}
-\contentsline {subsubsection}{\numberline {2.3.1}Prototyping in MATLAB}{4}
-\contentsline {subsubsection}{\numberline {2.3.2}C++ runs}{5}
-\contentsline {subsection}{\numberline {2.4}Exchanging data}{5}
+\contentsline {subsubsection}{\numberline {1.4.4}Prototyping in MATLAB}{4}
+\contentsline {subsection}{\numberline {1.5}Exchanging data}{5}
+\contentsline {subsubsection}{\numberline {1.5.1}Data swap}{5}
+\contentsline {subsubsection}{\numberline {1.5.2}Cleanup}{5}
+\contentsline {section}{\numberline {2}Performance}{5}
 \contentsline {section}{\numberline {3}Conclusions}{5}
-\contentsline {subsection}{\numberline {3.1}Challenges and successes}{6}
-\contentsline {subsection}{\numberline {3.2}Future work}{6}
+\contentsline {subsection}{\numberline {3.1}Challenges and successes}{5}
+\contentsline {subsection}{\numberline {3.2}Future work}{5}
