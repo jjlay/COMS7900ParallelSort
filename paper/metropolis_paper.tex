@@ -365,7 +365,7 @@ We will now conclude with two discussions on 1) the most difficult and most succ
         \begin{itemize}
             \item Combine with \texttt{pthreads} to leverage shared memory
         \end{itemize}
-    \item [Utilize All-to-all and Reduce MPI operations]{We chose to leverage \texttt{MPI_Isend} and \texttt{MPI_Recv} for data transfers rather than the more efficient all-to-all and reduce operations. This could improve our data swapping routine.}
+    \item [Utilize All-to-all and Reduce MPI operations]{We chose to leverage \texttt{MPI\_Isend} and \texttt{MPI\_Recv} for data transfers rather than the more efficient all-to-all and reduce operations. This could improve our data swapping routine.}
     \item [File I/O]{The import routine is very inefficient due to its use of C++ string operations to parse the data. A major improvement would be to use \texttt{fscanf} to read the file and immediately export the results as binary. If the program has to be executed again, it can check for the binary version. Also, \texttt{pthreads} would allow multiple files to be read simultaneously.}
         \begin{itemize}
             \item Use \texttt{fscanf} to read files
