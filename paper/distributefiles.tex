@@ -1,1 +1,4 @@
-Hello worled
+Rank 0 generates a list of data files to be processed by reading in all filenames from the specified directory. It looks for files matching the naming pattern \texttt{datafile00000.txt}, i.e., the string \texttt{datafile} followed by five digits, and ending with \texttt{.txt}. The list is stored in a C++ STL \texttt{vector} container.
+
+Next the filenames are sent to the worker nodes in a round-robin manner as a means to evenly distribute the workload. This approach assumes that the files are equal in length. A more fair algorithm could accumulate the number of lines in each file and distribute chunks of data to each node to better balance the effort.
+

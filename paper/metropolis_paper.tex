@@ -322,7 +322,9 @@ CleanUp first uses the information in '*binIPTR' to determine the amount and loc
 
 JJ's performance data sections go here
 
+\section{Performance}
 
+\input{performance.tex}
 
 %%%%%%%%%%%%%
 %%% NEW SECTION %%%
@@ -330,11 +332,52 @@ JJ's performance data sections go here
 \section{Conclusions}
 We will now conclude with two discussions on 1) the most difficult and most successful aspects of our method and 2) ways of improving the both the method's performance/efficiency and our workflow as a group.
 
+We will now conclude with two discussions on 1) the most difficult and most successful aspects of our method and 2) ways of improving the both the method's performance/efficiency and our workflow as a group.
+
 \subsection{Challenges and successes}
 
+\begin{enumerate}
+    \item Integration
+		\begin{itemize}
+			\item Identifying structure of parameters and return values
+			\item Needed better planning of data types up front
+		\end{itemize}
+    \item Git
+		\begin{itemize}
+			\item Resolving merge conflicts
+			\item Basic Git workflow
+		\end{itemize}
+    \item Coding
+		\begin{itemize}
+			\item Forgot to remove debug controls while collecting performance data
+		\end{itemize}
+    \item Testing
+		\begin{itemize}
+			\item Long runtimes when testing with full dataset
+			\item Failures during long runs
+		\end{itemize}
+\end{enumerate}
 
 \subsection{Future work}
 
+\begin{enumerate}
+    \item Shared memory
+        \begin{itemize}
+            \item Combine with \texttt{pthreads} to leverage shared memory
+        \end{itemize}
+    \item Utilize All-to-all and Reduce MPI operations
+    \item File I/O
+        \begin{itemize}
+            \item Use \texttt{fscanf} to read files
+            \item Read multiple files in parallel on single host
+            \item Balance data distribution at a row level rather than a file level to deal with differing file sizes
+            \item Intelligent distribution of rows to nodes as a ``presort''
+        \end{itemize}
+    \item Recoverability
+        \begin{itemize}
+            \item Output data at checkpoints to avoid repeating successful operations
+        \end{itemize}
+\end{enumerate}
 
 
 %%%%%%%%%%%%%%%
@@ -343,7 +386,6 @@ We will now conclude with two discussions on 1) the most difficult and most succ
 
 
 \end{document}
-
 
 
 
