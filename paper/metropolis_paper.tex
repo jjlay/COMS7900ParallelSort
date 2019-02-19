@@ -70,7 +70,7 @@ tabsize=3
 
 \title{An optimization-inspired approach to parallel sorting}
 \author{Team Metropolis: \\
-		James Farzi, JJ Lay, and Graham West}
+		Jamshid 'James' Farzidayeri, JJ Lay, and Graham West}
 \date{COMS 7900, Capstone}
 
 \maketitle
@@ -88,7 +88,9 @@ We present a novel method influenced by ideas in the field optimization to effic
 %%%%%%%%%%%%%
 \section{The Method}
 
-Introduction:
+
+As our first project for COMS 7900, the objective was to develop a system that would use MPI and the Babbage cluster to read in a significant amount of raw data and output that data in sorted sections. The data consisted of 500 files each with 20 million lines of data points. Each data point contained a integer number with three floating point coordinates. The project must allow for the sorting of data by any of the coordinate columns of data points. Additionally, the project must output the sorted information using qsub and have the data stored in files listed from smallest to largest. Finally, the system must allow for testing the output for verification of the sorting and a method for process timing. After the assignment was distributed, the team members met to discuss and develop a brief outline of how the assignment would be handled. It was concluded that a prototype would be developed using Mat Lab, and the final project would use C++ with C MPI calls. It was at that time Graham began working with the Metropolis algorithm. As the project took shape JJ set up GitHub and provided Graham and James with additional GitHub training. JJ also set up the structure for how the code would be presented, including general outline of the main program's structure and the outline for different files needed. Then the team met and presented with Graham's Mat Lab prototyping. It was after the second meeting that work assignments began to be handed out and we agreed upon several variables and conventions. Several pieces of the C++ code were developed simultaneously. JJ worked on file I/O and distribution, Graham developed bin adapting, and James worked on sorting and data exchanging. The code was assembled and any remaining issues resolved. 
+
 
 
 
@@ -179,14 +181,36 @@ Here we provide a helpful list of conventions, notations, and variable names use
 
 % JF
 \subsection{Sorting}
-
+In this section we address the two options for sorting the data. Since the majority of the groups are using qsort or some variation of that. We felt it would be interesting to have some alternative options for comparison for the class. Therefore we offer two options while using our process: a linked list insertion sort and bubble sort. Both options require the user pass information in the following format. 
 % here's how to insert code into LaTeX
 \begin{lstlisting}
-	walk = RandomWalk(nStep, initPos, stdDev)
+            void LL_sort(double myArray[], int rows, int cols, int sortThisColumn)
+\end{lstlisting}
+Each option first uses the value in 'sortThisColumn' to determine which column the user is requesting the sort on. Both options also make modifications to the existing 'myArray[]'. The rows and column are used during the iteration process to determine the 'shape' of the array during iteration. The limiting factor for both options is that the user is currently restricted to just the four columns. However, the function could be easily modified the accept more columns.
+\subsubsection{Linked list insertion sort}
+The better of our two options by a significant margin is or linked list insertion sort. Inside this function is a one directional singly linked list made with the following node structure.
+\begin{lstlisting}
+                                    struct Node{
+	                                    double ll_location;
+	                                    double ll_x;
+	                                    double ll_y;
+	                                    double ll_z;
+	                                    struct Node *next;
+                                    };
+
+\end{lstlisting}
+The function initializes the linked with the first data point in the myArray[]. Then inserts each additional piece of data from myArray[] into the linked list using the traditional head, current, and previous pointer methods. After the method has iterated through all the data in myArray[] and has a now sorted linked list,  then the data is placed back into myArray[] and exits the program.
+\subsubsection{Bubble sort}
+This function is by far the weaker of the two options and considered one of the least desirable of all sort functions. However, it is quite easy to implement, very robust, requires no additional large memory sections, and extremely reliable. This method simply sorts in place using the classic bubble sort process below.
+\begin{lstlisting}
+           for (int iii = 0 ; iii < (rows);iii++){
+		        for(int jjj=0; jjj<(rows-stop); jjj++){
+			            if(myArray[cols*jjj+sortByThisColumn]>
+			                myArray[cols*(jjj+1)+sortByThisColumn]){
+				                //perform swap
 \end{lstlisting}
 
-\subsubsection{Linked list merge sort}
-\subsubsection{Bubble sort}
+Although this will not be used as part of our regular process, we are interested in seeing how poorly it performs compared to other algorithms. This method does does not attempt to resort the 'last' space of the previous iteration. This is a slight reduction in the $N^2$ average that is usually expected from bubble sort methods. 
 
 
 % GW
@@ -232,33 +256,6 @@ If the data is not uniform in the first step, we move on to adapt the interior b
 \end{equation}
 where $0 < \alpha < 0.5$. Each of these terms is designed the allow the bins to adapt the maximum amount possible without the bin edges becoming out of order. The quantity $\Delta B$ scales the maximum change to be within the current bin width. The quantity $0 \le \Delta C \le 1$ is a type of normalized gradient which will direct the bin edges toward regions with higher density. Lastly, $\alpha$ is a form of rate constant. It must remain less than 0.5 to maintain the constraint. It is usually set between 0.25-0.475.
 
-
-
-
-
-
-
-% JF
-\subsection{Exchanging data}
-\subsubsection{Data swap}
-\subsubsection{Cleanup}
-
-
-%%%%%%%%%%%%%
-%%% NEW SECTION %%%
-%%%%%%%%%%%%%
-\section{Testing}
-
-
-\subsection{File I/O}
-
-\subsection{Sorting}
-\subsubsection{Linked list merge sort}
-\subsubsection{Bubble sort}
-
-\subsection{Binning}
-
-
 \subsubsection{Prototyping in MATLAB}
 Prior to our implementation in C++, we prototype the adaptation scheme in MATLAB as a proof of concept. For these tests, we read 1000 lines from one of the provided data files and applied the adaptive binning scheme to it, varying the number of nodes, iterations, and the value of $\alpha$.
 \begin{figure}[!htb]
@@ -291,13 +288,39 @@ As can be seen from the Figure \ref{5,0.475}, with $W=5$ and $\alpha=0.475$, the
 These tests demonstrate two general rules which describe the performance of the method. First, the method performs better (faster convergence, less oscillations) with more data since altering the bin edges on average won't have as drastic an effect on the bin counts. Also, the method performs worse (slower convergence, possible oscillatory behavior) with more workers (i.e., bin edges). There are two reasons for this. First, relating to the previous rule, since more granular divisions of the data counter the positive effects that large amounts of data have on performance. This being said, in practice, this effect is not significant when dealing with millions or billions of data points because no practical number of workers can make the data significantly granular. Second, since we use only a local bin updating scheme (a form of normalized gradient of the bin counts), the bin edges near the boundary of the data range do not have much room to move since the interior bin edges must move first (since we must maintain the constraint). Consequently, this makes our method susceptible to very poor performance if there is an outlier in the data, because there will be a large number of bin edges between the outlier and the rest of the data which cannot move until some data is propagated toward them. A clear improvement which could be made to the method would be to replace the local bin count gradient with a global analogue (whicj still maintains the constraint, of course).
 
 
-\subsubsection{C++ runs}
 
 
 
-
-
+% JF
 \subsection{Exchanging data}
+The exchanging data process for our design includes two steps: Data swap and Clean up. This is to allow flexibility in the main program during its implementation of the functions. 
+\subsubsection{Data swap}
+When this function is called, it uses a from/to process. Meaning that given the following set of options it will transfer a specific set of data from one node to another. 
+\begin{lstlisting}
+ void swapArrayParts(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numranks, int *binIPTR, int fromWho, int toWho)        
+\end{lstlisting}
+The first thing the process does is pass information regarding the length of the data to be received from the array. If the node that called the function is considered 'fromWho' it will pass its binI information to the node who called the function as the 'toWho'. At this point, the node who is 'toWho' creates a temporary array that is large enough to fit both the current set of data plus the additional set of data it is about to receive. After that is completed the node 'fromWho' then passes the pointer to the beginning of the data point in pmyArray where the node 'toWho' begins it's length of data to transfer. Here the node who is considered 'fromWho' will exit the function and the node who is 'toWho' will simply insert the data from its current pmyArray into the temporary array. Then in the remaining spaces inserts the information it just received from 'fromWho'. Finally, the 'toWho' node will increase the number of rows to include the additional data points. Then 'toWho' exits the function. At this point, the 'fromWho' node still has all of its original data and the 'toWho' node now has its original data plus the additional data sent over from the 'fromWho' node. Since this is a one to one transfer, it can be implemented in anyway the main program chooses. For the purposes of our group's needs we choose to have one node send all of its information to each other then increment through all nodes in the following method.
+\begin{lstlisting}
+                for( fromWho = 1; fromWho < numNodes; fromWho++ ){
+                    for( int toWho = 1; toWho< numNodes; toWho++){
+                        if(toWho!=fromWho){
+                            if(myRank ==toWho || myRank ==fromWho){
+                                perform swapArrayParts
+\end{lstlisting}
+\subsubsection{Cleanup}
+Once this method is complete each node will have all the information from each other node appended to the end of their existing array. However, each node will still have the information that it has passed to others and will now need to remove from their own array. This is where the cleanUp function is utilized. Whenever a function calls cleanUp it will need to receive the following parameters.
+\begin{lstlisting}
+                void cleanUp(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numranks, int *binIPTR)
+\end{lstlisting}
+CleanUp first uses the information in '*binIPTR' to determine the amount and locations of the data that was given to other nodes and the amount of information it should retain inside its array. Then we malloc a temporary array with the correct size. The information that should be kept is inserted into the temporary array while excluding the data that should not be included. Then '*pmyArray[]' is pointed to the beginning of the temporary array and the row size is adjusted to reflect the new and correct size of the node's array. The node now exits the function with the correct size and information however the data is no longer sorted and a new sort must be completed. This function must be called individually for all nodes used in the swapArrayParts method. 
+
+
+%%%%%%%%%%%%%
+%%% NEW SECTION %%%
+%%%%%%%%%%%%%
+\section{Performance}
+
+JJ's performance data sections go here
 
 \section{Performance}
 
@@ -342,7 +365,7 @@ We will now conclude with two discussions on 1) the most difficult and most succ
         \begin{itemize}
             \item Combine with \texttt{pthreads} to leverage shared memory
         \end{itemize}
-    \item [Utilize All-to-all and Reduce MPI operations]{We chose to leverage \texttt{MPI_Isend} and \texttt{MPI_Recv} for data transfers rather than the more efficient all-to-all and reduce operations. This could improve our data swapping routine.}
+    \item [Utilize All-to-all and Reduce MPI operations]{We chose to leverage \texttt{MPI\_Isend} and \texttt{MPI\_Recv} for data transfers rather than the more efficient all-to-all and reduce operations. This could improve our data swapping routine.}
     \item [File I/O]{The import routine is very inefficient due to its use of C++ string operations to parse the data. A major improvement would be to use \texttt{fscanf} to read the file and immediately export the results as binary. If the program has to be executed again, it can check for the binary version. Also, \texttt{pthreads} would allow multiple files to be read simultaneously.}
         \begin{itemize}
             \item Use \texttt{fscanf} to read files
