@@ -326,58 +326,63 @@ JJ's performance data sections go here
 
 \input{performance.tex}
 
-%%%%%%%%%%%%%
-%%% NEW SECTION %%%
-%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+%%% CONCLUSION %%%
+%%%%%%%%%%%%%%%%%%
+
 \section{Conclusions}
-We will now conclude with two discussions on 1) the most difficult and most successful aspects of our method and 2) ways of improving the both the method's performance/efficiency and our workflow as a group.
 
 We will now conclude with two discussions on 1) the most difficult and most successful aspects of our method and 2) ways of improving the both the method's performance/efficiency and our workflow as a group.
 
 \subsection{Challenges and successes}
 
-\begin{enumerate}
-    \item Integration
+\begin{description}
+    \item [Integration]{The integration proved challenging due to a lack of specifications for the individual functions. While we agreed on \textit{what} the function would perform, we did not discuss parameters and return values.}
 		\begin{itemize}
 			\item Identifying structure of parameters and return values
 			\item Needed better planning of data types up front
 		\end{itemize}
-    \item Git
+    \item [Git]{We had a basic knowledge of Git but not in the context of working with a group. Rather than creating individual branches for each team member, we attempted to work from the \textit{master} branch. This resulted in the loss of work on at least two occasions.}
 		\begin{itemize}
 			\item Resolving merge conflicts
 			\item Basic Git workflow
 		\end{itemize}
-    \item Coding
+    \item [Coding]{During debugging, we added print lines and other code to help identify problems. None of this code was removed.}
 		\begin{itemize}
 			\item Forgot to remove debug controls while collecting performance data
 		\end{itemize}
-    \item Testing
+    \item [Testing]{Testing on large sets of data was challenging due to the long runtimes. If a crash occured, the program had to be restarted resulting in repeating the data import section.}
 		\begin{itemize}
 			\item Long runtimes when testing with full dataset
 			\item Failures during long runs
 		\end{itemize}
-\end{enumerate}
+\end{description}
 
 \subsection{Future work}
 
-\begin{enumerate}
-    \item Shared memory
+\begin{description}
+    \item [Shared memory]{Rather than rely solely on MPI, the code could be modified such that a single MPI process is launched on each physical host and pthreads is used for interprocess communication on the host. This would allow a single copy of the data to be stored on the node and shared among the local threads.}
         \begin{itemize}
             \item Combine with \texttt{pthreads} to leverage shared memory
         \end{itemize}
-    \item Utilize All-to-all and Reduce MPI operations
-    \item File I/O
+    \item [Utilize All-to-all and Reduce MPI operations]{We chose to leverage \texttt{MPI_Isend} and \texttt{MPI_Recv} for data transfers rather than the more efficient all-to-all and reduce operations. This could improve our data swapping routine.}
+    \item [File I/O]{The import routine is very inefficient due to its use of C++ string operations to parse the data. A major improvement would be to use \texttt{fscanf} to read the file and immediately export the results as binary. If the program has to be executed again, it can check for the binary version. Also, \texttt{pthreads} would allow multiple files to be read simultaneously.}
         \begin{itemize}
             \item Use \texttt{fscanf} to read files
             \item Read multiple files in parallel on single host
             \item Balance data distribution at a row level rather than a file level to deal with differing file sizes
             \item Intelligent distribution of rows to nodes as a ``presort''
         \end{itemize}
-    \item Recoverability
+    \item [Recoverability]{Data could be exported during major milestones (e.g., convert text to binary, after sorting, and after exchanging. If the program fails, it can check for the checkpoint files and restart at the milestone.}
         \begin{itemize}
             \item Output data at checkpoints to avoid repeating successful operations
         \end{itemize}
-\end{enumerate}
+     \item [Testing]{A framework such as \texttt{CMAKE} would allow automated testing and simplify including unit tests to verify code works. The performance data was collected manually, and the process could be easily automated using Python or Bash.}
+     	\begin{itemize}
+	\item Utilize \texttt{CMAKE} to automate build and testing
+	\item Utilize scripts to run various configurations and automate performance data collection
+	\end{itemize}
+\end{description}
 
 
 %%%%%%%%%%%%%%%
