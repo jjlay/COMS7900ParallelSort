@@ -53,7 +53,6 @@ void cleanUp(double *pmyArray[], int *rowPTR , int *colPTR, int myrank, int numr
 	myBinI  =(int*) malloc((maxRank+1)*sizeof(int));
 
 	
-	sleep(myRank);
 //	cout << "Rank: " << myRank << " adusted binI: "<< endl ;
 	for (int ii =0; ii< maxRank +1; ii++){
 //		cout <<"rank: " << myRank <<  " : " << myBinI[ii]<< endl;
